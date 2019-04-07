@@ -3,6 +3,8 @@ public class Tile
 	private int x;
 	private int y;
 
+	// Must add copy constructor
+
 	public Tile(int x, int y)
 	{
 		this.x = x;
