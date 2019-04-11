@@ -45,7 +45,7 @@ public class Board
 		int mineCount = 0;
 
 		// Check all 8 adjacent tiles for mines
-		for (int direction = 0; i < 8; direction++)
+		for (int direction = 0; direction < 8; direction++)
 		{
 			mineCount += checkAdjacent(x, y, direction);
 		}
@@ -55,19 +55,67 @@ public class Board
 
 	public int checkAdjacent(int x, int y, int direction)
 	{
-		int mineCount = 0;
-
-		switch(direction)
+		try
 		{
-			// North
-			case 0:
-				if (this.theBoard[x][y+1] instanceof Mine)
-					mineCount++;
-				break;
+			switch(direction)
+			{	
+				// North
+				case 0:
+					if (this.theBoard[x-1][y] instanceof Mine)
+						return 1;
+					break;
+			
+				// North East
+				case 1:	
+					if (this.theBoard[x-1][y+1] instanceof Mine)
+						return 1;
+					break;
 		
-			// North East
-			case 1:	
+				// East
+				case 2:
+					if (this.theBoard[x][y+1] instanceof Mine)
+						return 1;
+					break;
+
+				// South East 
+				case 3:
+					if (this.theBoard[x+1][y+1] instanceof Mine)
+						return 1;
+					break;
+		
+				// South
+				case 4:
+					if (this.theBoard[x+1][y] instanceof Mine)
+						return 1;
+					break;
+
+				// South West
+				case 5:
+					if (this.theBoard[x+1][y-1] instanceof Mine)
+						return 1;
+					break;
+
+				// West
+				case 6:
+					if (this.theBoard[x][y-1] instanceof Mine)
+						return 1;
+					break;
+
+				// North West
+				case 7:
+					if (this.theBoard[x-1][y-1] instanceof Mine)
+						return 1;
+					break;
+				default:
+					return 0;
+			}
 		}
+		catch (ArrayIndexOutOfBoundsException e)
+		{
+			return 0;
+		}
+		
+		return 0;
 	}
 
 	/*
