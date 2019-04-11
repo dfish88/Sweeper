@@ -8,7 +8,7 @@ public class Board
 	public Board(int dimension)
 	{
 		this.dimension = dimension;
-		
+		theBoard = new Tile[this.dimension][this.dimension];		
 		buildBoard();
 	}
 
@@ -31,7 +31,8 @@ public class Board
                 {
                         for (int j = 0; j < this.dimension; j++)
                         {       
-				this.theBoard[i][j] = new Tile(i, j, calculateAdjacent(i,j));
+				if (!(this.theBoard[i][j] instanceof Mine))
+					this.theBoard[i][j] = new Tile(i, j, calculateAdjacent(i,j));
                         }
                 }
 
@@ -148,6 +149,18 @@ public class Board
 			int randY = rand.nextInt(dimension);
 			
 			this.theBoard[randX][randY] = new Mine(randX, randY);
+		}
+	}
+
+	public void printBoard()
+	{
+		for (int i = 0; i < this.dimension; i ++)
+		{
+			for (int j = 0; j < this.dimension; j++)
+			{
+				System.out.print(this.theBoard[i][j]);
+			}
+			System.out.println("");
 		}
 	}
 }
