@@ -50,4 +50,9 @@ public class Tile
 	{
 		return this.adjacentTo;
 	}
+
+	public String toString()
+	{
+		return Integer.toString(this.adjacentTo);
+	}
 }

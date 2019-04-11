@@ -4,5 +4,10 @@ public class Mine extends Tile
 	{
 		super(x,y,0);
 	}
+
+	public String toString()
+	{
+		return "M";
+	}
 }
 
