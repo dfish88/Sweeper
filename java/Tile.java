@@ -7,13 +7,18 @@ public class Tile
 	// Count how many mines this tile touches
 	private int adjacentTo;
 
-	// Must add copy constructor
-
 	public Tile(int x, int y, int adjacentTo)
 	{
 		this.x = x;
 		this.y = y;
 		this.adjacentTo = adjacentTo;
+	}
+
+	public Tile(Tile toCopy)
+	{
+		this.x = toCopy.getX();
+		this.y = toCopy.getY();
+		this.adjacentTo = toCopy.getAdjacent();
 	}
 
 	public void setX(int x)
