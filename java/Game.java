@@ -1,8 +1,10 @@
+import javafx.application.Application;
+import javafx.stage.Stage;
 import java.util.*;
 
-public class Game
+public class Game extends Application
 {
-	public static void main(String[] args)
+	public void start(Stage primaryStage) throws Exception
 	{
 		// Create board
 		int dimension = 8;
@@ -29,5 +31,10 @@ public class Game
 			// Display board
 			System.out.println(gameBoard);
 		}
+	}
+
+	public static void main(String[] args)
+	{
+		launch(args);
 	}
 }
