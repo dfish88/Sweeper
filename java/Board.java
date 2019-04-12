@@ -156,16 +156,22 @@ public class Board
 		}
 	}
 
-	public void printBoard()
+	/*
+	* Returns a string representation of the board.
+	* Use a string for each row and new lines to go to next row.
+	*/
+	public String toString()
 	{
+		String rep = "";
 		for (int i = 0; i < this.dimension; i ++)
 		{
 			for (int j = 0; j < this.dimension; j++)
 			{
-				System.out.print("| " + this.theBoard[i][j] + " ");
+				rep = rep + this.theBoard[i][j].toString();
 			}
-			System.out.println("|");
+				rep = rep + "\n";
 		}
+		return rep;
 	}
 
 	public void revealSquare(int x, int y)

@@ -12,7 +12,7 @@ public class Game
 		int y;
 		Scanner sc = new Scanner(System.in);
 
-		gameBoard.printBoard();
+		System.out.println(gameBoard);		
 
 		// Game loop
 		while (true)
@@ -27,7 +27,7 @@ public class Game
 			gameBoard.revealSquare(x,y);
 
 			// Display board
-			gameBoard.printBoard();
+			System.out.println(gameBoard);
 		}
 	}
 }
