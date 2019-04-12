@@ -3,6 +3,7 @@ public class Tile
 	// x and y coordinates
 	private int x;
 	private int y;
+	private boolean revealed;
 
 	// Count how many mines this tile touches
 	private int adjacentTo;
@@ -12,6 +13,7 @@ public class Tile
 		this.x = x;
 		this.y = y;
 		this.adjacentTo = adjacentTo;
+		this.revealed = false;
 	}
 
 	public Tile(Tile toCopy)
@@ -36,6 +38,11 @@ public class Tile
 		this.adjacentTo = adjacentTo;
 	}
 
+	public void setRevealed(boolean r)
+	{
+		this.revealed = r;
+	}
+
 	public int getX()
 	{
 		return this.x;
@@ -54,5 +61,10 @@ public class Tile
 	public String toString()
 	{
 		return Integer.toString(this.adjacentTo);
+	}
+
+	public boolean isRevealed()
+	{
+		return this.revealed;
 	}
 }

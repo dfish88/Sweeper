@@ -158,9 +158,9 @@ public class Board
 		{
 			for (int j = 0; j < this.dimension; j++)
 			{
-				System.out.print(this.theBoard[i][j]);
+				System.out.print("| " + this.theBoard[i][j] + " ");
 			}
-			System.out.println("");
+			System.out.println("|");
 		}
 	}
 }
