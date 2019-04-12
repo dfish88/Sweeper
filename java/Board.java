@@ -32,7 +32,7 @@ public class Board
                         for (int j = 0; j < this.dimension; j++)
                         {       
 				if (!(this.theBoard[i][j] instanceof Mine))
-					this.theBoard[i][j] = new Tile(i, j, calculateAdjacent(i,j));
+					this.theBoard[i][j] = new Tile(calculateAdjacent(i,j));
                         }
                 }
 
@@ -152,7 +152,7 @@ public class Board
 			int randX = rand.nextInt(dimension);
 			int randY = rand.nextInt(dimension);
 			
-			this.theBoard[randX][randY] = new Mine(randX, randY);
+			this.theBoard[randX][randY] = new Mine();
 		}
 	}
 
