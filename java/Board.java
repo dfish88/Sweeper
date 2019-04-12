@@ -54,6 +54,10 @@ public class Board
 		return mineCount;
 	}
 
+	/*
+	* Checks for mines adjacent to square (x,y) in direction direction.
+	* and returns either 1 or 0.
+	*/
 	public int checkAdjacent(int x, int y, int direction)
 	{
 		try
@@ -162,5 +166,10 @@ public class Board
 			}
 			System.out.println("|");
 		}
+	}
+
+	public void revealSquare(int x, int y)
+	{
+		this.theBoard[x][y].setRevealed(true);
 	}
 }

@@ -7,7 +7,8 @@ public class Mine extends Tile
 
 	public String toString()
 	{
-		return "M";
+		
+		return "x";
 	}
 }
 

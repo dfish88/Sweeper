@@ -60,7 +60,10 @@ public class Tile
 
 	public String toString()
 	{
-		return Integer.toString(this.adjacentTo);
+		if (this.revealed)
+			return Integer.toString(this.adjacentTo);
+		else
+			return "x";
 	}
 
 	public boolean isRevealed()
