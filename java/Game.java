@@ -32,8 +32,8 @@ public class Game
 		Board gameBoard = new Board(dimension);
 
 		// Game loop
-		while (true)
-		{
-		}
+		//while (true)
+		//{
+		//}
 	}
 }
