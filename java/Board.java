@@ -177,7 +177,7 @@ public class Board
 	/*
 	* Reveals a square, used when square is clicked on.
 	*/
-	public String revealSquare(int x, int y)
+	public String revealTile(int x, int y)
 	{
 		this.theBoard[x][y].setRevealed(true);
 		return this.theBoard[x][y].toString();
