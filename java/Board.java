@@ -174,6 +174,9 @@ public class Board
 		return rep;
 	}
 
+	/*
+	* Reveals a square, used when square is clicked on.
+	*/
 	public void revealSquare(int x, int y)
 	{
 		this.theBoard[x][y].setRevealed(true);
