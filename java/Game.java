@@ -5,7 +5,6 @@ public class Game
 {
 	private JFrame frame;
 	private JButton buttonGrid[][];
-	private int dimension;
 	private Board gameBoard;
 	private ButtonListener listener;
 
@@ -13,31 +12,30 @@ public class Game
 	{
 		this.gameBoard = new Board(dimension);
 
-		listener = new ButtonListener();
-		this.frame = new JFrame();
-		this.buttonGrid = new JButton[this.dimension][this.dimension];
-		this.frame.setLayout(new GridLayout(this.dimension, this.dimension));
-		this.frame.setSize(500,500);
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame.setVisible(true);
+		this.listener = new ButtonListener();
+		this.frame = new JFrame("Mine Sweeper!");
+		this.buttonGrid = new JButton[dimension][dimension];
 
-		for (int i = 0; i < this.dimension; i++)
+		for (int i = 0; i < dimension; i++)
                 {
-                        for (int j = 0; j < this.dimension; j++)
+                        for (int j = 0; j < dimension; j++)
                         {
                                 this.buttonGrid[i][j] = new JButton();
                                 this.buttonGrid[i][j].putClientProperty("coordinates", new Integer[]{i,j});
-                                this.buttonGrid[i][j].addActionListener(listener);
+                                this.buttonGrid[i][j].addActionListener(this.listener);
                                 this.frame.add(buttonGrid[i][j]);
                         }
 
                 }
+		this.frame.setLayout(new GridLayout(dimension, dimension));
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setSize(500,500);
+		this.frame.setVisible(true);
 	}
 
 	public void revealTiles(int x, int y)
 	{
-		this.gameBoard.revealTile(x,y);
-		this.buttonGrid[x][y].setText(this.gameBoard.toString());
+		this.buttonGrid[x][y].setText(this.gameBoard.revealTile(x,y));
 	}
 
 	private class ButtonListener implements ActionListener
