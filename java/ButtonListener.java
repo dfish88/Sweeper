@@ -6,16 +6,18 @@ public class ButtonListener implements ActionListener
 {
 	private JFrame frame;
 	private JButton buttonGrid[][];
-	private dimension;
+	private int dimension;
+	private Board gameBoard;
 
 	public ButtonListener()
 	{
+		this.gameBoard = new Board(8);
 		this.dimension = 8;
 		this.frame = new JFrame();
 		this.buttonGrid = new JButton[this.dimension][this.dimension];
-		this.frame.setLayout(new GridLayout(this.dimension, this.dimension);
+		this.frame.setLayout(new GridLayout(this.dimension, this.dimension));
 		this.frame.setSize(500,500);
-		this.frame.setDefaultCloserOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		for (int i = 0; i < this.dimension; i++)
                 {
@@ -35,11 +37,11 @@ public class ButtonListener implements ActionListener
 		JButton button = (JButton) e.getSource();
 		Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
 		System.out.println("Button pressed at: " + coordinates[0] + ", " + coordinates[1]);
+		this.buttonGrid[coordinates[0]][coordinates[1]].setText(this.gameBoard.revealSquare(coordinates[0], coordinates[1]));
 	}
 
 	public static void main(String[] args)
 	{
-		Board gameBoard = new Board(8);
 		ButtonListener game = new ButtonListener();
 	}	
 }
