@@ -32,7 +32,6 @@ public class Board
 	*/
 	public void buildBoard()
 	{
-		initializeBoard();
 		addMines();
 		placeAdjacent();
 	}
@@ -50,7 +49,6 @@ public class Board
 					this.theBoard[i][j] = new Tile(calculateAdjacent(i,j));
                         }
                 }
-
 	}
 
 	/*
@@ -88,20 +86,6 @@ public class Board
 		catch(ArrayIndexOutOfBoundsException e)
 		{
 			return 0;
-		}
-	}
-
-	/*
-	* Initialize each tile to null	
-	*/
-	public void initializeBoard()
-	{
-		for (int i = 0; i < this.dimension; i++)
-		{
-			for (int j = 0; j < this.dimension; j++)
-			{
-				this.theBoard[i][j] = null;
-			}
 		}
 	}
 
