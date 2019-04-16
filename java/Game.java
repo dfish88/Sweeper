@@ -43,6 +43,13 @@ public class Game
 
 	public void revealTiles(int x, int y)
 	{
+		// Clicked on mine!
+		if (this.gameBoard.mine(x,y))
+		{
+			System.out.println("GAME OVER!!!");
+			System.exit(0);
+		}
+
 		this.gameBoard.revealTile(x,y);
 		this.drawBoard();
 	}

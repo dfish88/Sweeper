@@ -17,6 +17,11 @@ public class Board
 		return this.dimension;
 	}	
 
+	public boolean mine(int x, int y)
+	{
+		return this.theBoard[x][y] instanceof Mine;
+	}
+
 	/*
 	* Builds the board
 	*/
@@ -175,7 +180,7 @@ public class Board
 	public void revealTile(int x, int y)
 	{
 		this.theBoard[x][y].reveal();
-		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y] instanceof Mine))
+		if (this.theBoard[x][y].getAdjacent() == 0)
 			this.revealAdjacentTiles(x,y);
 	}
 
