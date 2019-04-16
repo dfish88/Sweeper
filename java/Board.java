@@ -50,7 +50,7 @@ public class Board
                 {
                         for (int dy = -1; dy < 2; dy++)
                         {
-                                if (x+dx != 0 && y+dy != 0)
+                                if (!(dx == 0 && dy == 0))
                                         mineCount += checkTile(x+dx, y+dy, true);
                         }
                 }
@@ -131,14 +131,32 @@ public class Board
 		return rep;
 	}
 
+	public String toStringReveal()
+	{
+		String rep = "";
+		for (int i = 0; i < this.dimension; i ++)
+		{
+			for (int j = 0; j < this.dimension; j++)
+			{
+				if (this.theBoard[i][j] instanceof Mine)
+					rep = rep + "M";
+				else
+					rep = rep + Integer.toString(this.theBoard[i][j].getAdjacent());
+			}
+				rep = rep + "\n";
+		}
+		return rep;
+	}
+
 	/*
 	* Reveals a square, used when square is clicked on.  If the tile
 	* is adjacent to 0 mines then it also reveals all adjacent 0 tiles.
 	*/
 	public void revealTile(int x, int y)
 	{
-		this.theBoard[x][y].reveal();;
-		this.revealAdjacentTiles(x,y);
+		this.theBoard[x][y].reveal();
+		if (this.theBoard[x][y].getAdjacent() == 0)
+			this.revealAdjacentTiles(x,y);
 	}
 
 	/*
@@ -151,14 +169,19 @@ public class Board
 		adjacent.push(y);
 		adjacent.push(x);
 
+		int currentX;
+		int currentY;
+
 		// Loop until stack is empty
 		while (!adjacent.empty())
 		{
+			currentX = adjacent.pop();
+			currentY = adjacent.pop();
 			// Reveal top tile on stack
-			this.theBoard[adjacent.pop()][adjacent.pop()].reveal();
+			this.theBoard[currentX][currentY].reveal();
 
 			// Add adjacent 0 tiles to stack
-			this.findAdjacentZero(x, y, adjacent);
+			this.findAdjacentZero(currentX, currentY, adjacent);
 		}
 	}
 
@@ -169,7 +192,7 @@ public class Board
                 {
 			for (int dy = -1; dy < 2; dy++)
 			{
-				if (x+dx != 0 && y+dy != 0)
+				if (!(dx == 0 && dy == 0))
 				{
 					if (this.checkTile(x+dx, y+dy, false) == 1)
 					{

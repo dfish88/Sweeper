@@ -38,6 +38,7 @@ public class Game
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setSize(500,500);
 		this.frame.setVisible(true);
+		System.out.println(this.gameBoard.toString());
 	}
 
 	public void revealTiles(int x, int y)
