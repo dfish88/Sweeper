@@ -4,7 +4,8 @@ public class Board
 { 
 	private Tile[][] theBoard; 
 	private int dimension;
- 
+	private int[] delta = {-1,-1,-1,0,-1,1,0,-1,0,1,1,-1,1,0,1,1};
+
 	public Board(int dimension)
 	{
 		this.dimension = dimension;
@@ -56,14 +57,10 @@ public class Board
 		int mineCount = 0;
 
 		// Check all 8 adjacent tiles for mines
-                for (int dx = -1; dx < 2; dx++)
-                {
-                        for (int dy = -1; dy < 2; dy++)
-                        {
-                                if (!(dx == 0 && dy == 0))
-                                        mineCount += checkTile(x+dx, y+dy, true);
-                        }
-                }
+		for (int i = 0; i < this.delta.length; i = i + 2)
+		{
+			mineCount += checkTile(x + this.delta[i], y + this.delta[i+1], true);
+		}
 		return mineCount;
 	}
 
@@ -214,30 +211,24 @@ public class Board
 	private void findAdjacentZero(int x, int y, Stack<Integer> s)
 	{
 		// Check all 8 adjacent tiles for mines
-                for (int dx = -1; dx < 2; dx++)
-                {
-			for (int dy = -1; dy < 2; dy++)
+		for (int i = 0; i < this.delta.length; i = i + 2)
+		{
+			if (this.checkTile(x + this.delta[i], y + this.delta[i+1], false) == 1)
 			{
-				if (!(dx == 0 && dy == 0))
+				s.push(y + this.delta[i+1]);
+				s.push(x + this.delta[i]);
+			}
+			else
+			{
+				try
 				{
-					if (this.checkTile(x+dx, y+dy, false) == 1)
-					{
-						s.push(y+dy);
-						s.push(x+dx);
-					}
-					else
-					{
-						try
-						{
-							this.theBoard[x+dx][y+dy].reveal();
-						}
-						catch(ArrayIndexOutOfBoundsException e)
-						{
-							continue;
-						}
-					}
+					this.theBoard[x + this.delta[i]][y + this.delta[i+1]].reveal();
+				}
+				catch(ArrayIndexOutOfBoundsException e)
+				{
+					continue;
 				}
 			}
-                }
+		}
 	}
 } 
