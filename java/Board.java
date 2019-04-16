@@ -185,7 +185,7 @@ public class Board
 		}
 	}
 
-	private void findAdjacentZero(int x, int y, Stack s)
+	private void findAdjacentZero(int x, int y, Stack<Integer> s)
 	{
 		// Check all 8 adjacent tiles for mines
                 for (int dx = -1; dx < 2; dx++)
@@ -202,6 +202,5 @@ public class Board
 				}
 			}
                 }
-	
 	}
 } 
