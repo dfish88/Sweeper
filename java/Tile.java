@@ -1,6 +1,6 @@
 public class Tile
 {
-	// x and y coordinates
+	// has the tile been clicked on?
 	private boolean revealed;
 
 	// Count how many mines this tile touches

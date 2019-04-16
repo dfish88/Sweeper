@@ -1,9 +1,13 @@
 import java.util.*;
+import java.awt.*;
 
 public class Board 
 { 
 	private Tile[][] theBoard; 
 	private int dimension;
+
+	// Used to calculate coordinates of all 8 adjacent tiles of
+	// a particular tile
 	private int[] delta = {-1,-1,-1,0,-1,1,0,-1,0,1,1,-1,1,0,1,1};
 
 	public Board(int dimension)
