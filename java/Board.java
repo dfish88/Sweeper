@@ -219,6 +219,17 @@ public class Board
 						s.push(y+dy);
 						s.push(x+dx);
 					}
+					else
+					{
+						try
+						{
+							this.theBoard[x+dx][y+dy].reveal();
+						}
+						catch(ArrayIndexOutOfBoundsException e)
+						{
+							continue;
+						}
+					}
 				}
 			}
                 }
