@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import javax.imageio.ImageIO;
 
 public class Game
 {
@@ -9,15 +10,55 @@ public class Game
 	private Board gameBoard;
 	private GameListener listener;
 
+	private ImageIcon blank;
+	private ImageIcon zero;
+	private ImageIcon one;
+	private ImageIcon two;
+	private ImageIcon three;
+	private ImageIcon four;
+	private ImageIcon five;
+	private ImageIcon six;
+	private ImageIcon seven;
+	private ImageIcon eight;
+	private ImageIcon flag;
+	private ImageIcon mine;
+
 	public Game(int dimension)
 	{
 		this.gameBoard = new Board(dimension);
+		this.loadImages();
 
 		this.listener = new GameListener();
 		this.frame = new JFrame("Mine Sweeper!");
 		this.buttonGrid = new JButton[dimension][dimension];
 
 		this.buildWindow(dimension);
+	}
+
+	private void loadImages()
+	{
+		try
+		{
+			blank = new ImageIcon("../icons/blank.png");
+			zero = new ImageIcon("../icons/0.png");
+			/*
+			one = ImageIO.read(getClass().getResource("../icons/1.png"));
+			two = ImageIO.read(getClass().getResource("../icons/2.png"));
+			three = ImageIO.read(getClass().getResource("../icons/3.png"));
+			four = ImageIO.read(getClass().getResource("../icons/4.png"));
+			five = ImageIO.read(getClass().getResource("../icons/5.png"));
+			six = ImageIO.read(getClass().getResource("../icons/6.png"));
+			seven = ImageIO.read(getClass().getResource("../icons/7.png"));
+			eight = ImageIO.read(getClass().getResource("../icons/8.png"));
+			flag = ImageIO.read(getClass().getResource("../icons/flag.png"));
+			mine = ImageIO.read(getClass().getResource("../icons/mine.png"));
+			*/
+		}
+		catch (Exception e)
+		{
+			System.out.println(e);
+			System.out.println("Couldn't fing images");
+		}
 	}
 
 	private void buildWindow(int dimension)
@@ -30,6 +71,12 @@ public class Game
                                 this.buttonGrid[i][j] = new JButton();
                                 this.buttonGrid[i][j].putClientProperty("coordinates", new Integer[]{i,j});
                                 this.buttonGrid[i][j].addMouseListener(this.listener);
+				
+				Image img = this.blank.getImage() ;  
+   				Image newimg = img.getScaledInstance( 500/8, 500/8,  java.awt.Image.SCALE_SMOOTH ) ;  
+   				this.blank = new ImageIcon( newimg );
+
+				this.buttonGrid[i][j].setIcon(this.blank);
                                 this.frame.add(buttonGrid[i][j]);
                         }
 
