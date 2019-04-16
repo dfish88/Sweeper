@@ -42,11 +42,20 @@ public class Game
 	{
 		public void actionPerformed(ActionEvent e)
 		{
-			JButton button = (JButton) e.getSource();
-			Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
-			System.out.println("Button pressed at: " + coordinates[0] + ", " + coordinates[1]);
+			if (true)
+			{
+				JButton button = (JButton) e.getSource();
+				Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
+				System.out.println("Left Button pressed at: " + coordinates[0] + ", " + coordinates[1]);
 	
-			Game.this.revealTiles(coordinates[0], coordinates[1]);
+				Game.this.revealTiles(coordinates[0], coordinates[1]);
+			}
+			else
+			{
+				JButton button = (JButton) e.getSource();
+				Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
+				System.out.println("Right button pressed at: " + coordinates[0] + ", " + coordinates[1]);
+			}
 		}
 	}
 }
