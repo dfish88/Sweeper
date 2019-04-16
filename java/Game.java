@@ -57,6 +57,7 @@ public class Game
 	{
 		public void mouseClicked(MouseEvent e)
 		{
+<<<<<<< HEAD
 			JButton button = (JButton) e.getSource();
 			Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
 
@@ -66,6 +67,22 @@ public class Game
 				System.out.println("Right Button pressed at: " + coordinates[0] + ", " + coordinates[1]);
 				
 			Game.this.revealTiles(coordinates[0], coordinates[1]);
+=======
+			if (true)
+			{
+				JButton button = (JButton) e.getSource();
+				Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
+				System.out.println("Left Button pressed at: " + coordinates[0] + ", " + coordinates[1]);
+	
+				Game.this.revealTiles(coordinates[0], coordinates[1]);
+			}
+			else
+			{
+				JButton button = (JButton) e.getSource();
+				Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
+				System.out.println("Right button pressed at: " + coordinates[0] + ", " + coordinates[1]);
+			}
+>>>>>>> df11c9bd24ee124652f4be7b897a953938becd70
 		}
 		
 		public void mousePressed(MouseEvent e) 
