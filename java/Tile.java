@@ -37,7 +37,7 @@ public class Tile
 		if (this.revealed)
 			return Integer.toString(this.adjacentTo);
 		else
-			return "x";
+			return " ";
 	}
 
 	public boolean isRevealed()

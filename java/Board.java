@@ -12,6 +12,11 @@ public class Board
 		buildBoard();
 	}
 
+	public int getDimension()
+	{
+		return this.dimension;
+	}	
+
 	/*
 	* Builds the board
 	*/
@@ -146,6 +151,21 @@ public class Board
 				rep = rep + "\n";
 		}
 		return rep;
+	}
+
+	public char[][] boardToArray()
+	{
+		char [][] ret = new char[this.dimension][this.dimension];
+		
+		for (int i = 0; i < this.dimension; i++)
+		{
+			for(int j = 0; j < this.dimension; j++)
+			{
+				ret[i][j] = this.theBoard[i][j].toString().charAt(0);
+			}
+		}
+
+		return ret;
 	}
 
 	/*

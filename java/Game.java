@@ -49,8 +49,16 @@ public class Game
 	
 	private void drawBoard()
 	{
-		String board = this.gameBoard.toString();
+		char[][] board = gameBoard.boardToArray();
 		System.out.println(board);
+		
+		for (int i = 0; i < gameBoard.getDimension(); i++)
+		{
+			for (int j = 0; j < gameBoard.getDimension(); j++)
+			{
+				this.buttonGrid[i][j].setText(Character.toString(board[i][j]));
+			}
+		}
 	}
 
 	private class GameListener implements MouseListener
