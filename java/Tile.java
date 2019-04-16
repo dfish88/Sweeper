@@ -22,9 +22,9 @@ public class Tile
 		this.adjacentTo = adjacentTo;
 	}
 
-	public void setRevealed(boolean r)
+	public void reveal()
 	{
-		this.revealed = r;
+		this.revealed = true;
 	}
 
 	public int getAdjacent()
