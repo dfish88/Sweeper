@@ -114,7 +114,8 @@ public class Board
 		Random rand = new Random();
 
 		// Loop dimension times to place mines
-		for(int i = 0; i < this.dimension; i++)
+		int limit = (int)((this.dimension * this.dimension) / 6);
+		for(int i = 0; i < limit; i++)
 		{
 			int randX = rand.nextInt(dimension);
 			int randY = rand.nextInt(dimension);
