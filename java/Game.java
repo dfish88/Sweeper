@@ -50,7 +50,6 @@ public class Game
 	private void drawBoard()
 	{
 		char[][] board = gameBoard.boardToArray();
-		System.out.println(board);
 		
 		for (int i = 0; i < gameBoard.getDimension(); i++)
 		{
