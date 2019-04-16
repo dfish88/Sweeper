@@ -46,81 +46,38 @@ public class Board
 		int mineCount = 0;
 
 		// Check all 8 adjacent tiles for mines
-		for (int direction = 0; direction < 8; direction++)
-		{
-			mineCount += checkAdjacent(x, y, direction);
-		}
-
+                for (int dx = -1; dx < 2; dx++)
+                {
+                        for (int dy = -1; dy < 2; dy++)
+                        {
+                                if (x+dx != 0 && y+dy != 0)
+                                        mineCount += checkTile(x+dx, y+dy, true);
+                        }
+                }
 		return mineCount;
 	}
 
-	/*
-	* Checks for mines adjacent to square (x,y) in direction direction.
-	* and returns either 1 or 0.
-	*/
-	public int checkAdjacent(int x, int y, int direction)
+	public int checkTile(int x, int y, boolean mine)
 	{
 		try
 		{
-			switch(direction)
-			{	
-				// North
-				case 0:
-					if (this.theBoard[x-1][y] instanceof Mine)
-						return 1;
-					break;
-			
-				// North East
-				case 1:	
-					if (this.theBoard[x-1][y+1] instanceof Mine)
-						return 1;
-					break;
-		
-				// East
-				case 2:
-					if (this.theBoard[x][y+1] instanceof Mine)
-						return 1;
-					break;
-
-				// South East 
-				case 3:
-					if (this.theBoard[x+1][y+1] instanceof Mine)
-						return 1;
-					break;
-		
-				// South
-				case 4:
-					if (this.theBoard[x+1][y] instanceof Mine)
-						return 1;
-					break;
-
-				// South West
-				case 5:
-					if (this.theBoard[x+1][y-1] instanceof Mine)
-						return 1;
-					break;
-
-				// West
-				case 6:
-					if (this.theBoard[x][y-1] instanceof Mine)
-						return 1;
-					break;
-
-				// North West
-				case 7:
-					if (this.theBoard[x-1][y-1] instanceof Mine)
-						return 1;
-					break;
-				default:
-					return 0;
+			if (mine)
+			{
+				if (this.theBoard[x][y] instanceof Mine)
+					return 1;
+				return 0;
+			}
+			else
+			{
+				if (this.theBoard[x][y].getAdjacent() == 0 && this.theBoard[x][y].isRevealed() == false)
+					return 1;
+				return 0;
 			}
 		}
-		catch (ArrayIndexOutOfBoundsException e)
+		catch(ArrayIndexOutOfBoundsException e)
 		{
 			return 0;
 		}
-		
-		return 0;
 	}
 
 	/*
@@ -175,11 +132,53 @@ public class Board
 	}
 
 	/*
-	* Reveals a square, used when square is clicked on.
+	* Reveals a square, used when square is clicked on.  If the tile
+	* is adjacent to 0 mines then it also reveals all adjacent 0 tiles.
 	*/
-	public String revealTile(int x, int y)
+	public void revealTile(int x, int y)
 	{
-		this.theBoard[x][y].setRevealed(true);
-		return this.theBoard[x][y].toString();
+		this.theBoard[x][y].reveal();;
+		this.revealAdjacentTiles(x,y);
 	}
-}
+
+	/*
+	* Reveals 0 tiles adjacent to tile at x,y.
+	*/
+	private void revealAdjacentTiles(int x, int y)
+	{
+		// Use a stack to store adjacent values, starting with origin tile
+		Stack<Integer> adjacent = new Stack<>();
+		adjacent.push(y);
+		adjacent.push(x);
+
+		// Loop until stack is empty
+		while (!adjacent.empty())
+		{
+			// Reveal top tile on stack
+			this.theBoard[adjacent.pop()][adjacent.pop()].reveal();
+
+			// Add adjacent 0 tiles to stack
+			this.findAdjacentZero(x, y, adjacent);
+		}
+	}
+
+	private void findAdjacentZero(int x, int y, Stack s)
+	{
+		// Check all 8 adjacent tiles for mines
+                for (int dx = -1; dx < 2; dx++)
+                {
+			for (int dy = -1; dy < 2; dy++)
+			{
+				if (x+dx != 0 && y+dy != 0)
+				{
+					if (this.checkTile(x+dx, y+dy, false) == 1)
+					{
+						s.push(y+dy);
+						s.push(x+dx);
+					}
+				}
+			}
+                }
+	
+	}
+} 

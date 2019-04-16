@@ -42,7 +42,14 @@ public class Game
 
 	public void revealTiles(int x, int y)
 	{
-		this.buttonGrid[x][y].setText(this.gameBoard.revealTile(x,y));
+		this.gameBoard.revealTile(x,y);
+		this.drawBoard();
+	}
+	
+	private void drawBoard()
+	{
+		String board = this.gameBoard.toString();
+		System.out.println(board);
 	}
 
 	private class GameListener implements MouseListener
