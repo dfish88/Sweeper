@@ -175,7 +175,7 @@ public class Board
 	public void revealTile(int x, int y)
 	{
 		this.theBoard[x][y].reveal();
-		if (this.theBoard[x][y].getAdjacent() == 0)
+		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y] instanceof Mine))
 			this.revealAdjacentTiles(x,y);
 	}
 
