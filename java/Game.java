@@ -50,7 +50,7 @@ public class Game
 	private void drawBoard()
 	{
 		String board = this.gameBoard.toString();
-		System.out.println(board);
+		
 	}
 
 	private class GameListener implements MouseListener
