@@ -41,18 +41,16 @@ public class Game
 		{
 			blank = new ImageIcon("../icons/blank.png");
 			zero = new ImageIcon("../icons/0.png");
-			/*
-			one = ImageIO.read(getClass().getResource("../icons/1.png"));
-			two = ImageIO.read(getClass().getResource("../icons/2.png"));
-			three = ImageIO.read(getClass().getResource("../icons/3.png"));
-			four = ImageIO.read(getClass().getResource("../icons/4.png"));
-			five = ImageIO.read(getClass().getResource("../icons/5.png"));
-			six = ImageIO.read(getClass().getResource("../icons/6.png"));
-			seven = ImageIO.read(getClass().getResource("../icons/7.png"));
-			eight = ImageIO.read(getClass().getResource("../icons/8.png"));
-			flag = ImageIO.read(getClass().getResource("../icons/flag.png"));
-			mine = ImageIO.read(getClass().getResource("../icons/mine.png"));
-			*/
+			one = new ImageIcon("../icons/1.png");
+			two = new ImageIcon("../icons/2.png");
+			three = new ImageIcon("../icons/3.png");
+			four = new ImageIcon("../icons/4.png");
+			five = new ImageIcon("../icons/5.png");
+			six = new ImageIcon("../icons/6.png");
+			seven = new ImageIcon("../icons/7.png");
+			eight = new ImageIcon("../icons/8.png");
+			mine = new ImageIcon("../icons/mine.png");
+			flag = new ImageIcon("../icons/flag.png");
 		}
 		catch (Exception e)
 		{
@@ -61,29 +59,32 @@ public class Game
 		}
 	}
 
-	private void buildWindow(int dimension)
+	private void addButton(int x, int y, ImageIcon i)
 	{
 
+		this.buttonGrid[x][y] = new JButton();
+		this.buttonGrid[x][y].putClientProperty("coordinates", new Integer[]{x,y});
+		this.buttonGrid[x][y].addMouseListener(this.listener);	
+
+		JLabel l = new JLabel(i);
+		this.buttonGrid[x][y].setLayout(new BorderLayout());
+		this.buttonGrid[x][y].add(l);
+
+		this.frame.add(this.buttonGrid[x][y], BorderLayout.CENTER);
+	}
+
+	private void buildWindow(int dimension)
+	{
 		for (int i = 0; i < dimension; i++)
                 {
                         for (int j = 0; j < dimension; j++)
                         {
-                                this.buttonGrid[i][j] = new JButton();
-                                this.buttonGrid[i][j].putClientProperty("coordinates", new Integer[]{i,j});
-                                this.buttonGrid[i][j].addMouseListener(this.listener);
-				
-				Image img = this.blank.getImage() ;  
-   				Image newimg = img.getScaledInstance( 500/8, 500/8,  java.awt.Image.SCALE_SMOOTH ) ;  
-   				this.blank = new ImageIcon( newimg );
-
-				this.buttonGrid[i][j].setIcon(this.blank);
-                                this.frame.add(buttonGrid[i][j]);
+				this.addButton(i, j, this.blank);
                         }
-
                 }
 		this.frame.setLayout(new GridLayout(dimension, dimension));
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame.setSize(500,500);
+		this.frame.setSize(400,400);
 		this.frame.setVisible(true);
 		System.out.println(this.gameBoard.toString());
 	}
@@ -109,8 +110,45 @@ public class Game
 		{
 			for (int j = 0; j < gameBoard.getDimension(); j++)
 			{
-				this.buttonGrid[i][j].setText(Character.toString(board[i][j]));
+				this.changeIcon(i,j, board[i][j]);
 			}
+		}
+	}
+
+	private void changeIcon(int x, int y, char tile)
+	{
+		//this.buttonGrid[x][y].setVisible(false);
+		this.frame.remove(this.buttonGrid[x][y]);
+
+		switch(tile)
+		{
+			case 0:
+				this.addButton(x, y, this.zero);
+				break;
+			case 1:
+				this.addButton(x, y, this.one);
+				break;
+			case 2:
+				this.addButton(x, y, this.two);
+				break;
+			case 3:
+				this.addButton(x, y, this.three);
+				break;
+			case 4:
+				this.addButton(x, y, this.four);
+				break;
+			case 5:
+				this.addButton(x, y, this.five);
+				break;
+			case 6:
+				this.addButton(x, y, this.one);
+				break;
+			case 7:
+				this.addButton(x, y, this.one);
+				break;
+			case 8:
+				this.addButton(x, y, this.one);
+				break;
 		}
 	}
 
