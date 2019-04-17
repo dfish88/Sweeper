@@ -35,10 +35,6 @@ public class Game
 		this.buildWindow(dimension);
 	}
 
-	private void resizeIcon(ImageIcon ic)
-	{
-	}
-
 	private void loadImages()
 	{
 		try
@@ -74,6 +70,16 @@ public class Game
 		this.frame.add(this.buttonGrid[x][y]);
 	}
 
+	private void setUpFrame(int dimension)
+	{
+		this.frame.setLayout(new GridLayout(dimension, dimension));
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.pack();
+		this.frame.setResizable(false);
+		this.frame.setVisible(true);
+		System.out.println(this.gameBoard.toStringReveal());
+	}
+
 	private void buildWindow(int dimension)
 	{
 		for (int i = 0; i < dimension; i++)
@@ -83,12 +89,7 @@ public class Game
 				this.addButton(i, j, this.blank);
                         }
                 }
-		this.frame.setLayout(new GridLayout(dimension, dimension));
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame.pack();
-		this.frame.setResizable(false);
-		this.frame.setVisible(true);
-		System.out.println(this.gameBoard.toStringReveal());
+		this.setUpFrame(dimension);
 	}
 
 	public void revealTiles(int x, int y)
@@ -161,11 +162,18 @@ public class Game
 			Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
 
 			if (SwingUtilities.isLeftMouseButton(e))
-				System.out.println("Left Button pressed at: " + coordinates[0] + ", " + coordinates[1]);
+			{
+				// Reveal square clicked on
+				Game.this.revealTiles(coordinates[0], coordinates[1]);
+			}
 			else if (SwingUtilities.isRightMouseButton(e))
-				System.out.println("Right Button pressed at: " + coordinates[0] + ", " + coordinates[1]);
-
-			Game.this.revealTiles(coordinates[0], coordinates[1]);
+			{
+				// Place flag on square if it isn't revealed
+				if (!(Game.this.gameBoard.revealed(coordinates[0], coordinates[1])))
+				{
+					Game.this.buttonGrid[coordinates[0]][coordinates[1]].setIcon(Game.this.flag);
+				}
+			}
 		}
 		
 		public void mousePressed(MouseEvent e) 
