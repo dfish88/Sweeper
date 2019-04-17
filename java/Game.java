@@ -149,8 +149,8 @@ public class Game
 
 	private void placeFlag(int x, int y)
 	{
-		// Place flag on square if it isn't revealed
-		if (!(this.gameBoard.revealed(x, y)))
+		// Place flag on square if it isn't revealed or is a mine
+		if (!(this.gameBoard.revealed(x, y)) || this.gameBoard.mine(x,y))
 		{
 			this.buttonGrid[x][y].setIcon(this.flag);
 		}
