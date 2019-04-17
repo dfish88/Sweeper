@@ -94,13 +94,6 @@ public class Game
 
 	public void revealTiles(int x, int y)
 	{
-		// Clicked on mine!
-		if (this.gameBoard.mine(x,y))
-		{
-			System.out.println("GAME OVER!!!");
-			System.exit(0);
-		}
-
 		this.gameBoard.revealTile(x,y);
 		this.drawBoard();
 	}
@@ -154,6 +147,15 @@ public class Game
 		}
 	}
 
+	private void placeFlag(int x, int y)
+	{
+		// Place flag on square if it isn't revealed
+		if (!(this.gameBoard.revealed(x, y)))
+		{
+			this.buttonGrid[x][y].setIcon(this.flag);
+		}
+	}
+
 	private class GameListener implements MouseListener
 	{
 		public void mouseClicked(MouseEvent e)
@@ -168,11 +170,7 @@ public class Game
 			}
 			else if (SwingUtilities.isRightMouseButton(e))
 			{
-				// Place flag on square if it isn't revealed
-				if (!(Game.this.gameBoard.revealed(coordinates[0], coordinates[1])))
-				{
-					Game.this.buttonGrid[coordinates[0]][coordinates[1]].setIcon(Game.this.flag);
-				}
+				Game.this.placeFlag(coordinates[0], coordinates[1]);
 			}
 		}
 		
