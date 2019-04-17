@@ -35,11 +35,18 @@ public class Game
 		this.buildWindow(dimension);
 	}
 
+	private void resizeIcon(ImageIcon ic)
+	{
+	}
+
 	private void loadImages()
 	{
 		try
 		{
 			blank = new ImageIcon("../icons/blank.png");
+			Image i = blank.getImage();
+			Image newimg = i.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+			blank = new ImageIcon(newimg);
 			zero = new ImageIcon("../icons/0.png");
 			one = new ImageIcon("../icons/1.png");
 			two = new ImageIcon("../icons/2.png");
@@ -65,12 +72,9 @@ public class Game
 		this.buttonGrid[x][y] = new JButton();
 		this.buttonGrid[x][y].putClientProperty("coordinates", new Integer[]{x,y});
 		this.buttonGrid[x][y].addMouseListener(this.listener);	
-
-		JLabel l = new JLabel(i);
-		this.buttonGrid[x][y].setLayout(new BorderLayout());
-		this.buttonGrid[x][y].add(l);
-
-		this.frame.add(this.buttonGrid[x][y], BorderLayout.CENTER);
+		this.buttonGrid[x][y].setIcon(i);
+		this.buttonGrid[x][y].setBorderPainted(false);
+		this.frame.add(this.buttonGrid[x][y]);
 	}
 
 	private void buildWindow(int dimension)
@@ -84,9 +88,9 @@ public class Game
                 }
 		this.frame.setLayout(new GridLayout(dimension, dimension));
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame.setSize(400,400);
+		this.frame.setSize(this.gameBoard.getDimension()*50, this.gameBoard.getDimension()*50);
 		this.frame.setVisible(true);
-		System.out.println(this.gameBoard.toString());
+		System.out.println(this.gameBoard.toStringReveal());
 	}
 
 	public void revealTiles(int x, int y)
@@ -117,37 +121,36 @@ public class Game
 
 	private void changeIcon(int x, int y, char tile)
 	{
-		//this.buttonGrid[x][y].setVisible(false);
-		this.frame.remove(this.buttonGrid[x][y]);
-
 		switch(tile)
 		{
-			case 0:
-				this.addButton(x, y, this.zero);
+			case '0':
+				this.buttonGrid[x][y].setIcon(this.zero);
 				break;
-			case 1:
-				this.addButton(x, y, this.one);
+			case '1':
+				this.buttonGrid[x][y].setIcon(this.one);
 				break;
-			case 2:
-				this.addButton(x, y, this.two);
+			case '2':
+				this.buttonGrid[x][y].setIcon(this.two);
 				break;
-			case 3:
-				this.addButton(x, y, this.three);
+			case '3':
+				this.buttonGrid[x][y].setIcon(this.three);
 				break;
-			case 4:
+			case '4':
 				this.addButton(x, y, this.four);
 				break;
-			case 5:
+			case '5':
 				this.addButton(x, y, this.five);
 				break;
-			case 6:
+			case '6':
 				this.addButton(x, y, this.one);
 				break;
-			case 7:
+			case '7':
 				this.addButton(x, y, this.one);
 				break;
-			case 8:
+			case '8':
 				this.addButton(x, y, this.one);
+				break;
+			default:
 				break;
 		}
 	}
