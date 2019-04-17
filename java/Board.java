@@ -27,6 +27,11 @@ public class Board
 		return this.theBoard[x][y] instanceof Mine;
 	}
 
+	public boolean revealed(int x, int y)
+	{
+		return this.theBoard[x][y].isRevealed();
+	}
+
 	/*
 	* Builds the board
 	*/
