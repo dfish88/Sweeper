@@ -44,11 +44,17 @@ public class Game
 		try
 		{
 			blank = new ImageIcon("../icons/blank.png");
-			Image i = blank.getImage();
-			Image newimg = i.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
-			blank = new ImageIcon(newimg);
+			//Image i = blank.getImage();
+			//Image newimg = i.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+			//blank = new ImageIcon(newimg);
 			zero = new ImageIcon("../icons/0.png");
+			//i = zero.getImage();
+			//newimg = i.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+			//zero = new ImageIcon(newimg);
 			one = new ImageIcon("../icons/1.png");
+			//i = one.getImage();
+			//newimg = i.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH);
+			//one = new ImageIcon(newimg);
 			two = new ImageIcon("../icons/2.png");
 			three = new ImageIcon("../icons/3.png");
 			four = new ImageIcon("../icons/4.png");
@@ -73,7 +79,7 @@ public class Game
 		this.buttonGrid[x][y].putClientProperty("coordinates", new Integer[]{x,y});
 		this.buttonGrid[x][y].addMouseListener(this.listener);	
 		this.buttonGrid[x][y].setIcon(i);
-		this.buttonGrid[x][y].setBorderPainted(false);
+		this.buttonGrid[x][y].setBorder(null);
 		this.frame.add(this.buttonGrid[x][y]);
 	}
 
@@ -88,7 +94,8 @@ public class Game
                 }
 		this.frame.setLayout(new GridLayout(dimension, dimension));
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame.setSize(this.gameBoard.getDimension()*50, this.gameBoard.getDimension()*50);
+		//this.frame.setSize(this.gameBoard.getDimension()*50, this.gameBoard.getDimension()*50);
+		this.frame.pack();
 		this.frame.setVisible(true);
 		System.out.println(this.gameBoard.toStringReveal());
 	}
