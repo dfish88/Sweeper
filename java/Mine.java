@@ -7,8 +7,10 @@ public class Mine extends Tile
 
 	public String toString()
 	{
-		
-		return " ";
+		if (super.isRevealed())
+			return "m";
+		else
+			return " ";
 	}
 }
 

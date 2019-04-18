@@ -146,6 +146,8 @@ public class Game
 			case '8':
 				this.addButton(x, y, this.one);
 				break;
+			case 'm':
+				this.buttonGrid[x][y].setIcon(this.mine);
 			default:
 				break;
 		}
@@ -157,6 +159,7 @@ public class Game
 		if (!(this.gameBoard.revealed(x, y)) || this.gameBoard.mine(x,y))
 		{
 			this.buttonGrid[x][y].setIcon(this.flag);
+			this.gameBoard.setFlag(x,y);
 		}
 	}
 
@@ -178,9 +181,8 @@ public class Game
 				// Check if mine was clicked on
 				if (Game.this.gameBoard.mine(coordinates[0], coordinates[1]))
 					Game.this.gameOver(coordinates[0], coordinates[1]);
-
-				// Reveal square clicked on
-				Game.this.revealTiles(coordinates[0], coordinates[1]);
+				else
+					Game.this.revealTiles(coordinates[0], coordinates[1]);
 			}
 			else if (SwingUtilities.isRightMouseButton(e))
 			{

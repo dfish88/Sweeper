@@ -17,6 +17,16 @@ public class Board
 		buildBoard();
 	}
 
+	public void setFlag(int x, int y)
+	{
+		this.theBoard[x][y].setFlag();
+	}
+
+	public boolean getFlag(int x, int y)
+	{
+		return this.theBoard[x][y].getFlag();
+	}
+
 	public int getDimension()
 	{
 		return this.dimension;
