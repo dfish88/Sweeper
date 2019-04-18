@@ -163,6 +163,7 @@ public class Game
 	private void gameOver(int x, int y)
 	{
 		this.buttonGrid[x][y].setIcon(this.boom);
+		this.frame.setEnabled(false);
 	}
 
 	private class GameListener implements MouseListener
