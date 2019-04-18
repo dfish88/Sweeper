@@ -6,10 +6,13 @@ public class Tile
 	// Count how many mines this tile touches
 	private int adjacentTo;
 
+	private boolean flag;
+
 	public Tile(int adjacentTo)
 	{
 		this.adjacentTo = adjacentTo;
 		this.revealed = false;
+		this.flag = false;
 	}
 
 	public Tile(Tile toCopy)
@@ -43,5 +46,15 @@ public class Tile
 	public boolean isRevealed()
 	{
 		return this.revealed;
+	}
+
+	public void setFlag()
+	{
+		this.flag = true;
+	}
+
+	public boolean getFlag()
+	{
+		return this.flag;
 	}
 }
