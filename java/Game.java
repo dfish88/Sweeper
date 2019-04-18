@@ -22,6 +22,8 @@ public class Game
 	private ImageIcon eight;
 	private ImageIcon flag;
 	private ImageIcon mine;
+	private ImageIcon boom;
+	private ImageIcon wrong;
 
 	public Game(int dimension)
 	{
@@ -51,6 +53,8 @@ public class Game
 			eight = new ImageIcon("../icons/8.png");
 			mine = new ImageIcon("../icons/mine.png");
 			flag = new ImageIcon("../icons/flag.png");
+			boom = new ImageIcon("../icons/boom.png");
+			wrong = new ImageIcon("../icons/wrong.png");
 		}
 		catch (Exception e)
 		{
@@ -158,16 +162,7 @@ public class Game
 
 	private void gameOver(int x, int y)
 	{
-		this.buttonGrid[x][y].setIcon(this.mine);
-		
-		for (int i = 0; i < this.gameBoard.getDimension(); i++)
-		{
-			for (int j = 0; j < this.gameBoard.getDimension(); j++)
-			{
-				this.buttonGrid[i][j].removeMouseListener(this.buttonGrid[i][j].getMouseListeners()[0]);
-			}
-
-		}
+		this.buttonGrid[x][y].setIcon(this.boom);
 	}
 
 	private class GameListener implements MouseListener
