@@ -1,5 +1,11 @@
 public class Tile
 {
+	enum tileType
+	{
+		ADJACENT,
+		MINE
+	}
+
 	// has the tile been clicked on?
 	private boolean revealed;
 
@@ -7,6 +13,7 @@ public class Tile
 	private int adjacentTo;
 
 	private boolean flag;
+	private char type;
 
 	public Tile(int adjacentTo)
 	{
