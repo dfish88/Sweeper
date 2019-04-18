@@ -156,6 +156,20 @@ public class Game
 		}
 	}
 
+	private void gameOver(int x, int y)
+	{
+		this.buttonGrid[x][y].setIcon(this.mine);
+		
+		for (int i = 0; i < this.gameBoard.getDimension(); i++)
+		{
+			for (int j = 0; j < this.gameBoard.getDimension(); j++)
+			{
+				this.buttonGrid[i][j].removeMouseListener(this.buttonGrid[i][j].getMouseListeners()[0]);
+			}
+
+		}
+	}
+
 	private class GameListener implements MouseListener
 	{
 		public void mouseClicked(MouseEvent e)
@@ -165,6 +179,10 @@ public class Game
 
 			if (SwingUtilities.isLeftMouseButton(e))
 			{
+				// Check if mine was clicked on
+				if (Game.this.gameBoard.mine(coordinates[0], coordinates[1]))
+					Game.this.gameOver(coordinates[0], coordinates[1]);
+
 				// Reveal square clicked on
 				Game.this.revealTiles(coordinates[0], coordinates[1]);
 			}
