@@ -34,7 +34,7 @@ public class Board
 
 	public boolean mine(int x, int y)
 	{
-		return this.theBoard[x][y] instanceof Mine;
+		return (this.theBoard[x][y].getType() == Tile.tileType.MINE);
 	}
 
 	public boolean revealed(int x, int y)
@@ -60,8 +60,8 @@ public class Board
                 {
                         for (int j = 0; j < this.dimension; j++)
                         {       
-				if (!(this.theBoard[i][j] instanceof Mine))
-					this.theBoard[i][j] = new Tile(calculateAdjacent(i,j));
+				if (this.theBoard[i][j] == null || this.theBoard[i][j].getType() != Tile.tileType.MINE)
+					this.theBoard[i][j] = new Tile(calculateAdjacent(i,j), Tile.tileType.ADJACENT);
                         }
                 }
 	}
@@ -87,18 +87,24 @@ public class Board
 		{
 			if (mine)
 			{
-				if (this.theBoard[x][y] instanceof Mine)
+				if (this.theBoard[x][y].getType() == Tile.tileType.MINE)
 					return 1;
-				return 0;
+				else
+					return 0;
 			}
 			else
 			{
 				if (this.theBoard[x][y].getAdjacent() == 0 && this.theBoard[x][y].isRevealed() == false)
 					return 1;
-				return 0;
+				else
+					return 0;
 			}
 		}
 		catch(ArrayIndexOutOfBoundsException e)
+		{
+			return 0;
+		}
+		catch(NullPointerException e)
 		{
 			return 0;
 		}
@@ -120,7 +126,7 @@ public class Board
 			int randX = rand.nextInt(dimension);
 			int randY = rand.nextInt(dimension);
 			
-			this.theBoard[randX][randY] = new Mine();
+			this.theBoard[randX][randY] = new Tile(0, Tile.tileType.MINE);
 		}
 	}
 
@@ -130,33 +136,21 @@ public class Board
 	*/
 	public String toString()
 	{
-		String rep = "";
-		for (int i = 0; i < this.dimension; i ++)
-		{
-			for (int j = 0; j < this.dimension; j++)
-			{
-				rep = rep + this.theBoard[i][j].toString();
-			}
-				rep = rep + "\n";
-		}
-		return rep;
+		return "";
 	}
 
 	public String toStringReveal()
 	{
-		String rep = "";
-		for (int i = 0; i < this.dimension; i ++)
+		String b = "";
+		for (int i = 0; i < this.dimension; i++)
 		{
-			for (int j = 0; j < this.dimension; j++)
+			for(int j = 0; j < this.dimension; j++)
 			{
-				if (this.theBoard[i][j] instanceof Mine)
-					rep = rep + "M";
-				else
-					rep = rep + Integer.toString(this.theBoard[i][j].getAdjacent());
+				b = b + this.theBoard[i][j].toString();
 			}
-				rep = rep + "\n";
+			b = b + "\n";
 		}
-		return rep;
+		return b;
 	}
 
 	public char[][] boardToArray()
@@ -181,7 +175,7 @@ public class Board
 	public void revealTile(int x, int y)
 	{
 		this.theBoard[x][y].reveal();
-		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y] instanceof Mine))
+		if (this.theBoard[x][y].getAdjacent() == 0 && this.theBoard[x][y].getType() != Tile.tileType.MINE)
 			this.revealAdjacentTiles(x,y);
 	}
 

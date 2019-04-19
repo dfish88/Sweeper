@@ -13,13 +13,14 @@ public class Tile
 	private int adjacentTo;
 
 	private boolean flag;
-	private char type;
+	private tileType type;
 
-	public Tile(int adjacentTo)
+	public Tile(int adjacentTo, tileType t)
 	{
 		this.adjacentTo = adjacentTo;
 		this.revealed = false;
 		this.flag = false;
+		this.type = t;
 	}
 
 	public Tile(Tile toCopy)
@@ -42,14 +43,6 @@ public class Tile
 		return this.adjacentTo;
 	}
 
-	public String toString()
-	{
-		if (this.revealed)
-			return Integer.toString(this.adjacentTo);
-		else
-			return " ";
-	}
-
 	public boolean isRevealed()
 	{
 		return this.revealed;
@@ -63,5 +56,28 @@ public class Tile
 	public boolean getFlag()
 	{
 		return this.flag;
+	}
+
+	public tileType getType()
+	{
+		return this.type;
+	}
+
+	public void setType(tileType t)
+	{
+		this.type = t;
+	}
+
+	public String toString()
+	{
+		if (this.revealed)
+		{
+			if (this.type == tileType.ADJACENT)
+				return Integer.toString(this.adjacentTo);
+			else
+				return "m";
+		}
+		else
+			return " ";
 	}
 }
