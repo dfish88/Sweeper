@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.imageio.ImageIO;
+import java.util.*;
 
 public class Game
 {
@@ -9,21 +10,7 @@ public class Game
 	private JButton buttonGrid[][];
 	private Board gameBoard;
 	private GameListener listener;
-
-	private ImageIcon blank;
-	private ImageIcon zero;
-	private ImageIcon one;
-	private ImageIcon two;
-	private ImageIcon three;
-	private ImageIcon four;
-	private ImageIcon five;
-	private ImageIcon six;
-	private ImageIcon seven;
-	private ImageIcon eight;
-	private ImageIcon flag;
-	private ImageIcon mine;
-	private ImageIcon boom;
-	private ImageIcon wrong;
+	private HashMap<Character, ImageIcon> icons = new HashMap<>();
 
 	public Game(int dimension)
 	{
@@ -41,20 +28,20 @@ public class Game
 	{
 		try
 		{
-			blank = new ImageIcon("../icons/blank.png");
-			zero = new ImageIcon("../icons/0.png");
-			one = new ImageIcon("../icons/1.png");
-			two = new ImageIcon("../icons/2.png");
-			three = new ImageIcon("../icons/3.png");
-			four = new ImageIcon("../icons/4.png");
-			five = new ImageIcon("../icons/5.png");
-			six = new ImageIcon("../icons/6.png");
-			seven = new ImageIcon("../icons/7.png");
-			eight = new ImageIcon("../icons/8.png");
-			mine = new ImageIcon("../icons/mine.png");
-			flag = new ImageIcon("../icons/flag.png");
-			boom = new ImageIcon("../icons/boom.png");
-			wrong = new ImageIcon("../icons/wrong.png");
+			icons.put(' ', new ImageIcon("../icons/blank.png"));
+			icons.put('0', new ImageIcon("../icons/0.png"));
+			icons.put('1', new ImageIcon("../icons/1.png"));
+			icons.put('2', new ImageIcon("../icons/2.png"));
+			icons.put('3', new ImageIcon("../icons/3.png"));
+			icons.put('4', new ImageIcon("../icons/4.png"));
+			icons.put('5', new ImageIcon("../icons/5.png"));
+			icons.put('6', new ImageIcon("../icons/6.png"));
+			icons.put('7', new ImageIcon("../icons/7.png"));
+			icons.put('8', new ImageIcon("../icons/8.png"));
+			icons.put('m', new ImageIcon("../icons/mine.png"));
+			icons.put('f', new ImageIcon("../icons/flag.png"));
+			icons.put('b', new ImageIcon("../icons/boom.png"));
+			icons.put('w', new ImageIcon("../icons/wrong.png"));
 		}
 		catch (Exception e)
 		{
@@ -90,7 +77,7 @@ public class Game
                 {
                         for (int j = 0; j < dimension; j++)
                         {
-				this.addButton(i, j, this.blank);
+				this.addButton(i, j, this.icons.get(' '));
                         }
                 }
 		this.setUpFrame(dimension);
@@ -117,40 +104,7 @@ public class Game
 
 	private void changeIcon(int x, int y, char tile)
 	{
-		switch(tile)
-		{
-			case '0':
-				this.buttonGrid[x][y].setIcon(this.zero);
-				break;
-			case '1':
-				this.buttonGrid[x][y].setIcon(this.one);
-				break;
-			case '2':
-				this.buttonGrid[x][y].setIcon(this.two);
-				break;
-			case '3':
-				this.buttonGrid[x][y].setIcon(this.three);
-				break;
-			case '4':
-				this.addButton(x, y, this.four);
-				break;
-			case '5':
-				this.addButton(x, y, this.five);
-				break;
-			case '6':
-				this.addButton(x, y, this.one);
-				break;
-			case '7':
-				this.addButton(x, y, this.one);
-				break;
-			case '8':
-				this.addButton(x, y, this.one);
-				break;
-			case 'm':
-				this.buttonGrid[x][y].setIcon(this.mine);
-			default:
-				break;
-		}
+		this.buttonGrid[x][y].setIcon(this.icons.get(tile));
 	}
 
 	private void placeFlag(int x, int y)
@@ -158,14 +112,14 @@ public class Game
 		// Place flag on square if it isn't revealed or is a mine
 		if (!(this.gameBoard.revealed(x, y)) || this.gameBoard.mine(x,y))
 		{
-			this.buttonGrid[x][y].setIcon(this.flag);
+			this.buttonGrid[x][y].setIcon(this.icons.get("f"));
 			this.gameBoard.setFlag(x,y);
 		}
 	}
 
 	private void gameOver(int x, int y)
 	{
-		this.buttonGrid[x][y].setIcon(this.boom);
+		this.buttonGrid[x][y].setIcon(this.icons.get("b"));
 		this.frame.setEnabled(false);
 	}
 
