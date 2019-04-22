@@ -148,7 +148,8 @@ public class Board
 
 	public Stack<Integer> getChanges()
 	{
-		Stack<Integer> ret = (Stack<Integer>)this.changes.clone();
+		Stack<Integer> ret = new Stack<>();
+		ret.addAll(this.changes); 
 		this.changes.clear();
 		return ret;
 	}

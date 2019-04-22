@@ -102,13 +102,12 @@ public class Game
 			x = changes.pop();
 			y = changes.pop();
 			c = Character.forDigit(changes.pop(), 10);
-			this.changeIcon(x,y,(char)c);
+			this.buttonGrid[x][y].setIcon(this.icons.get((char)c));
 		}	
 	}
 
 	private void changeIcon(int x, int y, char tile)
 	{
-		this.buttonGrid[x][y].setIcon(this.icons.get(tile));
 	}
 
 	private void placeFlag(int x, int y)
