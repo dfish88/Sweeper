@@ -91,15 +91,19 @@ public class Game
 	
 	private void drawBoard()
 	{
-		char[][] board = gameBoard.boardToArray();
+		Stack<Integer> changes = this.gameBoard.getChanges();
 		
-		for (int i = 0; i < gameBoard.getDimension(); i++)
+		int x;
+		int y;
+		int c;
+
+		while(!(changes.empty()))
 		{
-			for (int j = 0; j < gameBoard.getDimension(); j++)
-			{
-				this.changeIcon(i,j, board[i][j]);
-			}
-		}
+			x = changes.pop();
+			y = changes.pop();
+			c = Character.forDigit(changes.pop(), 10);
+			this.changeIcon(x,y,(char)c);
+		}	
 	}
 
 	private void changeIcon(int x, int y, char tile)

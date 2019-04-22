@@ -5,6 +5,7 @@ public class Board
 { 
 	private Tile[][] theBoard; 
 	private int dimension;
+	private Stack<Integer> changes;
 
 	// Used to calculate coordinates of all 8 adjacent tiles of
 	// a particular tile
@@ -15,6 +16,7 @@ public class Board
 		this.dimension = dimension;
 		theBoard = new Tile[this.dimension][this.dimension];		
 		buildBoard();
+		this.changes = new Stack<>();
 	}
 
 	public void setFlag(int x, int y)
@@ -144,18 +146,10 @@ public class Board
 		return "";
 	}
 
-	public char[][] boardToArray()
+	public Stack<Integer> getChanges()
 	{
-		char [][] ret = new char[this.dimension][this.dimension];
-		
-		for (int i = 0; i < this.dimension; i++)
-		{
-			for(int j = 0; j < this.dimension; j++)
-			{
-				ret[i][j] = this.theBoard[i][j].toChar();
-			}
-		}
-
+		Stack<Integer> ret = (Stack<Integer>)this.changes.clone();
+		this.changes.clear();
 		return ret;
 	}
 
@@ -166,6 +160,9 @@ public class Board
 	public void revealTile(int x, int y)
 	{
 		this.theBoard[x][y].reveal();
+		this.changes.push(this.theBoard[x][y].getAdjacent());
+		this.changes.push(y);
+		this.changes.push(x);
 		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y].isMine())) 
 			this.revealAdjacentTiles(x,y);
 	}
@@ -191,6 +188,10 @@ public class Board
 			// Reveal top tile on stack
 			this.theBoard[currentX][currentY].reveal();
 
+			this.changes.push(this.theBoard[currentX][currentY].getAdjacent());
+			this.changes.push(currentY);
+			this.changes.push(currentX);
+
 			// Add adjacent 0 tiles to stack
 			this.findAdjacentZero(currentX, currentY, adjacent);
 		}
@@ -211,6 +212,9 @@ public class Board
 				try
 				{
 					this.theBoard[x + this.delta[i]][y + this.delta[i+1]].reveal();
+					this.changes.push(this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getAdjacent());
+					this.changes.push(y + this.delta[i+1]);
+					this.changes.push(x + this.delta[i]);
 				}
 				catch(ArrayIndexOutOfBoundsException e)
 				{
