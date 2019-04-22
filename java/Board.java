@@ -208,11 +208,12 @@ public class Board
 				s.push(y + this.delta[i+1]);
 				s.push(x + this.delta[i]);
 			}
+			// The non 0 edges of the 0 area are convered in this case
 			else
 			{
 				try
 				{
-					this.theBoard[x + this.delta[i]][y + this.delta[i+1]].reveal();
+					this.theBoard[x + this.delta[i]][y + this.delta[y+1]].reveal();
 					this.changes.push(this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getAdjacent());
 					this.changes.push(y + this.delta[i+1]);
 					this.changes.push(x + this.delta[i]);
