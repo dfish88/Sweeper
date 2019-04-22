@@ -1,31 +1,16 @@
 public class Tile
 {
-	enum tileType
-	{
-		ADJACENT,
-		MINE
-	}
-
-	// has the tile been clicked on?
 	private boolean revealed;
-
-	// Count how many mines this tile touches
 	private int adjacentTo;
-
 	private boolean flag;
-	private tileType type;
+	private boolean mine;
 
-	public Tile(int adjacentTo, tileType t)
+	public Tile(int adjacentTo, boolean mine)
 	{
 		this.adjacentTo = adjacentTo;
 		this.revealed = false;
 		this.flag = false;
-		this.type = t;
-	}
-
-	public Tile(Tile toCopy)
-	{
-		this.adjacentTo = toCopy.getAdjacent();
+		this.mine = mine;
 	}
 
 	public void setAdjacent(int adjacentTo)
@@ -58,26 +43,28 @@ public class Tile
 		return this.flag;
 	}
 
-	public tileType getType()
+	public void setMine()
 	{
-		return this.type;
+		this.mine = true;
 	}
 
-	public void setType(tileType t)
+	public boolean isMine()
 	{
-		this.type = t;
+		return this.mine;
 	}
 
-	public String toString()
+	public char toChar()
 	{
 		if (this.revealed)
 		{
-			if (this.type == tileType.ADJACENT)
-				return Integer.toString(this.adjacentTo);
-			else
-				return "m";
+			return Character.forDigit(this.adjacentTo, 10);
 		}
 		else
-			return " ";
+		{
+			if (this.flag)
+				return 'f';
+			else
+				return ' ';
+		}
 	}
 }

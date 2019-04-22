@@ -34,7 +34,7 @@ public class Board
 
 	public boolean mine(int x, int y)
 	{
-		return (this.theBoard[x][y].getType() == Tile.tileType.MINE);
+		return this.theBoard[x][y].isMine();
 	}
 
 	public boolean revealed(int x, int y)
@@ -60,8 +60,8 @@ public class Board
                 {
                         for (int j = 0; j < this.dimension; j++)
                         {       
-				if (this.theBoard[i][j] == null || this.theBoard[i][j].getType() != Tile.tileType.MINE)
-					this.theBoard[i][j] = new Tile(calculateAdjacent(i,j), Tile.tileType.ADJACENT);
+				if (this.theBoard[i][j] == null)
+					this.theBoard[i][j] = new Tile(calculateAdjacent(i,j), false);
                         }
                 }
 	}
@@ -87,7 +87,7 @@ public class Board
 		{
 			if (mine)
 			{
-				if (this.theBoard[x][y].getType() == Tile.tileType.MINE)
+				if (this.theBoard[x][y].isMine())
 					return 1;
 				else
 					return 0;
@@ -126,7 +126,7 @@ public class Board
 			int randX = rand.nextInt(dimension);
 			int randY = rand.nextInt(dimension);
 			
-			this.theBoard[randX][randY] = new Tile(0, Tile.tileType.MINE);
+			this.theBoard[randX][randY] = new Tile(0, true);
 		}
 	}
 
@@ -141,16 +141,7 @@ public class Board
 
 	public String toStringReveal()
 	{
-		String b = "";
-		for (int i = 0; i < this.dimension; i++)
-		{
-			for(int j = 0; j < this.dimension; j++)
-			{
-				b = b + this.theBoard[i][j].toString();
-			}
-			b = b + "\n";
-		}
-		return b;
+		return "";
 	}
 
 	public char[][] boardToArray()
@@ -161,7 +152,7 @@ public class Board
 		{
 			for(int j = 0; j < this.dimension; j++)
 			{
-				ret[i][j] = this.theBoard[i][j].toString().charAt(0);
+				ret[i][j] = this.theBoard[i][j].toChar();
 			}
 		}
 
@@ -175,7 +166,7 @@ public class Board
 	public void revealTile(int x, int y)
 	{
 		this.theBoard[x][y].reveal();
-		if (this.theBoard[x][y].getAdjacent() == 0 && this.theBoard[x][y].getType() != Tile.tileType.MINE)
+		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y].isMine())) 
 			this.revealAdjacentTiles(x,y);
 	}
 
