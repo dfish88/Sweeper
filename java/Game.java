@@ -126,6 +126,7 @@ public class Game
 		this.buttonGrid[x][y].setIcon(this.icons.get('b'));
 		this.frame.setEnabled(false);
 		this.revealMines();
+		this.revealFlags();
 	}
 
 	private void revealMines()
@@ -140,6 +141,21 @@ public class Game
 			y = mines.pop();
 		
 			this.buttonGrid[x][y].setIcon(this.icons.get('m'));
+		}
+	}
+
+	private void revealFlags()
+	{
+		Stack<Integer> wrongs = this.gameBoard.getFlags();
+		int x;
+		int y;
+	
+		while(!(wrongs.isEmpty()))
+		{
+			x = wrongs.pop();
+			y = wrongs.pop();
+			
+			this.buttonGrid[x][y].setIcon(this.icons.get('w'));
 		}
 	}
 
