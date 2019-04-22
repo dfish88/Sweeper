@@ -122,8 +122,25 @@ public class Game
 
 	private void gameOver(int x, int y)
 	{
+		this.gameBoard.revealTile(x,y);
 		this.buttonGrid[x][y].setIcon(this.icons.get('b'));
 		this.frame.setEnabled(false);
+		this.revealMines();
+	}
+
+	private void revealMines()
+	{
+		Stack<Integer> mines = this.gameBoard.getMines();
+		int x;
+		int y;
+
+		while(!(mines.isEmpty()))
+		{
+			x = mines.pop();
+			y = mines.pop();
+		
+			this.buttonGrid[x][y].setIcon(this.icons.get('m'));
+		}
 	}
 
 	private class GameListener implements MouseListener

@@ -224,4 +224,21 @@ public class Board
 			}
 		}
 	}
+
+	public Stack<Integer> getMines()
+	{
+		Stack<Integer> stack = new Stack<>();
+		for (int x = 0; x < this.dimension; x++)
+		{
+			for (int y = 0; y < this.dimension; y++)
+			{
+				if (!(this.theBoard[x][y].isRevealed()) && this.theBoard[x][y].isMine())
+				{
+					stack.push(y);
+					stack.push(x);
+				}	
+			}
+		}
+		return stack;
+	}
 } 
