@@ -69,7 +69,7 @@ public class Game
 	{
 		this.panel.setLayout(new GridLayout(dimension, dimension));
 		this.top.setBackground(Color.LIGHT_GRAY);
-		this.top.setPreferredSize(new Dimension(4*50,50));
+		this.top.setPreferredSize(new Dimension(this.gameBoard.getDimension()*50,50));
 		this.frame.add(this.top, BorderLayout.PAGE_START);
 		this.frame.add(this.panel, BorderLayout.CENTER);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
