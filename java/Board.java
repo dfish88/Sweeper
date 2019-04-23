@@ -26,7 +26,7 @@ public class Board
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
-				if (this.theBoard[x][y].isRevealed() || this.theBoard[x][y].getFlag())
+				if (this.theBoard[x][y].isRevealed() || this.theBoard[x][y].getFlag() || this.theBoard[x][y].isMine())
 				{
 					this.changes.push((int)' ');
 					this.changes.push(y);
