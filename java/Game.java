@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.imageio.ImageIO;
@@ -9,6 +10,7 @@ public class Game
 	private JFrame frame;
 	private JPanel panel;
 	private JPanel top;
+	private JButton restart;
 	private JButton buttonGrid[][];
 	private Board gameBoard;
 	private GameListener listener;
@@ -24,6 +26,7 @@ public class Game
 		this.panel = new JPanel();
 		this.top = new JPanel();
 		this.buttonGrid = new JButton[dimension][dimension];
+		this.restart = new JButton("Restart?");
 
 		this.buildWindow(dimension);
 	}
@@ -69,7 +72,10 @@ public class Game
 	{
 		this.panel.setLayout(new GridLayout(dimension, dimension));
 		this.top.setBackground(Color.LIGHT_GRAY);
+		this.restart.setBackground(Color.LIGHT_GRAY);
+		this.restart.setBorder(new LineBorder(Color.BLACK));
 		this.top.setPreferredSize(new Dimension(this.gameBoard.getDimension()*50,50));
+		this.top.add(this.restart);
 		this.frame.add(this.top, BorderLayout.PAGE_START);
 		this.frame.add(this.panel, BorderLayout.CENTER);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

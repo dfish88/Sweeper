@@ -19,6 +19,13 @@ public class Board
 		this.changes = new Stack<>();
 	}
 
+	public void restart()
+	{
+		theBoard = new Tile[this.dimension][this.dimension];		
+		buildBoard();
+		this.changes = new Stack<>();
+	}
+
 	public void setFlag(int x, int y)
 	{
 		this.theBoard[x][y].setFlag();
