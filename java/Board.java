@@ -260,4 +260,22 @@ public class Board
 		}
 		return stack;
 	}
+
+	public boolean checkForWin()
+	{
+		boolean win = true;
+
+		for (int x = 0; x < this.dimension; x++)
+		{
+			for (int y = 0; y < this.dimension; y++)
+			{
+				if(!(this.theBoard[x][y].isRevealed()) && !(this.theBoard[x][y].isMine()))
+				{
+					win = false;
+					break;
+				}
+			}
+		}
+		return win;
+	}
 } 

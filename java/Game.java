@@ -86,6 +86,9 @@ public class Game
 	{
 		this.gameBoard.revealTile(x,y);
 		this.drawBoard();
+		
+		if(this.gameBoard.checkForWin())
+			this.frame.setEnabled(false);
 	}
 	
 	private void drawBoard()
