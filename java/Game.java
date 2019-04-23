@@ -7,6 +7,8 @@ import java.util.*;
 public class Game
 {
 	private JFrame frame;
+	private JPanel panel;
+	private JPanel top;
 	private JButton buttonGrid[][];
 	private Board gameBoard;
 	private GameListener listener;
@@ -19,6 +21,8 @@ public class Game
 
 		this.listener = new GameListener();
 		this.frame = new JFrame("Mine Sweeper!");
+		this.panel = new JPanel();
+		this.top = new JPanel();
 		this.buttonGrid = new JButton[dimension][dimension];
 
 		this.buildWindow(dimension);
@@ -58,12 +62,16 @@ public class Game
 		this.buttonGrid[x][y].addMouseListener(this.listener);	
 		this.buttonGrid[x][y].setIcon(i);
 		this.buttonGrid[x][y].setBorder(null);
-		this.frame.add(this.buttonGrid[x][y]);
+		this.panel.add(this.buttonGrid[x][y]);
 	}
 
-	private void setUpFrame(int dimension)
+	private void setUpPanel(int dimension)
 	{
-		this.frame.setLayout(new GridLayout(dimension, dimension));
+		this.panel.setLayout(new GridLayout(dimension, dimension));
+		this.top.setBackground(Color.LIGHT_GRAY);
+		this.top.setPreferredSize(new Dimension(4*50,50));
+		this.frame.add(this.top, BorderLayout.PAGE_START);
+		this.frame.add(this.panel, BorderLayout.CENTER);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.pack();
 		this.frame.setResizable(false);
@@ -79,7 +87,7 @@ public class Game
 				this.addButton(i, j, this.icons.get(' '));
                         }
                 }
-		this.setUpFrame(dimension);
+		this.setUpPanel(dimension);
 	}
 
 	public void revealTiles(int x, int y)
