@@ -74,6 +74,7 @@ public class Game
 		this.top.setBackground(Color.LIGHT_GRAY);
 		this.restart.setBackground(Color.LIGHT_GRAY);
 		this.restart.setBorder(new LineBorder(Color.BLACK));
+		this.restart.addMouseListener(this.listener);
 		this.top.setPreferredSize(new Dimension(this.gameBoard.getDimension()*50,50));
 		this.top.add(this.restart);
 		this.frame.add(this.top, BorderLayout.PAGE_START);
@@ -109,6 +110,8 @@ public class Game
 	{
 		Stack<Integer> changes = this.gameBoard.getChanges();
 		
+		System.out.println(changes);
+
 		int x;
 		int y;
 		int c;
@@ -117,13 +120,10 @@ public class Game
 		{
 			x = changes.pop();
 			y = changes.pop();
-			c = Character.forDigit(changes.pop(), 10);
+			c = changes.pop();
+			System.out.println(c);
 			this.buttonGrid[x][y].setIcon(this.icons.get((char)c));
 		}	
-	}
-
-	private void changeIcon(int x, int y, char tile)
-	{
 	}
 
 	private void placeFlag(int x, int y)
@@ -175,11 +175,24 @@ public class Game
 		}
 	}
 
+	private void restart()
+	{
+		this.gameBoard.restart();
+		this.drawBoard();
+	}
+
 	private class GameListener implements MouseListener
 	{
 		public void mouseClicked(MouseEvent e)
 		{
 			JButton button = (JButton) e.getSource();
+
+			if (button.equals(Game.this.restart))
+			{
+				Game.this.restart();
+				return;
+			}
+
 			Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
 
 			if (SwingUtilities.isLeftMouseButton(e))

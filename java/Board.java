@@ -21,9 +21,22 @@ public class Board
 
 	public void restart()
 	{
+		this.changes.clear();
+		for (int x = 0; x < this.dimension; x++)
+		{
+			for (int y = 0; y < this.dimension; y++)
+			{
+				if (this.theBoard[x][y].isRevealed() || this.theBoard[x][y].getFlag())
+				{
+					this.changes.push((int)' ');
+					this.changes.push(y);
+					this.changes.push(x);
+				}
+			}
+		}
+
 		theBoard = new Tile[this.dimension][this.dimension];		
 		buildBoard();
-		this.changes = new Stack<>();
 	}
 
 	public void setFlag(int x, int y)
@@ -168,7 +181,7 @@ public class Board
 	public void revealTile(int x, int y)
 	{
 		this.theBoard[x][y].reveal();
-		this.changes.push(this.theBoard[x][y].getAdjacent());
+		this.changes.push(this.theBoard[x][y].getAdjacent() + '0');
 		this.changes.push(y);
 		this.changes.push(x);
 		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y].isMine())) 
@@ -196,7 +209,7 @@ public class Board
 			// Reveal top tile on stack
 			this.theBoard[currentX][currentY].reveal();
 
-			this.changes.push(this.theBoard[currentX][currentY].getAdjacent());
+			this.changes.push(this.theBoard[currentX][currentY].getAdjacent() + '0');
 			this.changes.push(currentY);
 			this.changes.push(currentX);
 
@@ -221,7 +234,7 @@ public class Board
 				try
 				{
 					this.theBoard[x + this.delta[i]][y + this.delta[i+1]].reveal();
-					this.changes.push(this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getAdjacent());
+					this.changes.push(this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getAdjacent() + '0');
 					this.changes.push(y + this.delta[i+1]);
 					this.changes.push(x + this.delta[i]);
 				}
