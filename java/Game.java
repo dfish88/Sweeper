@@ -68,7 +68,6 @@ public class Game
 		this.frame.pack();
 		this.frame.setResizable(false);
 		this.frame.setVisible(true);
-		System.out.println(this.gameBoard.toStringReveal());
 	}
 
 	private void buildWindow(int dimension)
