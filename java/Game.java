@@ -140,7 +140,6 @@ public class Game
 	{
 		this.gameBoard.revealTile(x,y);
 		this.buttonGrid[x][y].setIcon(this.icons.get('b'));
-		this.frame.setEnabled(false);
 		this.revealMines();
 		this.revealFlags();
 	}
@@ -183,15 +182,27 @@ public class Game
 
 	private class GameListener implements MouseListener
 	{
+		private boolean enabled;
+
+		public GameListener()
+		{
+			this.enabled = true;
+		}
+
 		public void mouseClicked(MouseEvent e)
 		{
+
 			JButton button = (JButton) e.getSource();
 
 			if (button.equals(Game.this.restart))
 			{
+				this.enabled = true;
 				Game.this.restart();
 				return;
 			}
+
+			if (this.enabled == false)
+				return;
 
 			Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
 
@@ -199,7 +210,10 @@ public class Game
 			{
 				// Check if mine was clicked on
 				if (Game.this.gameBoard.mine(coordinates[0], coordinates[1]))
+				{
 					Game.this.gameOver(coordinates[0], coordinates[1]);
+					this.enabled = false;
+				}
 				else
 					Game.this.revealTiles(coordinates[0], coordinates[1]);
 			}
