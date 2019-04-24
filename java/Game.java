@@ -103,7 +103,7 @@ public class Game
 		this.drawBoard();
 		
 		if(this.gameBoard.checkForWin())
-			this.frame.setEnabled(false);
+			this.listener.disable();
 	}
 	
 	private void drawBoard()
@@ -185,6 +185,16 @@ public class Game
 		private boolean enabled;
 
 		public GameListener()
+		{
+			this.enabled = true;
+		}
+
+		public void disable()
+		{
+			this.enabled = false;
+		}
+
+		public void enable()
 		{
 			this.enabled = true;
 		}
