@@ -203,6 +203,12 @@ public class Game
 		this.face.setIcon(this.icons.get('s'));
 	}
 
+	private void doHint()
+	{
+		Stack<Integer> stack = this.gameBoard.hint();
+		//this.buttonGrid[stack.pop()][stack.pop()].setIcon(this.icons.get((char)stack.pop()));
+	}
+
 	private class GameListener implements MouseListener
 	{
 		private boolean enabled;
@@ -242,6 +248,12 @@ public class Game
 				return;
 
 			Game.this.face.setIcon(Game.this.icons.get('s'));
+
+			if (button.equals(Game.this.hint))
+			{
+				Game.this.doHint();
+				return;
+			}
 
 			Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
 

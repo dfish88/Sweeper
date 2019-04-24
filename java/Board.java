@@ -19,6 +19,18 @@ public class Board
 		this.changes = new Stack<>();
 	}
 
+	public Stack<Integer> hint()
+	{
+		Stack<Integer> stack = new Stack<>();
+		for (int x = 0; x < this.dimension; x++)
+		{
+			for (int y = 0; y < this.dimension; y++)
+			{
+			}
+		}
+		return stack;
+	}
+
 	public void restart()
 	{
 		this.changes.clear();
