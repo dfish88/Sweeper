@@ -181,7 +181,12 @@ public class Board
 	public void revealTile(int x, int y)
 	{
 		this.theBoard[x][y].reveal();
-		this.changes.push(this.theBoard[x][y].getAdjacent() + '0');
+		
+		if (this.theBoard[x][y].isMine())
+			this.changes.push((int)'b');
+		else
+			this.changes.push(this.theBoard[x][y].getAdjacent() + '0');
+			
 		this.changes.push(y);
 		this.changes.push(x);
 		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y].isMine())) 

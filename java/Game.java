@@ -7,9 +7,9 @@ import java.util.*;
 
 public class Game
 {
-	private JFrame frame;
-	private JPanel panel;
-	private JPanel top;
+	private JFrame frame; // The main JFrame that holds everything
+	private JPanel panel; // The panel that holds all the tiles
+	private JPanel top; // The panel that has the restart button, time, faces
 	private JButton restart;
 	private JButton buttonGrid[][];
 	private Board gameBoard;
@@ -31,6 +31,10 @@ public class Game
 		this.buildWindow(dimension);
 	}
 
+	/*
+	* Load all icon images into hash map.  The keys match the characters returned
+	* by tiles toChar() method so changing icons can be done in one line.
+	*/
 	private void loadImages()
 	{
 		try
@@ -57,6 +61,10 @@ public class Game
 		}
 	}
 
+	/*
+	* Adds and enables button for each tile.  Use a button property to track
+	* coordinates instead of doing math.
+	*/
 	private void addButton(int x, int y, ImageIcon i)
 	{
 
@@ -68,6 +76,9 @@ public class Game
 		this.panel.add(this.buttonGrid[x][y]);
 	}
 
+	/*
+	* Addes all the buttons to panels and all the panels to the main frame.
+	*/
 	private void setUpPanel(int dimension)
 	{
 		this.panel.setLayout(new GridLayout(dimension, dimension));
@@ -101,9 +112,6 @@ public class Game
 	{
 		this.gameBoard.revealTile(x,y);
 		this.drawBoard();
-		
-		if(this.gameBoard.checkForWin())
-			this.listener.disable();
 	}
 	
 	private void drawBoard()
@@ -189,21 +197,11 @@ public class Game
 			this.enabled = true;
 		}
 
-		public void disable()
-		{
-			this.enabled = false;
-		}
-
-		public void enable()
-		{
-			this.enabled = true;
-		}
-
 		public void mouseClicked(MouseEvent e)
 		{
-
 			JButton button = (JButton) e.getSource();
 
+			// Restart button was clicked
 			if (button.equals(Game.this.restart))
 			{
 				this.enabled = true;
@@ -211,11 +209,13 @@ public class Game
 				return;
 			}
 
+			// Used to disable buttons when game is over
 			if (this.enabled == false)
 				return;
 
 			Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
 
+			// Left click reveals tiles, there is a chance a mine has been clicked on.
 			if (SwingUtilities.isLeftMouseButton(e))
 			{
 				// Check if mine was clicked on
@@ -224,9 +224,15 @@ public class Game
 					Game.this.gameOver(coordinates[0], coordinates[1]);
 					this.enabled = false;
 				}
-				else
-					Game.this.revealTiles(coordinates[0], coordinates[1]);
+				// Check if player has won the game
+				else if(Game.this.gameBoard.checkForWin())
+				{
+						this.enabled = false;
+				}
+
+				Game.this.revealTiles(coordinates[0], coordinates[1]);
 			}
+			// Right click places flag
 			else if (SwingUtilities.isRightMouseButton(e))
 			{
 				Game.this.placeFlag(coordinates[0], coordinates[1]);
