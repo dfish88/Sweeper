@@ -11,6 +11,7 @@ public class Game
 	private JPanel panel; // The panel that holds all the tiles
 	private JPanel top; // The panel that has the restart button, time, faces
 	private JButton restart;
+	private JButton face;
 	private JButton buttonGrid[][];
 	private Board gameBoard;
 	private GameListener listener;
@@ -27,6 +28,7 @@ public class Game
 		this.top = new JPanel();
 		this.buttonGrid = new JButton[dimension][dimension];
 		this.restart = new JButton("Restart?");
+		this.face = new JButton();
 
 		this.buildWindow(dimension);
 	}
@@ -53,6 +55,10 @@ public class Game
 			icons.put('f', new ImageIcon("../icons/flag.png"));
 			icons.put('b', new ImageIcon("../icons/boom.png"));
 			icons.put('w', new ImageIcon("../icons/wrong.png"));
+			icons.put('s', new ImageIcon("../icons/smile.png"));
+			icons.put('c', new ImageIcon("../icons/click.png"));
+			icons.put('d', new ImageIcon("../icons/dead.png"));
+			icons.put('g', new ImageIcon("../icons/glasses.png"));
 		}
 		catch (Exception e)
 		{
@@ -86,8 +92,11 @@ public class Game
 		this.restart.setBackground(Color.LIGHT_GRAY);
 		this.restart.setBorder(new LineBorder(Color.BLACK));
 		this.restart.addMouseListener(this.listener);
-		this.top.setPreferredSize(new Dimension(this.gameBoard.getDimension()*50,50));
-		this.top.add(this.restart);
+		this.face.setIcon(this.icons.get('s'));
+		this.face.setBorder(null);
+		this.top.setPreferredSize(new Dimension(this.gameBoard.getDimension()*50,75));
+		this.top.add(this.face,0);
+		this.top.add(this.restart,1);
 		this.frame.add(this.top, BorderLayout.PAGE_START);
 		this.frame.add(this.panel, BorderLayout.CENTER);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -199,6 +208,7 @@ public class Game
 
 		public void mouseClicked(MouseEvent e)
 		{
+			Game.this.face.setIcon(Game.this.icons.get('c'));
 			JButton button = (JButton) e.getSource();
 
 			// Restart button was clicked
@@ -243,7 +253,10 @@ public class Game
 		{}
 
 		public void mouseReleased(MouseEvent e)
-		{}
+		{
+			Game.this.face.setIcon(Game.this.icons.get('s'));
+			System.out.println("Released!");
+		}
 
 		public void mouseEntered(MouseEvent e)
 		{}
