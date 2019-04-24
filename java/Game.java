@@ -12,6 +12,7 @@ public class Game
 	private JPanel top; // The panel that has the restart button, time, faces
 	private JButton restart;
 	private JButton face;
+	private JButton hint;
 	private JButton buttonGrid[][];
 	private Board gameBoard;
 	private GameListener listener;
@@ -29,6 +30,7 @@ public class Game
 		this.buttonGrid = new JButton[dimension][dimension];
 		this.restart = new JButton("Restart?");
 		this.face = new JButton();
+		this.hint = new JButton("Hint?");
 
 		this.buildWindow(dimension);
 	}
@@ -90,13 +92,15 @@ public class Game
 		this.panel.setLayout(new GridLayout(dimension, dimension));
 		this.top.setBackground(Color.LIGHT_GRAY);
 		this.restart.setBackground(Color.LIGHT_GRAY);
-		this.restart.setBorder(new LineBorder(Color.BLACK));
 		this.restart.addMouseListener(this.listener);
 		this.face.setIcon(this.icons.get('s'));
 		this.face.setBorder(null);
+		this.hint.setBackground(Color.LIGHT_GRAY);
+		this.hint.addMouseListener(this.listener);
 		this.top.setPreferredSize(new Dimension(this.gameBoard.getDimension()*50,75));
-		this.top.add(this.face,0);
-		this.top.add(this.restart,1);
+		this.top.add(this.hint, 0);
+		this.top.add(this.face,1);
+		this.top.add(this.restart,2);
 		this.frame.add(this.top, BorderLayout.PAGE_START);
 		this.frame.add(this.panel, BorderLayout.CENTER);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
