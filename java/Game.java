@@ -157,6 +157,7 @@ public class Game
 	{
 		this.gameBoard.revealTile(x,y);
 		this.buttonGrid[x][y].setIcon(this.icons.get('b'));
+		this.face.setIcon(this.icons.get('d'));
 		this.revealMines();
 		this.revealFlags();
 	}
@@ -195,6 +196,7 @@ public class Game
 	{
 		this.gameBoard.restart();
 		this.drawBoard();
+		this.face.setIcon(this.icons.get('s'));
 	}
 
 	private class GameListener implements MouseListener
@@ -208,7 +210,19 @@ public class Game
 
 		public void mouseClicked(MouseEvent e)
 		{
+		}
+		
+		public void mousePressed(MouseEvent e) 
+		{
+			// Used to disable buttons when game is over
+			if (this.enabled == false)
+				return;
+
 			Game.this.face.setIcon(Game.this.icons.get('c'));
+		}
+
+		public void mouseReleased(MouseEvent e)
+		{
 			JButton button = (JButton) e.getSource();
 
 			// Restart button was clicked
@@ -223,39 +237,35 @@ public class Game
 			if (this.enabled == false)
 				return;
 
+			Game.this.face.setIcon(Game.this.icons.get('s'));
+
 			Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
 
 			// Left click reveals tiles, there is a chance a mine has been clicked on.
 			if (SwingUtilities.isLeftMouseButton(e))
-			{
+			{				
+				Game.this.revealTiles(coordinates[0], coordinates[1]);
+
 				// Check if mine was clicked on
 				if (Game.this.gameBoard.mine(coordinates[0], coordinates[1]))
 				{
 					Game.this.gameOver(coordinates[0], coordinates[1]);
 					this.enabled = false;
 				}
+
 				// Check if player has won the game
 				else if(Game.this.gameBoard.checkForWin())
 				{
-						this.enabled = false;
+					this.enabled = false;
+					Game.this.face.setIcon(Game.this.icons.get('g'));
 				}
 
-				Game.this.revealTiles(coordinates[0], coordinates[1]);
 			}
 			// Right click places flag
 			else if (SwingUtilities.isRightMouseButton(e))
 			{
 				Game.this.placeFlag(coordinates[0], coordinates[1]);
 			}
-		}
-		
-		public void mousePressed(MouseEvent e) 
-		{}
-
-		public void mouseReleased(MouseEvent e)
-		{
-			Game.this.face.setIcon(Game.this.icons.get('s'));
-			System.out.println("Released!");
 		}
 
 		public void mouseEntered(MouseEvent e)
