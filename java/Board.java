@@ -1,5 +1,6 @@
 import java.util.*;
 import java.awt.*;
+import java.io.*;
 
 public class Board 
 { 
@@ -26,9 +27,66 @@ public class Board
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
+				// We want to find a non mine, non revealed tile that is adjacent
+				// to at least one other non mine, revealed tile
+				if (this.hintTile(x,y))
+				{
+					stack.push(this.theBoard[x][y].getAdjacent() + '0');
+					stack.push(y);
+					stack.push(x);
+					this.theBoard[x][y].reveal();
+					return stack;
+				}
 			}
 		}
 		return stack;
+	}
+
+	/*
+	* Check if tile at x y is not a mine and not revealed, then check
+	* if it is adjacent to at least one non mine, revelaed tile.
+	*/
+	public boolean hintTile(int x, int y)
+	{
+		if (this.theBoard[x][y].isMine() || this.theBoard[x][y].isRevealed() || this.theBoard[x][y].getAdjacent() == 0)
+			return false;
+		else
+		{
+			if (this.checkAdjacentHint(x,y))
+				return true;
+			else
+				return false;
+		}
+	}
+
+	public boolean checkAdjacentHint(int x, int y)
+	{	
+		for (int i = 0; i < this.delta.length; i = i + 2)
+		{	
+			System.out.println("Checking for x: " + x + " y: " + y);
+			if (this.checkAdjacentTileHint(x + this.delta[i], y + this.delta[i+1]))
+				return true;
+		}
+		return false;
+	}
+
+	private boolean checkAdjacentTileHint(int x, int y)
+	{
+		try
+		{
+		
+			if (this.theBoard[x][y].isRevealed())
+			{
+				System.out.println("x: " + x + " y: " + y);
+				return true;
+			}
+			else
+				return false;
+		}
+		catch (Exception e)
+		{
+			return false;
+		}
 	}
 
 	public void restart()

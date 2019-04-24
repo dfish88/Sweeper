@@ -206,7 +206,11 @@ public class Game
 	private void doHint()
 	{
 		Stack<Integer> stack = this.gameBoard.hint();
-		//this.buttonGrid[stack.pop()][stack.pop()].setIcon(this.icons.get((char)stack.pop()));
+		int x = stack.pop();
+		int y = stack.pop();
+		int c = stack.pop();
+
+		this.buttonGrid[x][y].setIcon(this.icons.get((char)c));
 	}
 
 	private class GameListener implements MouseListener
