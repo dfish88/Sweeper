@@ -20,6 +20,7 @@ public class Game
 	private GameListener listener;
 	private HashMap<Character, ImageIcon> icons = new HashMap<>();
 	private javax.swing.Timer time;
+	private int seconds;
 
 	public Game(int dimension)
 	{
@@ -38,15 +39,15 @@ public class Game
 		this.theTimer.setHorizontalAlignment(JLabel.CENTER);
 		this.theTimer.setVerticalAlignment(JLabel.CENTER);
 		this.buildWindow(dimension);
+		this.seconds = 0;
 		this.time = new Timer(1000, new ActionListener()
 		{
-			private int seconds = 0;
 			public void actionPerformed(ActionEvent e)
 			{
-				this.seconds = this.seconds + 1;
+				Game.this.seconds = Game.this.seconds + 1;
 			
-				int sec = this.seconds % 60;
-				int min = (int)(this.seconds/60); 
+				int sec = Game.this.seconds % 60;
+				int min = (int)(Game.this.seconds/60); 
 				String s = Integer.toString(sec);;
 
 				if (sec < 10)
@@ -191,6 +192,7 @@ public class Game
 		this.face.setIcon(this.icons.get('d'));
 		this.revealMines();
 		this.revealFlags();
+		this.time.stop();
 	}
 
 	private void revealMines()
@@ -275,6 +277,7 @@ public class Game
 			if (this.first)
 			{
 				Game.this.time.start();
+				Game.this.theTimer.setText("0:00");
 				this.first = false;
 			}
 
@@ -283,6 +286,10 @@ public class Game
 			{
 				this.enabled = true;
 				Game.this.restart();
+				this.first = true;
+				Game.this.seconds = 0;
+				Game.this.time.stop();
+				Game.this.theTimer.setText("");
 				return;
 			}
 
@@ -317,6 +324,7 @@ public class Game
 				{
 					this.enabled = false;
 					Game.this.face.setIcon(Game.this.icons.get('g'));
+					Game.this.time.stop();
 				}
 
 			}
