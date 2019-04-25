@@ -3,7 +3,8 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.imageio.ImageIO;
-import java.util.*;
+import java.util.Stack;
+import java.util.HashMap;
 
 public class Game
 {
@@ -11,12 +12,14 @@ public class Game
 	private JPanel panel; // The panel that holds all the tiles
 	private JPanel top; // The panel that has the restart button, time, faces
 	private JButton restart;
+	private JLabel theTimer;
 	private JButton face;
 	private JButton hint;
 	private JButton buttonGrid[][];
 	private Board gameBoard;
 	private GameListener listener;
 	private HashMap<Character, ImageIcon> icons = new HashMap<>();
+	private javax.swing.Timer time;
 
 	public Game(int dimension)
 	{
@@ -31,8 +34,30 @@ public class Game
 		this.restart = new JButton("Restart?");
 		this.face = new JButton();
 		this.hint = new JButton("Hint?");
-
+		this.theTimer = new JLabel();
+		this.theTimer.setHorizontalAlignment(JLabel.CENTER);
+		this.theTimer.setVerticalAlignment(JLabel.CENTER);
 		this.buildWindow(dimension);
+		this.time = new Timer(1000, new ActionListener()
+		{
+			private int seconds = 0;
+			public void actionPerformed(ActionEvent e)
+			{
+				this.seconds = this.seconds + 1;
+			
+				int sec = this.seconds % 60;
+				int min = (int)(this.seconds/60); 
+				String s = Integer.toString(sec);;
+
+				if (sec < 10)
+				{
+					s = "0" + sec;
+				}
+			
+				Game.this.theTimer.setText(min + ":" + s);
+			}
+		});
+		this.time.start();
 	}
 
 	/*
@@ -90,7 +115,7 @@ public class Game
 	private void setUpPanel(int dimension)
 	{
 		this.panel.setLayout(new GridLayout(dimension, dimension));
-		this.top.setLayout(new GridLayout(1,3));
+		this.top.setLayout(new GridLayout(1,4));
 		this.top.setBackground(Color.LIGHT_GRAY);
 		this.restart.setBackground(Color.LIGHT_GRAY);
 		this.restart.addMouseListener(this.listener);
@@ -103,6 +128,7 @@ public class Game
 		this.top.add(this.hint, 0);
 		this.top.add(this.face,1);
 		this.top.add(this.restart,2);
+		this.top.add(this.theTimer,3);
 		this.frame.add(this.top, BorderLayout.PAGE_START);
 		this.frame.add(this.panel, BorderLayout.CENTER);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
