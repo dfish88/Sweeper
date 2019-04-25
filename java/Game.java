@@ -57,7 +57,6 @@ public class Game
 				Game.this.theTimer.setText(min + ":" + s);
 			}
 		});
-		this.time.start();
 	}
 
 	/*
@@ -272,6 +271,12 @@ public class Game
 		public void mouseReleased(MouseEvent e)
 		{
 			JButton button = (JButton) e.getSource();
+
+			if (this.first)
+			{
+				Game.this.time.start();
+				this.first = false;
+			}
 
 			// Restart button was clicked
 			if (button.equals(Game.this.restart))
