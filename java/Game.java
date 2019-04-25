@@ -15,6 +15,8 @@ public class Game
 	private JLabel theTimer;
 	private JButton face;
 	private JButton hint;
+	private JButton eight;
+	private JButton sixteen;
 	private JButton buttonGrid[][];
 	private Board gameBoard;
 	private GameListener listener;
@@ -22,23 +24,38 @@ public class Game
 	private javax.swing.Timer time;
 	private int seconds;
 
-	public Game(int dimension)
+	public Game()
 	{
-		this.gameBoard = new Board(dimension);
-		this.loadImages();
-
-		this.listener = new GameListener();
+		// Start window with 2 options
 		this.frame = new JFrame("Mine Sweeper!");
 		this.panel = new JPanel();
+		this.panel.setLayout(new GridLayout(1,2));
+		this.eight = new JButton();
+		this.eight.setText("8x8");
+		this.eight.setBackground(Color.LIGHT_GRAY);
+		this.sixteen = new JButton();
+		this.sixteen.setText("16x16");
+		this.sixteen.setBackground(Color.LIGHT_GRAY);
+		this.panel.add(this.eight);
+		this.panel.add(this.sixteen);
+
 		this.top = new JPanel();
-		this.buttonGrid = new JButton[dimension][dimension];
-		this.restart = new JButton("Restart?");
+		this.top.setLayout(new GridLayout(1,4));
+		this.top.setBackground(Color.LIGHT_GRAY);
+		this.restart = new JButton();
+		this.restart.setBackground(Color.LIGHT_GRAY);
+		//this.restart.addMouseListener(this.listener);
 		this.face = new JButton();
-		this.hint = new JButton("Hint?");
+		this.face.setIcon(this.icons.get('s'));
+		this.face.setBorder(null);
+		this.face.setBackground(Color.LIGHT_GRAY);
+		this.hint = new JButton();
+		this.hint.setBackground(Color.LIGHT_GRAY);
+		//this.hint.addMouseListener(this.listener);
+
 		this.theTimer = new JLabel();
 		this.theTimer.setHorizontalAlignment(JLabel.CENTER);
 		this.theTimer.setVerticalAlignment(JLabel.CENTER);
-		this.buildWindow(dimension);
 		this.seconds = 0;
 		this.time = new Timer(1000, new ActionListener()
 		{
@@ -58,6 +75,32 @@ public class Game
 				Game.this.theTimer.setText(min + ":" + s);
 			}
 		});
+
+		this.top.setPreferredSize(new Dimension(400,100));
+		this.top.add(this.hint, 0);
+		this.top.add(this.face,1);
+		this.top.add(this.restart,2);
+		this.top.add(this.theTimer,3);
+		this.frame.setPreferredSize(new Dimension(400,400));
+		this.frame.add(top);
+		//this.frame.add(panel);
+		this.frame.pack();
+		this.frame.setResizable(false);
+		this.frame.setVisible(true);
+	}
+
+	public void startGame(int dimension)
+	{
+		this.gameBoard = new Board(dimension);
+		this.loadImages();
+
+		this.listener = new GameListener();
+		this.frame = new JFrame("Mine Sweeper!");
+		this.panel = new JPanel();
+		this.buttonGrid = new JButton[dimension][dimension];
+		this.restart = new JButton("Restart?");
+		this.face = new JButton();
+		this.hint = new JButton("Hint?");
 	}
 
 	/*
@@ -115,20 +158,6 @@ public class Game
 	private void setUpPanel(int dimension)
 	{
 		this.panel.setLayout(new GridLayout(dimension, dimension));
-		this.top.setLayout(new GridLayout(1,4));
-		this.top.setBackground(Color.LIGHT_GRAY);
-		this.restart.setBackground(Color.LIGHT_GRAY);
-		this.restart.addMouseListener(this.listener);
-		this.face.setIcon(this.icons.get('s'));
-		this.face.setBorder(null);
-		this.face.setBackground(Color.LIGHT_GRAY);
-		this.hint.setBackground(Color.LIGHT_GRAY);
-		this.hint.addMouseListener(this.listener);
-		this.top.setPreferredSize(new Dimension(this.gameBoard.getDimension()*50,75));
-		this.top.add(this.hint, 0);
-		this.top.add(this.face,1);
-		this.top.add(this.restart,2);
-		this.top.add(this.theTimer,3);
 		this.frame.add(this.top, BorderLayout.PAGE_START);
 		this.frame.add(this.panel, BorderLayout.CENTER);
 		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

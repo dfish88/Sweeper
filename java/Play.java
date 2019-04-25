@@ -2,6 +2,6 @@ public class Play
 {
 	public static void main(String[] args)
 	{
-		Game theGame = new Game(8);
+		Game theGame = new Game();
 	}
 }
