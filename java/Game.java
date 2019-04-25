@@ -5,6 +5,8 @@ import java.awt.event.*;
 import javax.imageio.ImageIO;
 import java.util.Stack;
 import java.util.HashMap;
+import javax.swing.BorderFactory; 
+import javax.swing.border.*;
 
 public class Game
 {
