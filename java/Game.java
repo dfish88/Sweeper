@@ -248,10 +248,12 @@ public class Game
 	private class GameListener implements MouseListener
 	{
 		private boolean enabled;
+		private boolean first;
 
 		public GameListener()
 		{
 			this.enabled = true;
+			this.first = true;
 		}
 
 		public void mouseClicked(MouseEvent e)
