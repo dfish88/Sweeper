@@ -90,11 +90,13 @@ public class Game
 	private void setUpPanel(int dimension)
 	{
 		this.panel.setLayout(new GridLayout(dimension, dimension));
+		this.top.setLayout(new GridLayout(1,3));
 		this.top.setBackground(Color.LIGHT_GRAY);
 		this.restart.setBackground(Color.LIGHT_GRAY);
 		this.restart.addMouseListener(this.listener);
 		this.face.setIcon(this.icons.get('s'));
 		this.face.setBorder(null);
+		this.face.setBackground(Color.LIGHT_GRAY);
 		this.hint.setBackground(Color.LIGHT_GRAY);
 		this.hint.addMouseListener(this.listener);
 		this.top.setPreferredSize(new Dimension(this.gameBoard.getDimension()*50,75));
