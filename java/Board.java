@@ -7,6 +7,7 @@ public class Board
 	private Tile[][] theBoard; 
 	private int dimension;
 	private Stack<Integer> changes;
+	private boolean firstMove;
 
 	// Used to calculate coordinates of all 8 adjacent tiles of
 	// a particular tile
@@ -16,8 +17,13 @@ public class Board
 	{
 		this.dimension = dimension;
 		theBoard = new Tile[this.dimension][this.dimension];		
-		buildBoard();
 		this.changes = new Stack<>();
+		this.firstMove = true;
+	}
+
+	public void first(int x, int y)
+	{
+		this.buildBoard(x,y);
 	}
 
 	public Stack<Integer> hint()
@@ -91,6 +97,9 @@ public class Board
 
 	public void restart()
 	{
+		if (this.firstMove)
+			return;
+
 		this.changes.clear();
 		for (int x = 0; x < this.dimension; x++)
 		{
@@ -105,8 +114,8 @@ public class Board
 			}
 		}
 
-		theBoard = new Tile[this.dimension][this.dimension];		
-		buildBoard();
+		theBoard = new Tile[this.dimension][this.dimension];
+		this.firstMove = true;
 	}
 
 	public void setFlag(int x, int y)
@@ -137,9 +146,9 @@ public class Board
 	/*
 	* Builds the board
 	*/
-	public void buildBoard()
+	public void buildBoard(int x, int y)
 	{
-		addMines();
+		addMines(x,y);
 		placeAdjacent();
 	}
 
@@ -207,7 +216,7 @@ public class Board
 	* If there is overlap we simply skip that mine which is
 	* how we can get less than dimension mines.
 	*/
-	public void addMines()
+	public void addMines(int x, int y)
 	{
 		Random rand = new Random();
 
@@ -217,6 +226,9 @@ public class Board
 		{
 			int randX = rand.nextInt(dimension);
 			int randY = rand.nextInt(dimension);
+	
+			if(randX == x && randY == y)
+				continue;
 			
 			this.theBoard[randX][randY] = new Tile(0, true);
 		}
@@ -250,6 +262,12 @@ public class Board
 	*/
 	public void revealTile(int x, int y)
 	{
+		if (this.firstMove)
+		{
+			this.firstMove = false;
+			this.first(x,y);
+		}
+
 		this.theBoard[x][y].reveal();
 		
 		if (this.theBoard[x][y].isMine())
