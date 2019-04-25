@@ -31,29 +31,32 @@ public class Game
 		this.panel = new JPanel();
 		this.panel.setLayout(new GridLayout(1,2));
 		this.eight = new JButton();
-		this.eight.setText("8x8");
+		this.eight.setText("8x8 (Easy)");
 		this.eight.setBackground(Color.LIGHT_GRAY);
 		this.sixteen = new JButton();
-		this.sixteen.setText("16x16");
+		this.sixteen.setText("16x16 (Hard)");
 		this.sixteen.setBackground(Color.LIGHT_GRAY);
 		this.panel.add(this.eight);
 		this.panel.add(this.sixteen);
+		this.panel.setPreferredSize(new Dimension(400,400));
 
+		this.loadImages();
 		this.top = new JPanel();
 		this.top.setLayout(new GridLayout(1,4));
 		this.top.setBackground(Color.LIGHT_GRAY);
-		this.restart = new JButton();
+		this.restart = new JButton("Restart?");
 		this.restart.setBackground(Color.LIGHT_GRAY);
 		//this.restart.addMouseListener(this.listener);
 		this.face = new JButton();
 		this.face.setIcon(this.icons.get('s'));
 		this.face.setBorder(null);
 		this.face.setBackground(Color.LIGHT_GRAY);
-		this.hint = new JButton();
+		this.hint = new JButton("Hint?");
 		this.hint.setBackground(Color.LIGHT_GRAY);
 		//this.hint.addMouseListener(this.listener);
 
-		this.theTimer = new JLabel();
+
+		this.theTimer = new JLabel("0:00");
 		this.theTimer.setHorizontalAlignment(JLabel.CENTER);
 		this.theTimer.setVerticalAlignment(JLabel.CENTER);
 		this.seconds = 0;
@@ -76,15 +79,15 @@ public class Game
 			}
 		});
 
-		this.top.setPreferredSize(new Dimension(400,100));
+		//this.top.setPreferredSize(new Dimension(400,100));
 		this.top.add(this.hint, 0);
 		this.top.add(this.face,1);
 		this.top.add(this.restart,2);
 		this.top.add(this.theTimer,3);
-		this.frame.setPreferredSize(new Dimension(400,400));
-		this.frame.add(top);
-		//this.frame.add(panel);
+		this.frame.add(this.top, BorderLayout.PAGE_START);
+		this.frame.add(this.panel, BorderLayout.CENTER);
 		this.frame.pack();
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.setResizable(false);
 		this.frame.setVisible(true);
 	}
@@ -92,7 +95,6 @@ public class Game
 	public void startGame(int dimension)
 	{
 		this.gameBoard = new Board(dimension);
-		this.loadImages();
 
 		this.listener = new GameListener();
 		this.frame = new JFrame("Mine Sweeper!");
@@ -160,7 +162,6 @@ public class Game
 		this.panel.setLayout(new GridLayout(dimension, dimension));
 		this.frame.add(this.top, BorderLayout.PAGE_START);
 		this.frame.add(this.panel, BorderLayout.CENTER);
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.frame.pack();
 		this.frame.setResizable(false);
 		this.frame.setVisible(true);
