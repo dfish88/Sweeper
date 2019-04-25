@@ -28,6 +28,21 @@ public class Board
 
 	public Stack<Integer> hint()
 	{
+		if (this.firstMove)
+		{
+			Random rand = new Random();
+
+			int randX = rand.nextInt(dimension);
+			int randY = rand.nextInt(dimension);
+
+			this.revealTile(randX, randY);
+			
+			Stack<Integer> s = new Stack<>();
+			s.addAll(this.changes);
+			this.changes.clear();
+			return s;
+		}
+
 		Stack<Integer> stack = new Stack<>();
 		for (int x = 0; x < this.dimension; x++)
 		{
@@ -264,8 +279,8 @@ public class Board
 	{
 		if (this.firstMove)
 		{
-			this.firstMove = false;
 			this.first(x,y);
+			this.firstMove = false;
 		}
 
 		this.theBoard[x][y].reveal();
@@ -278,7 +293,11 @@ public class Board
 		this.changes.push(y);
 		this.changes.push(x);
 		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y].isMine())) 
+		{
+			System.out.println("0 tile, looking for adjacent tiles");
 			this.revealAdjacentTiles(x,y);
+		}
+			
 	}
 
 	/*
