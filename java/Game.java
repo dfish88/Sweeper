@@ -111,6 +111,7 @@ public class Game
 	
 		this.panel.remove(this.eight);
 		this.panel.remove(this.sixteen);
+		this.panel.setPreferredSize(null);
 	
 		this.panel.setLayout(new GridLayout(dimension, dimension));
 
