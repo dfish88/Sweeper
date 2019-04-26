@@ -117,7 +117,6 @@ public class Game
 
 		this.panel.setLayout(new GridLayout(dimension, dimension));
 
-		this.listener = new GameListener();
 		this.buttonGrid = new JButton[dimension][dimension];
 		this.buildWindow(dimension);
 	}
@@ -352,6 +351,7 @@ public class Game
 		public void mouseReleased(MouseEvent e)
 		{
 			JButton button = (JButton) e.getSource();
+			System.out.println(this.enabled);
 
 			if (this.first)
 			{
@@ -389,6 +389,8 @@ public class Game
 			// Left click reveals tiles, there is a chance a mine has been clicked on.
 			if (SwingUtilities.isLeftMouseButton(e))
 			{				
+				System.out.println("Button clicked!");
+
 				Game.this.revealTiles(coordinates[0], coordinates[1]);
 
 				// Check if mine was clicked on
