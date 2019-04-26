@@ -22,6 +22,7 @@ public class Game
 	private JButton buttonGrid[][];
 	private Board gameBoard;
 	private GameListener listener;
+	private InitialListener listener2;
 	private HashMap<Character, ImageIcon> icons = new HashMap<>();
 	private javax.swing.Timer time;
 	private int seconds;
@@ -32,14 +33,17 @@ public class Game
 		this.frame = new JFrame("Mine Sweeper!");
 		this.panel = new JPanel();
 		this.panel.setLayout(new GridLayout(1,2));
+		this.listener2 = new InitialListener();
 		this.eight = new JButton();
 		this.eight.setText("8x8 (Easy)");
 		this.eight.setBackground(Color.LIGHT_GRAY);
 		this.eight.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		this.eight.addMouseListener(this.listener2);
 		this.sixteen = new JButton();
 		this.sixteen.setText("16x16 (Hard)");
 		this.sixteen.setBackground(Color.LIGHT_GRAY);
 		this.sixteen.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		this.sixteen.addMouseListener(this.listener2);
 		this.panel.add(this.eight);
 		this.panel.add(this.sixteen);
 		this.panel.setPreferredSize(new Dimension(400,400));
@@ -283,6 +287,40 @@ public class Game
 
 			this.buttonGrid[x][y].setIcon(this.icons.get((char)c));
 		}
+	}
+
+	private class InitialListener implements MouseListener
+	{
+
+		public void mouseClicked(MouseEvent e)
+		{
+		}
+		
+		public void mousePressed(MouseEvent e) 
+		{
+		}
+
+		public void mouseReleased(MouseEvent e)
+		{
+			JButton button = (JButton) e.getSource();
+
+			if (button.equals(Game.this.eight))
+			{
+				System.out.println("Starting 8x8 game");
+				Game.this.startGame(8);
+			}
+			else if (button.equals(Game.this.sixteen))
+			{
+				System.out.println("Starting 16x16 game");
+				Game.this.startGame(16);
+			}
+		}
+
+		public void mouseEntered(MouseEvent e)
+		{}
+
+      		public void mouseExited(MouseEvent e)
+		{}
 	}
 
 	private class GameListener implements MouseListener
