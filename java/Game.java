@@ -108,14 +108,15 @@ public class Game
 	public void startGame(int dimension)
 	{
 		this.gameBoard = new Board(dimension);
+	
+		this.panel.remove(this.eight);
+		this.panel.remove(this.sixteen);
+	
+		this.panel.setLayout(new GridLayout(dimension, dimension));
 
 		this.listener = new GameListener();
-		this.frame = new JFrame("Mine Sweeper!");
-		this.panel = new JPanel();
 		this.buttonGrid = new JButton[dimension][dimension];
-		this.restart = new JButton("Restart?");
-		this.face = new JButton();
-		this.hint = new JButton("Hint?");
+		this.buildWindow(dimension);
 	}
 
 	/*
@@ -170,10 +171,8 @@ public class Game
 	/*
 	* Addes all the buttons to panels and all the panels to the main frame.
 	*/
-	private void setUpPanel(int dimension)
+	private void setUpFrame()
 	{
-		this.panel.setLayout(new GridLayout(dimension, dimension));
-		this.frame.add(this.top, BorderLayout.PAGE_START);
 		this.frame.add(this.panel, BorderLayout.CENTER);
 		this.frame.pack();
 		this.frame.setResizable(false);
@@ -189,7 +188,7 @@ public class Game
 				this.addButton(i, j, this.icons.get(' '));
                         }
                 }
-		this.setUpPanel(dimension);
+		this.setUpFrame();
 	}
 
 	public void revealTiles(int x, int y)
