@@ -55,7 +55,6 @@ public class Game
 		this.restart = new JButton("Restart?");
 		this.restart.setBackground(Color.LIGHT_GRAY);
 		this.restart.setBorder(BorderFactory.createRaisedBevelBorder());
-		//this.restart.addMouseListener(this.listener);
 		this.face = new JButton();
 		this.face.setIcon(this.icons.get('s'));
 		this.face.setBorder(null);
@@ -63,7 +62,6 @@ public class Game
 		this.hint = new JButton("Hint?");
 		this.hint.setBackground(Color.LIGHT_GRAY);
 		this.hint.setBorder(BorderFactory.createRaisedBevelBorder());
-		//this.hint.addMouseListener(this.listener);
 
 
 		this.theTimer = new JLabel("0:00");
@@ -113,6 +111,10 @@ public class Game
 		this.panel.remove(this.sixteen);
 		this.panel.setPreferredSize(null);
 	
+		this.listener = new GameListener();
+		this.hint.addMouseListener(this.listener);
+		this.restart.addMouseListener(this.listener);
+
 		this.panel.setLayout(new GridLayout(dimension, dimension));
 
 		this.listener = new GameListener();
