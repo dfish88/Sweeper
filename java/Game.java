@@ -150,8 +150,6 @@ public class Game
 		}
 		catch (Exception e)
 		{
-			System.out.println(e);
-			System.out.println("Couldn't fing images");
 		}
 	}
 
@@ -203,8 +201,6 @@ public class Game
 	{
 		Stack<Integer> changes = this.gameBoard.getChanges();
 		
-		System.out.println(changes);
-
 		int x;
 		int y;
 		int c;
@@ -214,7 +210,6 @@ public class Game
 			x = changes.pop();
 			y = changes.pop();
 			c = changes.pop();
-			System.out.println(c);
 			this.buttonGrid[x][y].setIcon(this.icons.get((char)c));
 		}	
 	}
@@ -307,12 +302,10 @@ public class Game
 
 			if (button.equals(Game.this.eight))
 			{
-				System.out.println("Starting 8x8 game");
 				Game.this.startGame(8);
 			}
 			else if (button.equals(Game.this.sixteen))
 			{
-				System.out.println("Starting 16x16 game");
 				Game.this.startGame(16);
 			}
 		}
@@ -351,7 +344,6 @@ public class Game
 		public void mouseReleased(MouseEvent e)
 		{
 			JButton button = (JButton) e.getSource();
-			System.out.println(this.enabled);
 
 			if (this.first)
 			{
@@ -389,7 +381,6 @@ public class Game
 			// Left click reveals tiles, there is a chance a mine has been clicked on.
 			if (SwingUtilities.isLeftMouseButton(e))
 			{				
-				System.out.println("Button clicked!");
 
 				Game.this.revealTiles(coordinates[0], coordinates[1]);
 

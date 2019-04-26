@@ -84,7 +84,6 @@ public class Board
 	{	
 		for (int i = 0; i < this.delta.length; i = i + 2)
 		{	
-			System.out.println("Checking for x: " + x + " y: " + y);
 			if (this.checkAdjacentTileHint(x + this.delta[i], y + this.delta[i+1]))
 				return true;
 		}
@@ -98,7 +97,6 @@ public class Board
 		
 			if (this.theBoard[x][y].isRevealed())
 			{
-				System.out.println("x: " + x + " y: " + y);
 				return true;
 			}
 			else
@@ -294,7 +292,6 @@ public class Board
 		this.changes.push(x);
 		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y].isMine())) 
 		{
-			System.out.println("0 tile, looking for adjacent tiles");
 			this.revealAdjacentTiles(x,y);
 		}
 			
