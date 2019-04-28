@@ -75,7 +75,9 @@ public class Board
 					stack.push(this.theBoard[x][y].getAdjacent() + '0');
 					stack.push(y);
 					stack.push(x);
-					this.theBoard[x][y].reveal();
+					this.revealTile(x,y);
+					stack.addAll(this.changes);
+					this.changes.clear();
 					return stack;
 				}
 			}
