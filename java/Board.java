@@ -50,7 +50,27 @@ public class Board
 			{
 				// We want to find a non mine, non revealed tile that is adjacent
 				// to at least one other non mine, revealed tile
-				if (this.hintTile(x,y))
+				if (this.hintTile(x,y, false))
+				{
+					stack.push(this.theBoard[x][y].getAdjacent() + '0');
+					stack.push(y);
+					stack.push(x);
+					this.theBoard[x][y].reveal();
+					return stack;
+				}
+			}
+		}
+
+		if (!(stack.empty()))
+			return stack;
+
+		for (int x = 0; x < this.dimension; x++)
+		{
+			for (int y = 0; y < this.dimension; y++)
+			{
+				// We want to find a non mine, non revealed tile that is adjacent
+				// to at least one other non mine, revealed tile
+				if (this.hintTile(x,y, true))
 				{
 					stack.push(this.theBoard[x][y].getAdjacent() + '0');
 					stack.push(y);
@@ -67,9 +87,11 @@ public class Board
 	* Check if tile at x y is not a mine and not revealed, then check
 	* if it is adjacent to at least one non mine, revelaed tile.
 	*/
-	public boolean hintTile(int x, int y)
+	public boolean hintTile(int x, int y, boolean zeros)
 	{
-		if (this.theBoard[x][y].isMine() || this.theBoard[x][y].isRevealed() || this.theBoard[x][y].getAdjacent() == 0)
+		if (this.theBoard[x][y].isMine() || this.theBoard[x][y].isRevealed())
+			return false;
+		else if(zeros == false && this.theBoard[x][y].getAdjacent() == 0)
 			return false;
 		else
 		{
