@@ -137,6 +137,9 @@ public class Board
 
 	private boolean surrounded(int x, int y)
 	{
+		if (this.theBoard[x][y].getAdjacent() < 3)
+			return false;
+	
 		// Check all adjacent directions, return true if surrounded by mines
 		boolean sur = true;
 		for (int i = 0; i < this.delta.length; i = i + 2)
