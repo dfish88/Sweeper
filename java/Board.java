@@ -118,7 +118,6 @@ public class Board
 	{
 		try
 		{
-		
 			if (this.theBoard[x][y].isRevealed())
 			{
 				return true;
