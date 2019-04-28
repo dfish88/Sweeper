@@ -111,6 +111,10 @@ public class Board
 			if (this.checkAdjacentTileHint(x + this.delta[i], y + this.delta[i+1]))
 				return true;
 		}
+
+		if (this.surrounded(x,y))
+			return true;
+
 		return false;
 	}
 
@@ -131,6 +135,35 @@ public class Board
 		}
 	}
 
+	private boolean surrounded(int x, int y)
+	{
+		// Check all adjacent directions, return true if surrounded by mines
+		boolean sur = true;
+		for (int i = 0; i < this.delta.length; i = i + 2)
+		{	
+			if (!(this.checkAdjacentTileMine(x + this.delta[i], y + this.delta[i+1])))
+				return false;
+		}
+		return sur;
+	}
+
+	private boolean checkAdjacentTileMine(int x, int y)
+	{
+		try
+		{
+			if (this.theBoard[x][y].isMine())
+			{
+				return true;
+			}
+			else
+				return false;
+		}
+		catch (Exception e)
+		{
+			return true;
+		}
+	}
+	
 	public void restart()
 	{
 		if (this.firstMove)
