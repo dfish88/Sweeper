@@ -373,6 +373,14 @@ public class Game
 			if (button.equals(Game.this.hint))
 			{
 				Game.this.doHint();
+				
+				if (Game.this.gameBoard.checkForWin())
+				{
+					this.enabled = false;
+					Game.this.face.setIcon(Game.this.icons.get('g'));
+					Game.this.time.stop();
+				}
+
 				return;
 			}
 
