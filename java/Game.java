@@ -348,13 +348,6 @@ public class Game
 		{
 			JButton button = (JButton) e.getSource();
 
-			if (this.first)
-			{
-				Game.this.time.start();
-				Game.this.theTimer.setText("0:00");
-				this.first = false;
-			}
-
 			// Restart button was clicked
 			if (button.equals(Game.this.restart))
 			{
@@ -363,7 +356,7 @@ public class Game
 				this.first = true;
 				Game.this.seconds = 0;
 				Game.this.time.stop();
-				Game.this.theTimer.setText("");
+				Game.this.theTimer.setText("0:00");
 				return;
 			}
 
@@ -377,6 +370,13 @@ public class Game
 			{
 				Game.this.doHint();
 				
+				if (this.first)
+				{
+					Game.this.time.start();
+					Game.this.theTimer.setText("0:00");
+					this.first = false;
+				}
+
 				if (Game.this.gameBoard.checkForWin())
 				{
 					this.enabled = false;
@@ -392,6 +392,13 @@ public class Game
 			// Left click reveals tiles, there is a chance a mine has been clicked on.
 			if (SwingUtilities.isLeftMouseButton(e))
 			{				
+
+				if (this.first)
+				{
+					Game.this.time.start();
+					Game.this.theTimer.setText("0:00");
+					this.first = false;
+				}
 
 				Game.this.revealTiles(coordinates[0], coordinates[1]);
 
