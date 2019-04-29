@@ -13,6 +13,8 @@ public class Tile
 		this.mine = mine;
 	}
 
+	/* GETTERS */
+
 	/*
 	* Character representation of a tile, used to load icons in the Game class
 	* ' ' if not revealed
@@ -34,8 +36,6 @@ public class Tile
 		}
 	}
 	
-	/* GETTERS */
-
 	public int getAdjacent()
 	{
 		return this.adjacentTo;
