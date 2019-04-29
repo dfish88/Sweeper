@@ -414,7 +414,13 @@ public class Game
 			// Right click places flag
 			else if (SwingUtilities.isRightMouseButton(e))
 			{
-				Game.this.placeFlag(coordinates[0], coordinates[1]);
+				try
+				{
+					Game.this.placeFlag(coordinates[0], coordinates[1]);
+				}
+				// Catches exception where players right clicks before making first move
+				catch (Exception exc)
+				{}
 			}
 		}
 
