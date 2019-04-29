@@ -75,6 +75,6 @@ public class Tile
 
 	public void setFlag()
 	{
-		this.flag = true;
+		this.flag = !(this.flag);
 	}
 }

@@ -219,8 +219,11 @@ public class Game
 		// Place flag on square if it isn't revealed or is a mine
 		if (!(this.gameBoard.revealed(x, y)) || this.gameBoard.mine(x,y))
 		{
-			this.buttonGrid[x][y].setIcon(this.icons.get('f'));
 			this.gameBoard.setFlag(x,y);
+			if (this.gameBoard.getFlag(x,y))
+				this.buttonGrid[x][y].setIcon(this.icons.get('f'));
+			else
+				this.buttonGrid[x][y].setIcon(this.icons.get(' '));
 		}
 	}
 
