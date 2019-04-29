@@ -55,7 +55,7 @@ public class Board
 					stack.push(this.theBoard[x][y].getAdjacent() + '0');
 					stack.push(y);
 					stack.push(x);
-					this.theBoard[x][y].reveal();
+					this.theBoard[x][y].setRevealed();
 					return stack;
 				}
 			}
@@ -91,7 +91,7 @@ public class Board
 	*/
 	public boolean hintTile(int x, int y, boolean zeros)
 	{
-		if (this.theBoard[x][y].isMine() || this.theBoard[x][y].isRevealed())
+		if (this.theBoard[x][y].getMine() || this.theBoard[x][y].getRevealed())
 			return false;
 		else if(zeros == false && this.theBoard[x][y].getAdjacent() == 0)
 			return false;
@@ -122,7 +122,7 @@ public class Board
 	{
 		try
 		{
-			if (this.theBoard[x][y].isRevealed())
+			if (this.theBoard[x][y].getRevealed())
 			{
 				return true;
 			}
@@ -154,7 +154,7 @@ public class Board
 	{
 		try
 		{
-			if (this.theBoard[x][y].isMine())
+			if (this.theBoard[x][y].getMine())
 			{
 				return true;
 			}
@@ -177,7 +177,7 @@ public class Board
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
-				if (this.theBoard[x][y].isRevealed() || this.theBoard[x][y].getFlag() || this.theBoard[x][y].isMine())
+				if (this.theBoard[x][y].getRevealed() || this.theBoard[x][y].getFlag() || this.theBoard[x][y].getMine())
 				{
 					this.changes.push((int)' ');
 					this.changes.push(y);
@@ -207,12 +207,12 @@ public class Board
 
 	public boolean mine(int x, int y)
 	{
-		return this.theBoard[x][y].isMine();
+		return this.theBoard[x][y].getMine();
 	}
 
 	public boolean revealed(int x, int y)
 	{
-		return this.theBoard[x][y].isRevealed();
+		return this.theBoard[x][y].getRevealed();
 	}
 
 	/*
@@ -260,14 +260,14 @@ public class Board
 		{
 			if (mine)
 			{
-				if (this.theBoard[x][y].isMine())
+				if (this.theBoard[x][y].getMine())
 					return 1;
 				else
 					return 0;
 			}
 			else
 			{
-				if (this.theBoard[x][y].getAdjacent() == 0 && this.theBoard[x][y].isRevealed() == false)
+				if (this.theBoard[x][y].getAdjacent() == 0 && this.theBoard[x][y].getRevealed() == false)
 					return 1;
 				else
 					return 0;
@@ -340,16 +340,16 @@ public class Board
 			this.firstMove = false;
 		}
 
-		this.theBoard[x][y].reveal();
+		this.theBoard[x][y].setRevealed();
 		
-		if (this.theBoard[x][y].isMine())
+		if (this.theBoard[x][y].getMine())
 			this.changes.push((int)'b');
 		else
 			this.changes.push(this.theBoard[x][y].getAdjacent() + '0');
 			
 		this.changes.push(y);
 		this.changes.push(x);
-		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y].isMine())) 
+		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y].getMine())) 
 		{
 			this.revealAdjacentTiles(x,y);
 		}
@@ -375,7 +375,7 @@ public class Board
 			currentX = adjacent.pop();
 			currentY = adjacent.pop();
 			// Reveal top tile on stack
-			this.theBoard[currentX][currentY].reveal();
+			this.theBoard[currentX][currentY].setRevealed();
 
 			this.changes.push(this.theBoard[currentX][currentY].getAdjacent() + '0');
 			this.changes.push(currentY);
@@ -401,7 +401,7 @@ public class Board
 			{
 				try
 				{
-					this.theBoard[x + this.delta[i]][y + this.delta[i+1]].reveal();
+					this.theBoard[x + this.delta[i]][y + this.delta[i+1]].setRevealed();
 					this.changes.push(this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getAdjacent() + '0');
 					this.changes.push(y + this.delta[i+1]);
 					this.changes.push(x + this.delta[i]);
@@ -421,7 +421,7 @@ public class Board
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
-				if (!(this.theBoard[x][y].isRevealed()) && this.theBoard[x][y].isMine() && !(this.theBoard[x][y].getFlag()))
+				if (!(this.theBoard[x][y].getRevealed()) && this.theBoard[x][y].getMine() && !(this.theBoard[x][y].getFlag()))
 				{
 					stack.push(y);
 					stack.push(x);
@@ -438,7 +438,7 @@ public class Board
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
-				if (!(this.theBoard[x][y].isRevealed()) && !(this.theBoard[x][y].isMine()) && this.theBoard[x][y].getFlag())
+				if (!(this.theBoard[x][y].getRevealed()) && !(this.theBoard[x][y].getMine()) && this.theBoard[x][y].getFlag())
 				{
 					stack.push(y);
 					stack.push(x);
@@ -457,7 +457,7 @@ public class Board
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
-				if(!(this.theBoard[x][y].isRevealed()) && !(this.theBoard[x][y].isMine()))
+				if(!(this.theBoard[x][y].getRevealed()) && !(this.theBoard[x][y].getMine()))
 				{
 					win = false;
 					break;

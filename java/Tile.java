@@ -1,9 +1,9 @@
 public class Tile
 {
-	private boolean revealed;
-	private int adjacentTo;
-	private boolean flag;
-	private boolean mine;
+	private boolean revealed;	// Is this tile revealed or hidden
+	private int adjacentTo;		// How many mines is this tile adjacent to
+	private boolean flag;		// Is flag placed on tile	
+	private boolean mine;		// Is this tile a mine
 
 	public Tile(int adjacentTo, boolean mine)
 	{
@@ -13,46 +13,12 @@ public class Tile
 		this.mine = mine;
 	}
 
-	public void setAdjacent(int adjacentTo)
-	{
-		this.adjacentTo = adjacentTo;
-	}
-
-	public void reveal()
-	{
-		this.revealed = true;
-	}
-
-	public int getAdjacent()
-	{
-		return this.adjacentTo;
-	}
-
-	public boolean isRevealed()
-	{
-		return this.revealed;
-	}
-
-	public void setFlag()
-	{
-		this.flag = true;
-	}
-
-	public boolean getFlag()
-	{
-		return this.flag;
-	}
-
-	public void setMine()
-	{
-		this.mine = true;
-	}
-
-	public boolean isMine()
-	{
-		return this.mine;
-	}
-
+	/*
+	* Character representation of a tile, used to load icons in the Game class
+	* ' ' if not revealed
+	* 'f' if not revealed and flag placed
+	* # of mines adjacent to if revealed
+	*/
 	public char toChar()
 	{
 		if (this.revealed)
@@ -66,5 +32,49 @@ public class Tile
 			else
 				return ' ';
 		}
+	}
+	
+	/* GETTERS */
+
+	public int getAdjacent()
+	{
+		return this.adjacentTo;
+	}
+
+	public boolean getRevealed()
+	{
+		return this.revealed;
+	}
+
+	public boolean getFlag()
+	{
+		return this.flag;
+	}
+
+	public boolean getMine()
+	{
+		return this.mine;
+	}
+
+	/* SETTERS */
+
+	public void setRevealed()
+	{
+		this.revealed = true;
+	}
+
+	public void setAdjacent(int adjacentTo)
+	{
+		this.adjacentTo = adjacentTo;
+	}
+
+	public void setMine()
+	{
+		this.mine = true;
+	}
+
+	public void setFlag()
+	{
+		this.flag = true;
 	}
 }
