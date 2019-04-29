@@ -217,7 +217,7 @@ public class Game
 	private void placeFlag(int x, int y)
 	{
 		// Place flag on square if it isn't revealed or is a mine
-		if (!(this.gameBoard.revealed(x, y)) || this.gameBoard.mine(x,y))
+		if (!(this.gameBoard.getRevealed(x, y)) || this.gameBoard.getMine(x,y))
 		{
 			this.gameBoard.setFlag(x,y);
 			if (this.gameBoard.getFlag(x,y))
@@ -403,7 +403,7 @@ public class Game
 				Game.this.revealTiles(coordinates[0], coordinates[1]);
 
 				// Check if mine was clicked on
-				if (Game.this.gameBoard.mine(coordinates[0], coordinates[1]))
+				if (Game.this.gameBoard.getMine(coordinates[0], coordinates[1]))
 				{
 					Game.this.gameOver(coordinates[0], coordinates[1]);
 					this.enabled = false;
