@@ -152,8 +152,6 @@ public class Board
 		if (this.theBoard[x][y].getRevealed())
 			return;
 
-		this.theBoard[x][y].setRevealed();
-		
 		if (this.theBoard[x][y].getMine())
 			this.changes.push((int)'b');
 		else
@@ -166,7 +164,10 @@ public class Board
 			this.revealAdjacentTiles(x,y);
 		}
 		else
+		{
 			this.tilesLeft--;
+			this.theBoard[x][y].setRevealed();
+		}
 			
 			
 	}
