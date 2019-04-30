@@ -8,6 +8,7 @@ public class Board
 	private int dimension;		
 	private Stack<Integer> changes;	// Stores all changes made
 	private boolean firstMove;	// If this is first move
+	private int tilesLeft;
 
 	// Used to calculate coordinates of all 8 adjacent tiles
 	private int[] delta = {-1,-1,-1,0,-1,1,0,-1,0,1,1,-1,1,0,1,1};
@@ -18,6 +19,7 @@ public class Board
 		theBoard = new Tile[this.dimension][this.dimension];		
 		this.changes = new Stack<>();
 		this.firstMove = true;
+		this.tilesLeft = 0;
 	}
 
 	/*
@@ -131,6 +133,7 @@ public class Board
 
 		theBoard = new Tile[this.dimension][this.dimension];
 		this.firstMove = true;
+		this.tilesLeft = 0;
 	}
 
 	/*
@@ -139,11 +142,15 @@ public class Board
 	*/
 	public void revealTile(int x, int y)
 	{
+		System.out.println(this.tilesLeft);
 		if (this.firstMove)
 		{
 			this.first(x,y);
 			this.firstMove = false;
 		}
+
+		if (this.theBoard[x][y].getRevealed())
+			return;
 
 		this.theBoard[x][y].setRevealed();
 		
@@ -158,6 +165,9 @@ public class Board
 		{
 			this.revealAdjacentTiles(x,y);
 		}
+		else
+			this.tilesLeft--;
+			
 			
 	}
 
@@ -166,20 +176,10 @@ public class Board
 	*/
 	public boolean checkForWin()
 	{
-		boolean win = true;
-
-		for (int x = 0; x < this.dimension; x++)
-		{
-			for (int y = 0; y < this.dimension; y++)
-			{
-				if(!(this.theBoard[x][y].getRevealed()) && !(this.theBoard[x][y].getMine()))
-				{
-					win = false;
-					break;
-				}
-			}
-		}
-		return win;
+		if (this.tilesLeft <=0)
+			return true;
+		else
+			return false;
 	}
 
 	/* PRIVATE HELPERS */
@@ -203,7 +203,10 @@ public class Board
 			if(randX == x && randY == y)
 				continue;
 			
-			this.theBoard[randX][randY] = new Tile(0, true);
+			if (this.theBoard[randX][randY] == null)
+			{
+				this.theBoard[randX][randY] = new Tile(0, true);
+			}
 		}
 	}
 
@@ -217,7 +220,10 @@ public class Board
                         for (int j = 0; j < this.dimension; j++)
                         {       
 				if (this.theBoard[i][j] == null)
+				{
 					this.theBoard[i][j] = new Tile(calculateAdjacent(i,j), false);
+					this.tilesLeft++;
+				}
                         }
                 }
 	}
@@ -396,12 +402,18 @@ public class Board
 		{
 			currentX = adjacent.pop();
 			currentY = adjacent.pop();
-			// Reveal top tile on stack
-			this.theBoard[currentX][currentY].setRevealed();
 
-			this.changes.push(this.theBoard[currentX][currentY].getAdjacent() + '0');
-			this.changes.push(currentY);
-			this.changes.push(currentX);
+			// Reveal top tile on stack
+			if (!(this.theBoard[currentX][currentY].getRevealed()))
+			{
+				this.theBoard[currentX][currentY].setRevealed();
+				this.tilesLeft--;
+			
+
+				this.changes.push(this.theBoard[currentX][currentY].getAdjacent() + '0');
+				this.changes.push(currentY);
+				this.changes.push(currentX);
+			}
 
 			// Add adjacent 0 tiles to stack
 			this.findAdjacentZero(currentX, currentY, adjacent);
@@ -427,10 +439,15 @@ public class Board
 			{
 				try
 				{
-					this.theBoard[x + this.delta[i]][y + this.delta[i+1]].setRevealed();
-					this.changes.push(this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getAdjacent() + '0');
-					this.changes.push(y + this.delta[i+1]);
-					this.changes.push(x + this.delta[i]);
+					
+					if(!(this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getRevealed()))
+					{
+						this.theBoard[x + this.delta[i]][y + this.delta[i+1]].setRevealed();
+						this.changes.push(this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getAdjacent() + '0');
+						this.changes.push(y + this.delta[i+1]);
+						this.changes.push(x + this.delta[i]);
+						this.tilesLeft--;
+					}
 				}
 				catch(ArrayIndexOutOfBoundsException e)
 				{
