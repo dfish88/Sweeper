@@ -57,6 +57,7 @@ public class Board
 			int randY = rand.nextInt(dimension);
 
 			this.revealTile(randX, randY);
+			this.tilesLeft--;
 			
 			Stack<Integer> s = new Stack<>();
 			s.addAll(this.changes);
@@ -79,6 +80,7 @@ public class Board
 					stack.push(y);
 					stack.push(x);
 					this.theBoard[x][y].setRevealed();
+					this.tilesLeft--;
 					return stack;
 				}
 			}
