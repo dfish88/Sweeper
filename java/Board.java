@@ -448,6 +448,9 @@ public class Board
 		}
 	}
 
+	/*
+	* When a field of 0s is being revealed this method deals with the non 0 edges where the field ends.
+	*/
 	private void revealEdges(int x, int y)
 	{
 		// Try catch incase coordinates are off board

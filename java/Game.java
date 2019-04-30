@@ -13,16 +13,15 @@ public class Game
 	private JFrame frame; // The main JFrame that holds everything
 	private JPanel panel; // The panel that holds all the tiles
 	private JPanel top; // The panel that has the restart button, time, faces
-	private JButton restart;
 	private JLabel theTimer;
 	private JButton face;
+	private JButton restart;
 	private JButton hint;
 	private JButton eight;
 	private JButton sixteen;
 	private JButton buttonGrid[][];
 	private Board gameBoard;
 	private GameListener listener;
-	private InitialListener listener2;
 	private HashMap<Character, ImageIcon> icons = new HashMap<>();
 	private javax.swing.Timer time;
 	private int seconds;
@@ -33,17 +32,17 @@ public class Game
 		this.frame = new JFrame("Mine Sweeper!");
 		this.panel = new JPanel();
 		this.panel.setLayout(new GridLayout(1,2));
-		this.listener2 = new InitialListener();
+		this.listener = new GameListener();
 		this.eight = new JButton();
 		this.eight.setText("8x8 (Easy)");
 		this.eight.setBackground(Color.LIGHT_GRAY);
 		this.eight.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		this.eight.addMouseListener(this.listener2);
+		this.eight.addMouseListener(this.listener);
 		this.sixteen = new JButton();
 		this.sixteen.setText("16x16 (Hard)");
 		this.sixteen.setBackground(Color.LIGHT_GRAY);
 		this.sixteen.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		this.sixteen.addMouseListener(this.listener2);
+		this.sixteen.addMouseListener(this.listener);
 		this.panel.add(this.eight);
 		this.panel.add(this.sixteen);
 		this.panel.setPreferredSize(new Dimension(400,400));
@@ -111,7 +110,6 @@ public class Game
 		this.panel.remove(this.sixteen);
 		this.panel.setPreferredSize(null);
 	
-		this.listener = new GameListener();
 		this.hint.addMouseListener(this.listener);
 		this.restart.addMouseListener(this.listener);
 
@@ -159,7 +157,6 @@ public class Game
 	*/
 	private void addButton(int x, int y, ImageIcon i)
 	{
-
 		this.buttonGrid[x][y] = new JButton();
 		this.buttonGrid[x][y].putClientProperty("coordinates", new Integer[]{x,y});
 		this.buttonGrid[x][y].addMouseListener(this.listener);	
@@ -288,38 +285,6 @@ public class Game
 		}
 	}
 
-	private class InitialListener implements MouseListener
-	{
-
-		public void mouseClicked(MouseEvent e)
-		{
-		}
-		
-		public void mousePressed(MouseEvent e) 
-		{
-		}
-
-		public void mouseReleased(MouseEvent e)
-		{
-			JButton button = (JButton) e.getSource();
-
-			if (button.equals(Game.this.eight))
-			{
-				Game.this.startGame(8);
-			}
-			else if (button.equals(Game.this.sixteen))
-			{
-				Game.this.startGame(16);
-			}
-		}
-
-		public void mouseEntered(MouseEvent e)
-		{}
-
-      		public void mouseExited(MouseEvent e)
-		{}
-	}
-
 	private class GameListener implements MouseListener
 	{
 		private boolean enabled;
@@ -341,6 +306,11 @@ public class Game
 			if (this.enabled == false)
 				return;
 
+			JButton button = (JButton) e.getSource();
+			
+			// Only change face once games starts and not on initial screen
+			if (button.equals(Game.this.eight) || button.equals(Game.this.sixteen))
+				return;
 			Game.this.face.setIcon(Game.this.icons.get('c'));
 		}
 
@@ -348,15 +318,23 @@ public class Game
 		{
 			JButton button = (JButton) e.getSource();
 
+			// Used for initial screen
+			if (button.equals(Game.this.eight))
+			{
+				Game.this.startGame(8);
+				return;
+			}
+			if (button.equals(Game.this.sixteen))
+			{
+				Game.this.startGame(16);
+				return;
+			}
+	
+
 			// Restart button was clicked
 			if (button.equals(Game.this.restart))
 			{
-				this.enabled = true;
-				Game.this.restart();
-				this.first = true;
-				Game.this.seconds = 0;
-				Game.this.time.stop();
-				Game.this.theTimer.setText("0:00");
+				this.restartClicked();
 				return;
 			}
 
@@ -366,24 +344,10 @@ public class Game
 
 			Game.this.face.setIcon(Game.this.icons.get('s'));
 
+			// Hint button clicked
 			if (button.equals(Game.this.hint))
 			{
-				Game.this.doHint();
-				
-				if (this.first)
-				{
-					Game.this.time.start();
-					Game.this.theTimer.setText("0:00");
-					this.first = false;
-				}
-
-				if (Game.this.gameBoard.checkForWin())
-				{
-					this.enabled = false;
-					Game.this.face.setIcon(Game.this.icons.get('g'));
-					Game.this.time.stop();
-				}
-
+				this.hintClicked();
 				return;
 			}
 
@@ -392,31 +356,7 @@ public class Game
 			// Left click reveals tiles, there is a chance a mine has been clicked on.
 			if (SwingUtilities.isLeftMouseButton(e))
 			{				
-
-				if (this.first)
-				{
-					Game.this.time.start();
-					Game.this.theTimer.setText("0:00");
-					this.first = false;
-				}
-
-				Game.this.revealTiles(coordinates[0], coordinates[1]);
-
-				// Check if mine was clicked on
-				if (Game.this.gameBoard.getMine(coordinates[0], coordinates[1]))
-				{
-					Game.this.gameOver(coordinates[0], coordinates[1]);
-					this.enabled = false;
-				}
-
-				// Check if player has won the game
-				else if(Game.this.gameBoard.checkForWin())
-				{
-					this.enabled = false;
-					Game.this.face.setIcon(Game.this.icons.get('g'));
-					Game.this.time.stop();
-				}
-
+				this.leftClick(coordinates[0], coordinates[1]);
 			}
 			// Right click places flag
 			else if (SwingUtilities.isRightMouseButton(e))
@@ -428,6 +368,62 @@ public class Game
 				// Catches exception where players right clicks before making first move
 				catch (Exception exc)
 				{}
+			}
+		}
+
+		private void hintClicked()
+		{
+			Game.this.doHint();
+			
+			if (this.first)
+			{
+				Game.this.time.start();
+				Game.this.theTimer.setText("0:00");
+				this.first = false;
+			}
+
+			if (Game.this.gameBoard.checkForWin())
+			{
+				this.enabled = false;
+				Game.this.face.setIcon(Game.this.icons.get('g'));
+				Game.this.time.stop();
+			}
+		}
+
+		private void restartClicked()
+		{
+			this.enabled = true;
+			Game.this.restart();
+			this.first = true;
+			Game.this.seconds = 0;
+			Game.this.time.stop();
+			Game.this.theTimer.setText("0:00");
+		}
+
+		private void leftClick(int x, int y)
+		{
+			if (this.first)
+			{
+				Game.this.time.start();
+				Game.this.theTimer.setText("0:00");
+				this.first = false;
+			}
+
+			Game.this.revealTiles(x,y);
+
+			// Check if mine was clicked on
+			if (Game.this.gameBoard.getMine(x,y))
+			{
+				Game.this.gameOver(x,y);
+				this.enabled = false;
+			}
+
+			// Check if player has won the game
+			else if(Game.this.gameBoard.checkForWin())
+			{
+				this.enabled = false;
+				Game.this.face.setIcon(Game.this.icons.get('g'));
+				Game.this.time.stop();
 			}
 		}
 
