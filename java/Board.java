@@ -144,7 +144,7 @@ public class Board
 	*/
 	public void revealTile(int x, int y)
 	{
-		System.out.println(this.tilesLeft);
+		// Build board if first move (hint or click)
 		if (this.firstMove)
 		{
 			this.first(x,y);
@@ -161,10 +161,13 @@ public class Board
 			
 		this.changes.push(y);
 		this.changes.push(x);
+
+		// Reveal adjacent 0s if 0 is clicked on
 		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y].getMine())) 
 		{
 			this.revealAdjacentTiles(x,y);
 		}
+		// Reveals tile if non 0 clicked on
 		else
 		{
 			this.tilesLeft--;
@@ -437,26 +440,30 @@ public class Board
 				s.push(y + this.delta[i+1]);
 				s.push(x + this.delta[i]);
 			}
-			// The non 0 edges of the 0 area are convered in this case
+			// The non 0 edges of the 0 area are covered in this case
 			else
 			{
-				try
-				{
-					
-					if(!(this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getRevealed()))
-					{
-						this.theBoard[x + this.delta[i]][y + this.delta[i+1]].setRevealed();
-						this.changes.push(this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getAdjacent() + '0');
-						this.changes.push(y + this.delta[i+1]);
-						this.changes.push(x + this.delta[i]);
-						this.tilesLeft--;
-					}
-				}
-				catch(ArrayIndexOutOfBoundsException e)
-				{
-					continue;
-				}
+				this.revealEdges(x + this.delta[i], y + this.delta[i+1]);
 			}
+		}
+	}
+
+	private void revealEdges(int x, int y)
+	{
+		// Try catch incase coordinates are off board
+		try
+		{
+			if(!(this.theBoard[x][y].getRevealed()))
+			{
+				this.theBoard[x][y].setRevealed();
+				this.changes.push(this.theBoard[x][y].getAdjacent() + '0');
+				this.changes.push(y);
+				this.changes.push(x);
+				this.tilesLeft--;
+			}
+		}
+		catch(ArrayIndexOutOfBoundsException e)
+		{
 		}
 	}
 
