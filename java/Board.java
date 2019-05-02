@@ -51,7 +51,6 @@ public class Board
 	{
 		if (this.firstMove)
 		{
-			this.firstMove = false;
 			Random rand = new Random();
 
 			int randX = rand.nextInt(dimension);
