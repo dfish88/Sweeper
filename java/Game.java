@@ -139,7 +139,9 @@ public class Game
 		this.panel.remove(this.sixteen);
 		this.panel.setPreferredSize(null);
 	
+		this.hint.removeMouseListener(this.listener);
 		this.hint.addMouseListener(this.listener);
+		this.restart.removeMouseListener(this.listener);
 		this.restart.addMouseListener(this.listener);
 
 		this.panel.setLayout(new GridLayout(dimension, dimension));
@@ -285,7 +287,6 @@ public class Game
 
 	private void restart()
 	{
-		this.gameBoard.restart();
 		this.startScreen();
 		this.face.setIcon(this.icons.get('s'));
 	}
@@ -293,6 +294,7 @@ public class Game
 	private void doHint()
 	{
 		Stack<Integer> stack = this.gameBoard.hint();
+		System.out.println(stack);
 		
 		while (!(stack.empty()))
 		{

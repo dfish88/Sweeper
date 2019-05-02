@@ -51,6 +51,7 @@ public class Board
 	{
 		if (this.firstMove)
 		{
+			this.firstMove = false;
 			Random rand = new Random();
 
 			int randX = rand.nextInt(dimension);
@@ -109,20 +110,6 @@ public class Board
 			}
 		}
 		return stack;
-	}
-
-	/*
-	* Restarts game when restart button is pressed by rebuilding board.
-	*/
-	public void restart()
-	{
-		if (this.firstMove)
-			return;
-	
-		this.changes.clear();
-		this.theBoard = new Tile[this.dimension][this.dimension];
-		this.firstMove = true;
-		this.tilesLeft = 0;
 	}
 
 	/*
