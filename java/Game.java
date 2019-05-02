@@ -102,6 +102,18 @@ public class Game
 		this.frame.setVisible(true);
 	}
 
+	private void startScreen()
+	{
+		this.frame.remove(this.panel);
+		this.panel = new JPanel();
+		this.panel.setLayout(new GridLayout(1,2));
+		this.panel.add(this.eight);
+		this.panel.add(this.sixteen);
+		this.panel.setPreferredSize(new Dimension(400,400));
+		this.frame.add(this.panel, BorderLayout.CENTER);
+		this.frame.pack();
+	}
+
 	public void startGame(int dimension)
 	{
 		this.gameBoard = new Board(dimension);
@@ -267,7 +279,7 @@ public class Game
 	private void restart()
 	{
 		this.gameBoard.restart();
-		this.drawBoard();
+		this.startScreen();
 		this.face.setIcon(this.icons.get('s'));
 	}
 

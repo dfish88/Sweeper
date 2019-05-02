@@ -118,22 +118,9 @@ public class Board
 	{
 		if (this.firstMove)
 			return;
-
+	
 		this.changes.clear();
-		for (int x = 0; x < this.dimension; x++)
-		{
-			for (int y = 0; y < this.dimension; y++)
-			{
-				if (this.theBoard[x][y].getRevealed() || this.theBoard[x][y].getFlag() || this.theBoard[x][y].getMine())
-				{
-					this.changes.push((int)' ');
-					this.changes.push(y);
-					this.changes.push(x);
-				}
-			}
-		}
-
-		theBoard = new Tile[this.dimension][this.dimension];
+		this.theBoard = new Tile[this.dimension][this.dimension];
 		this.firstMove = true;
 		this.tilesLeft = 0;
 	}
