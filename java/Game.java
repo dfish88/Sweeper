@@ -28,26 +28,27 @@ public class Game
 
 	public Game()
 	{
-		// Start window with 2 options
-		this.frame = new JFrame("Mine Sweeper!");
-		this.panel = new JPanel();
-		this.panel.setLayout(new GridLayout(1,2));
-		this.listener = new GameListener();
-		this.eight = new JButton();
-		this.eight.setText("8x8 (Easy)");
-		this.eight.setBackground(Color.LIGHT_GRAY);
-		this.eight.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		this.eight.addMouseListener(this.listener);
-		this.sixteen = new JButton();
-		this.sixteen.setText("16x16 (Hard)");
-		this.sixteen.setBackground(Color.LIGHT_GRAY);
-		this.sixteen.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		this.sixteen.addMouseListener(this.listener);
-		this.panel.add(this.eight);
-		this.panel.add(this.sixteen);
-		this.panel.setPreferredSize(new Dimension(400,400));
-
+		this.setUpStartScreen();
 		this.loadImages();
+		this.setUpTimer();	
+		this.setUpTopPanel();
+		this.setUpFrame();
+	}
+
+	/*
+	* Addes all the buttons to panels and all the panels to the main frame.
+	*/
+	private void setUpFrame()
+	{
+		this.frame.add(this.top, BorderLayout.PAGE_START);
+		this.frame.add(this.panel, BorderLayout.CENTER);
+		this.frame.pack();
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setResizable(false);
+		this.frame.setVisible(true);
+	}
+	private void setUpTopPanel()
+	{
 		this.top = new JPanel();
 		this.top.setLayout(new GridLayout(1,4));
 		this.top.setBackground(Color.LIGHT_GRAY);
@@ -61,8 +62,16 @@ public class Game
 		this.hint = new JButton("Hint?");
 		this.hint.setBackground(Color.LIGHT_GRAY);
 		this.hint.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.top.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.panel.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.top.add(this.hint, 0);
+		this.top.add(this.face,1);
+		this.top.add(this.restart,2);
+		this.top.add(this.theTimer,3);
+	}
 
-
+	private void setUpTimer()
+	{
 		this.theTimer = new JLabel("0:00");
 		this.theTimer.setHorizontalAlignment(JLabel.CENTER);
 		this.theTimer.setVerticalAlignment(JLabel.CENTER);
@@ -86,20 +95,28 @@ public class Game
 			}
 		});
 
-		this.top.setBorder(BorderFactory.createLoweredBevelBorder());
-		this.panel.setBorder(BorderFactory.createLoweredBevelBorder());
+	}
 
-		//this.top.setPreferredSize(new Dimension(400,100));
-		this.top.add(this.hint, 0);
-		this.top.add(this.face,1);
-		this.top.add(this.restart,2);
-		this.top.add(this.theTimer,3);
-		this.frame.add(this.top, BorderLayout.PAGE_START);
-		this.frame.add(this.panel, BorderLayout.CENTER);
-		this.frame.pack();
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame.setResizable(false);
-		this.frame.setVisible(true);
+	private void setUpStartScreen()
+	{
+		// Start window with 2 options
+		this.frame = new JFrame("Mine Sweeper!");
+		this.panel = new JPanel();
+		this.panel.setLayout(new GridLayout(1,2));
+		this.listener = new GameListener();
+		this.eight = new JButton();
+		this.eight.setText("8x8 (Easy)");
+		this.eight.setBackground(Color.LIGHT_GRAY);
+		this.eight.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		this.eight.addMouseListener(this.listener);
+		this.sixteen = new JButton();
+		this.sixteen.setText("16x16 (Hard)");
+		this.sixteen.setBackground(Color.LIGHT_GRAY);
+		this.sixteen.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		this.sixteen.addMouseListener(this.listener);
+		this.panel.add(this.eight);
+		this.panel.add(this.sixteen);
+		this.panel.setPreferredSize(new Dimension(400,400));
 	}
 
 	private void startScreen()
@@ -129,6 +146,7 @@ public class Game
 
 		this.buttonGrid = new JButton[dimension][dimension];
 		this.buildWindow(dimension);
+		this.frame.pack();
 	}
 
 	/*
@@ -177,16 +195,6 @@ public class Game
 		this.panel.add(this.buttonGrid[x][y]);
 	}
 
-	/*
-	* Addes all the buttons to panels and all the panels to the main frame.
-	*/
-	private void setUpFrame()
-	{
-		this.frame.add(this.panel, BorderLayout.CENTER);
-		this.frame.pack();
-		this.frame.setResizable(false);
-		this.frame.setVisible(true);
-	}
 
 	private void buildWindow(int dimension)
 	{
@@ -197,7 +205,6 @@ public class Game
 				this.addButton(i, j, this.icons.get(' '));
                         }
                 }
-		this.setUpFrame();
 	}
 
 	public void revealTiles(int x, int y)
