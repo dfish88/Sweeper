@@ -13,18 +13,18 @@ public class Game
 	private JFrame frame; // The main JFrame that holds everything
 	private JPanel panel; // The panel that holds all the tiles
 	private JPanel top; // The panel that has the restart button, time, faces
-	private JLabel theTimer;
-	private JButton face;
+	private JButton face; // Face icon
 	private JButton restart;
 	private JButton hint;
 	private JButton eight;
 	private JButton sixteen;
-	private JButton buttonGrid[][];
+	private JButton buttonGrid[][]; // Holds all the buttons for each tile
 	private Board gameBoard;
 	private GameListener listener;
-	private HashMap<Character, ImageIcon> icons = new HashMap<>();
-	private javax.swing.Timer time;
-	private int seconds;
+	private HashMap<Character, ImageIcon> icons = new HashMap<>(); // Hashmap for button icons
+	private javax.swing.Timer time; // Game timer
+	private JLabel theTimer; // Game timer label
+	private int seconds; // Seconds elapsed since game started
 
 	public Game()
 	{
@@ -36,7 +36,7 @@ public class Game
 	}
 
 	/*
-	* Addes all the buttons to panels and all the panels to the main frame.
+	* Adds panels to frame, sets close actions, draws frame.
 	*/
 	private void setUpFrame()
 	{
@@ -47,6 +47,10 @@ public class Game
 		this.frame.setResizable(false);
 		this.frame.setVisible(true);
 	}
+
+	/*
+	* Puts buttons on top panel
+	*/
 	private void setUpTopPanel()
 	{
 		this.top = new JPanel();
@@ -70,6 +74,9 @@ public class Game
 		this.top.add(this.theTimer,3);
 	}
 
+	/*
+	* Creates timer for game.
+	*/
 	private void setUpTimer()
 	{
 		this.theTimer = new JLabel("0:00");
@@ -97,6 +104,9 @@ public class Game
 
 	}
 
+	/*
+	* Builds start screen where player chooses board size.
+	*/
 	private void setUpStartScreen()
 	{
 		// Start window with 2 options
@@ -119,6 +129,9 @@ public class Game
 		this.panel.setPreferredSize(new Dimension(400,400));
 	}
 
+	/*
+	* Displays start screen and enables listeners.
+	*/
 	private void startScreen()
 	{
 		this.frame.remove(this.panel);
@@ -131,7 +144,10 @@ public class Game
 		this.frame.pack();
 	}
 
-	public void startGame(int dimension)
+	/*
+	* Starts the game with a board size of dimension.
+	*/
+	private void startGame(int dimension)
 	{
 		this.gameBoard = new Board(dimension);
 	
@@ -139,10 +155,12 @@ public class Game
 		this.panel.remove(this.sixteen);
 		this.panel.setPreferredSize(null);
 	
-		this.hint.removeMouseListener(this.listener);
-		this.hint.addMouseListener(this.listener);
-		this.restart.removeMouseListener(this.listener);
-		this.restart.addMouseListener(this.listener);
+		// Only add mouse listener once
+		if (this.hint.getMouseListeners().length == 1)
+			this.hint.addMouseListener(this.listener);
+	
+		if (this.restart.getMouseListeners().length == 1)
+			this.restart.addMouseListener(this.listener);
 
 		this.panel.setLayout(new GridLayout(dimension, dimension));
 
@@ -197,7 +215,9 @@ public class Game
 		this.panel.add(this.buttonGrid[x][y]);
 	}
 
-
+	/*
+	* Adds a button to the frame for each tile.
+	*/
 	private void buildWindow(int dimension)
 	{
 		for (int i = 0; i < dimension; i++)
@@ -209,12 +229,18 @@ public class Game
                 }
 	}
 
-	public void revealTiles(int x, int y)
+	/*
+	* Reveals tile at x y and adjacent tiles if 0 then redraws board.
+	*/
+	private void revealTiles(int x, int y)
 	{
 		this.gameBoard.revealTile(x,y);
 		this.drawBoard();
 	}
 	
+	/*
+	* Draws the board
+	*/
 	private void drawBoard()
 	{
 		Stack<Integer> changes = this.gameBoard.getChanges();
@@ -232,6 +258,9 @@ public class Game
 		}	
 	}
 
+	/*
+	* Changes icon on tile x y to a flag or to a blank square if already flag.
+	*/
 	private void placeFlag(int x, int y)
 	{
 		// Place flag on square if it isn't revealed or is a mine
@@ -245,6 +274,9 @@ public class Game
 		}
 	}
 
+	/*
+	* Called when player clicks on mine.
+	*/
 	private void gameOver(int x, int y)
 	{
 		this.gameBoard.revealTile(x,y);
@@ -255,6 +287,9 @@ public class Game
 		this.time.stop();
 	}
 
+	/*
+	* Reveals all mines on the board, called when players dies.
+	*/
 	private void revealMines()
 	{
 		Stack<Integer> mines = this.gameBoard.getMines();
@@ -270,6 +305,9 @@ public class Game
 		}
 	}
 
+	/*
+	* Reveals all flags on the board, called when player dies.
+	*/
 	private void revealFlags()
 	{
 		Stack<Integer> wrongs = this.gameBoard.getFlags();
@@ -285,16 +323,22 @@ public class Game
 		}
 	}
 
+	/*
+	* Called when player hits restart. Creates a new game.
+	*/
 	private void restart()
 	{
 		this.startScreen();
 		this.face.setIcon(this.icons.get('s'));
 	}
 
+	/*
+	* Called when players clicks hint. Reveals tile(s)(depending on if a 0 tile was revealed) 
+	* to help player.
+	*/
 	private void doHint()
 	{
 		Stack<Integer> stack = this.gameBoard.hint();
-		System.out.println(stack);
 		
 		while (!(stack.empty()))
 		{
@@ -306,6 +350,9 @@ public class Game
 		}
 	}
 
+	/*
+	* Mouse listener registerd on all game buttons.
+	*/
 	private class GameListener implements MouseListener
 	{
 		private boolean enabled;
