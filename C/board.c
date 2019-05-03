@@ -3,7 +3,9 @@
 #include <stdlib.h>
 #include "board.h"
 
-// tile on the board
+/********************
+*	TYPES
+********************/ 
 typedef struct
 {
 	char type;
@@ -18,11 +20,34 @@ struct game_board
 	tile **board;
 };
 
-char tile_type(game_board* gb, int x, int y)
+/********************
+*	GETTERS
+********************/ 
+
+char get_type(game_board* gb, int x, int y)
 {
 	return gb->board[x][y].type;
 }
 
+
+bool get_mine(game_board* gb, int x, int y)
+{
+	return gb->board[x][y].mine;
+}
+
+bool get_flag(game_board* gb, int x, int y)
+{
+	return gb->board[x][y].flag;
+}
+
+unsigned int get_adjacent(game_board* gb, int x, int y)
+{
+	return gb->board[x][y].adjacent;
+}
+
+/********************
+*	SETTERS
+********************/ 
 void add_tile(game_board* gb, char t, bool m, bool f, unsigned int a, int x, int y)
 {
 	gb->board[x][y].type = t;
@@ -31,6 +56,29 @@ void add_tile(game_board* gb, char t, bool m, bool f, unsigned int a, int x, int
 	gb->board[x][y].adjacent = a;
 }
 
+void set_type(game_board* gb, int x, int y, char t)
+{
+	gb->board[x][y].type = t;
+}
+
+void set_mine(game_board* gb, int x, int y)
+{
+	gb->board[x][y].mine = true;
+}
+
+void set_flag(game_board* gb, int x, int y)
+{
+	gb->board[x][y].flag = !(gb->board[x][y].flag);
+}
+
+void set_adjacent(game_board* gb, int x, int y, int a)
+{
+	gb->board[x][y].adjacent = a;
+}
+
+/******************************
+*    CONSTRUCTORS/DESTRUCTORS
+******************************/ 
 game_board* create_board(int size)
 {
 	game_board* gb = malloc(sizeof(game_board));
