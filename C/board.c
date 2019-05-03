@@ -3,6 +3,8 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "board.h"
+
 // tile on the board
 typedef struct
 {
@@ -12,22 +14,41 @@ typedef struct
 	unsigned int adjacent;
 } tile;
 
-int dimension;
-tile **board;
+struct game_board
+{
+	int dimension;
+	tile **board;
+};
 
-void free_board()
+
+game_board* create_game_board(int size)
+{
+	game_board* gb = malloc(sizeof(game_board));
+	gb->dimension = size;
+
+	int x;
+	gb->board = malloc(gb->dimension * sizeof(tile *));
+	for (x = 0; x < gb->dimension; x++)
+	{
+		gb->board[x] = malloc(gb->dimension * sizeof(tile));
+	}
+	return gb;
+}
+
+void destroy_board(game_board* gb, int size) 
 {
 	int x;
-	for (x = 0; x < dimension; x++)
+	for (x = 0; x < size; x++)
 	{
-		free(board[x]);
+		free(gb->board[x]);
 	}
-	free(board);
+	free(gb->board);
+	free(gb);
 }
 
 int main()
 {
-	dimension = 4;
+	/*dimension = 4;
 	board = malloc(dimension * sizeof(tile *));
 
 	int x,y;
@@ -46,4 +67,5 @@ int main()
 	printf("Tile type: %c\n", board[0][1].type);
 	printf("Adjacent to: %d\n", board[0][1].adjacent);
 	free_board();
+	*/
 }
