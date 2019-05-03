@@ -1,8 +1,6 @@
 #include <stdio.h>
-#include <stdbool.h> 
 #include <string.h>
 #include <stdlib.h>
-
 #include "board.h"
 
 // tile on the board
@@ -20,8 +18,20 @@ struct game_board
 	tile **board;
 };
 
+char tile_type(game_board* gb, int x, int y)
+{
+	return gb->board[x][y].type;
+}
 
-game_board* create_game_board(int size)
+void add_tile(game_board* gb, char t, bool m, bool f, unsigned int a, int x, int y)
+{
+	gb->board[x][y].type = t;
+	gb->board[x][y].mine = m;
+	gb->board[x][y].flag = f;
+	gb->board[x][y].adjacent = a;
+}
+
+game_board* create_board(int size)
 {
 	game_board* gb = malloc(sizeof(game_board));
 	gb->dimension = size;
@@ -44,28 +54,4 @@ void destroy_board(game_board* gb, int size)
 	}
 	free(gb->board);
 	free(gb);
-}
-
-int main()
-{
-	/*dimension = 4;
-	board = malloc(dimension * sizeof(tile *));
-
-	int x,y;
-	for (x = 0; x < dimension; x++)
-	{
-		board[x] = malloc(dimension * sizeof(tile));;
-	}
-	
-
-	board[0][0] = (tile) {'x', false, false, 2};
-	board[0][1] = (tile) {'f', false, false, 4}; 
-
-	printf("Tile type: %c\n", board[0][0].type);
-	printf("Adjacent to: %d\n", board[0][0].adjacent);
-
-	printf("Tile type: %c\n", board[0][1].type);
-	printf("Adjacent to: %d\n", board[0][1].adjacent);
-	free_board();
-	*/
 }
