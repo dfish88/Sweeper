@@ -145,8 +145,6 @@ void destroy_board(game_board* gb, int size)
 *       REVEALING TILES
 ******************************/ 
 
-int* reveal_tile(game_board* gb, int x, int y)
+void reveal_tile(game_board* gb, int x, int y)
 {
-	int a = 10;
-	return &a;
 }
