@@ -4,6 +4,12 @@
 *	TYPES
 ********************/ 
 typedef struct game_board game_board;
+typedef struct
+{
+	int x;
+	int y;
+	char c;
+} point;
 
 /********************
 *    INIT/DESTROY

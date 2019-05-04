@@ -4,6 +4,10 @@
 #include "board.h"
 
 /********************
+*     CONSTANTS
+********************/ 
+
+/********************
 *	TYPES
 ********************/ 
 typedef struct
@@ -19,6 +23,8 @@ struct game_board
 {
 	int dimension;
 	tile **board;
+	point* changes;
+	int change_head;
 };
 
 /********************
@@ -49,6 +55,20 @@ bool get_revealed(game_board* gb, int x, int y)
 unsigned int get_adjacent(game_board* gb, int x, int y)
 {
 	return gb->board[x][y].adjacent;
+}
+
+point* get_change(game_board* gb)
+{
+	gb->change_head--;
+	return (gb->changes + gb->change_head);
+}
+
+bool no_changes(game_board* gb)
+{
+	if(gb->change_head <= 0)
+		return true;
+	else
+		return false;
 }
 
 /********************
@@ -102,6 +122,10 @@ game_board* create_board(int size)
 	{
 		gb->board[x] = malloc(gb->dimension * sizeof(tile));
 	}
+
+	gb->changes = malloc(gb->dimension * gb->dimension * sizeof(point));
+	gb->change_head = 0;
+
 	return gb;
 }
 
@@ -113,5 +137,16 @@ void destroy_board(game_board* gb, int size)
 		free(gb->board[x]);
 	}
 	free(gb->board);
+	free(gb->changes);
 	free(gb);
+}
+
+/******************************
+*       REVEALING TILES
+******************************/ 
+
+int* reveal_tile(game_board* gb, int x, int y)
+{
+	int a = 10;
+	return &a;
 }
