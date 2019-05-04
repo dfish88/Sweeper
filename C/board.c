@@ -142,9 +142,15 @@ void destroy_board(game_board* gb, int size)
 }
 
 /******************************
+*       BUILD BOARD
+******************************/ 
+void place_mines(game_board* bd)
+{
+}
+
+/******************************
 *       REVEALING TILES
 ******************************/ 
-
 void reveal_tile(game_board* gb, int x, int y)
 {
 }
