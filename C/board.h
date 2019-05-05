@@ -4,11 +4,12 @@
 *	TYPES
 ********************/ 
 typedef struct game_board game_board;
-typedef struct
+typedef struct point
 {
 	int x;
 	int y;
 	char c;
+	struct point * next;
 } point;
 
 /********************

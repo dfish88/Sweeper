@@ -269,8 +269,6 @@ void reveal_all_adjacent(game_board* gb, int x, int y)
 
 void reveal_tile(game_board* gb, int x, int y)
 {
-	gb->board[x][y].revealed = true;
-
 	// GAME OVER!
 	if (gb->board[x][y].mine)
 	{
