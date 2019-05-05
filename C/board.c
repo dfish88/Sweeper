@@ -25,6 +25,7 @@ struct game_board
 	tile **board;
 	point* changes;
 	int change_head;
+	bool done;
 };
 
 /********************
@@ -143,6 +144,7 @@ game_board* create_board(int size)
 
 	gb->changes = malloc(gb->dimension * gb->dimension * sizeof(point));
 	gb->change_head = 0;
+	gb->done = false;
 
 	srand(time(0));
 
@@ -260,8 +262,25 @@ void add_mines(game_board* gb, int x, int y)
 /******************************
 *       REVEALING TILES
 ******************************/ 
+void reveal_all_adjacent(game_board* gb, int x, int y)
+{
+	
+}
+
 void reveal_tile(game_board* gb, int x, int y)
 {
+	gb->board[x][y].revealed = true;
+
+	// GAME OVER!
+	if (gb->board[x][y].mine)
+	{
+		gb->done = true;
+		return;
+	}
+
+	// Reveal all adjacent if tile is a 0
+	if (gb->board[x][y].adjacent == 0)
+		reveal_all_adajcent(gb, x, y);
 }
 
 /******************************
