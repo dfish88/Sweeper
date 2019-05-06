@@ -3,10 +3,22 @@
 #include <stdlib.h>
 #include <time.h>
 #include "board.h"
-
 /********************
 *     CONSTANTS
 ********************/ 
+
+/********************
+*      HELPERS
+********************/ 
+void add(point* head, int x, int y, point* next)
+{
+	point* new = malloc(sizeof(point));
+	new->x = x;
+	new->y = y;
+	new->next = next;
+	head->next = new;
+	head = new;
+}
 
 /********************
 *	TYPES
@@ -194,7 +206,6 @@ bool check_for_mine(game_board* gb, int x, int y)
 int count_mines(game_board* gb, int x, int y)
 {
 	int num_mines = 0;
-
 	// NORTH
 	if (check_for_mine(gb, x - 1, y))
 		num_mines++;
@@ -226,6 +237,7 @@ int count_mines(game_board* gb, int x, int y)
 	// NORTH WEST
 	if (check_for_mine(gb, x - 1, y - 1))
 		num_mines++;
+
 
 	return num_mines;
 }
@@ -281,6 +293,8 @@ bool in_bounds(game_board* gb, int x, int y)
 		return false;
 	else if (x < 0 || y < 0)
 		return false;
+	else if (gb->board[x][y].revealed)
+		return false;
 	else
 		return true;
 }
@@ -296,14 +310,56 @@ void reveal_all_adjacent(game_board* gb, int x, int y)
 
 	while (current != NULL)
 	{
+		printf("Current tile: (%d, %d)\n", current->x, current->y);
+
+		// Reveal all adjacent tiles and add 0 tiles to list
 		if (gb->board[current->x][current->y].adjacent == 0)
 		{
+			// NORTH
+			if (in_bounds(gb, current->x - 1, current->y))
+			{
+			}
+
+			// NORTH EAST
+			if (in_bounds(gb, current->x - 1, current->y + 1))
+			{
+			}
+
+			// EAST
+			if (in_bounds(gb, current->x, current->y + 1))
+			{
+				gb->board[current->x][current->y+1].revealed = true;
+				if (gb->board[current->x][current->y+1].adjacent == 0)
+					add(head, current->x, current->y+1, NULL);
+			}
+			
+			// SOUTH EAST
+			if (in_bounds(gb, current->x + 1, current->y + 1))
+			{
+			}
+
+			// SOUTH
+			if (in_bounds(gb, current->x + 1, current->y))
+			{
+			}
+
+			// SOUTH WEST
+			if (in_bounds(gb, current->x + 1, current->y - 1))
+			{
+			}
+
+			// WEST
+			if (in_bounds(gb, current->x, current->y - 1))
+			{
+			}
+
+			// NORTH WEST
+			if (in_bounds(gb, current->x - 1, current->y - 1))
+			{
+			}
 
 		}
-		else
-		{
-			gb->board[current->x][current->y].revealed = true;
-		}
+		gb->board[current->x][current->y].revealed = true;
 		current = current->next;
 	}
 }
