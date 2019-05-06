@@ -6,6 +6,11 @@
 /********************
 *     CONSTANTS
 ********************/ 
+#define DIRECTIONS 8
+#define NORTH_X -1
+#define NORTH_Y 0
+#define NORTH_EAST
+int directions[DIRECTIONS*2] = {-1,0, -1,1, 0,1, 1,1, 1,0, 1,-1, 0,-1, -1,-1};
 
 /********************
 *      HELPERS
@@ -303,75 +308,26 @@ point* reveal_all_adjacent(game_board* gb, int x, int y)
 	point* current = tail;
 	point* head = tail;
 
+	int dir, new_x, new_y;
+
 	while (current != NULL)
 	{
 		// Reveal all adjacent tiles and add 0 tiles to list
 		if (gb->board[current->x][current->y].adjacent == 0)
 		{
-			// NORTH
-			if (in_bounds(gb, current->x - 1, current->y))
+			for(dir = 0; dir < 8; dir++)
 			{
-				gb->board[current->x-1][current->y].revealed = true;
-				if (gb->board[current->x-1][current->y].adjacent == 0)
-					tail = add(tail, current->x-1, current->y);
-			}
+				if (in_bounds(gb, current->x + delta[dir], current->y + delta[dir+1]))
+				{
+					new_x = current->x + delta[dir];
+					new_y = current->y + delta[dir+1];
 
-			// NORTH EAST
-			if (in_bounds(gb, current->x - 1, current->y + 1))
-			{
-				gb->board[current->x-1][current->y+1].revealed = true;
-				if (gb->board[current->x-1][current->y+1].adjacent == 0)
-					tail = add(tail, current->x-1, current->y+1);
+					gb->board[new_x][new_y].revealed = true;
+					if(gb->board[new_x][new_y].adjacent == 0)
+						tail = add(tail, new_x, new_y);
+				}
 			}
-
-			// EAST
-			if (in_bounds(gb, current->x, current->y + 1))
-			{
-				gb->board[current->x][current->y+1].revealed = true;
-				if (gb->board[current->x][current->y+1].adjacent == 0)
-					tail = add(tail, current->x, current->y+1);
-			}
-			
-			// SOUTH EAST
-			if (in_bounds(gb, current->x + 1, current->y + 1))
-			{
-				gb->board[current->x+1][current->y+1].revealed = true;
-				if (gb->board[current->x+1][current->y+1].adjacent == 0)
-					tail = add(tail, current->x+1, current->y+1);
-			}
-
-			// SOUTH
-			if (in_bounds(gb, current->x + 1, current->y))
-			{
-				gb->board[current->x+1][current->y].revealed = true;
-				if (gb->board[current->x+1][current->y].adjacent == 0)
-					tail = add(tail, current->x+1, current->y);
-			}
-
-			// SOUTH WEST
-			if (in_bounds(gb, current->x + 1, current->y - 1))
-			{
-				gb->board[current->x+1][current->y-1].revealed = true;
-				if (gb->board[current->x+1][current->y-1].adjacent == 0)
-					tail = add(tail, current->x+1, current->y-1);
-			}
-
-			// WEST
-			if (in_bounds(gb, current->x, current->y - 1))
-			{
-				gb->board[current->x][current->y-1].revealed = true;
-				if (gb->board[current->x][current->y-1].adjacent == 0)
-					tail = add(tail, current->x, current->y-1);
-			}
-
-			// NORTH WEST
-			if (in_bounds(gb, current->x - 1, current->y - 1))
-			{
-				gb->board[current->x-1][current->y-1].revealed = true;
-				if (gb->board[current->x-1][current->y-1].adjacent == 0)
-					tail = add(tail, current->x-1, current->y-1);
-			}
-
+			//check_adjacent_tiles(gb, current->x, current->y, &tail);
 		}
 		gb->board[current->x][current->y].revealed = true;
 		current = current->next;
