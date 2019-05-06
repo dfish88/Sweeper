@@ -10,13 +10,18 @@
 /********************
 *      HELPERS
 ********************/ 
-point* add(point* head, int x, int y)
+
+/*
+* Used to add to linked lists which are used to track
+* changes and reveal tiles.
+*/ 
+point* add(point* tail, int x, int y)
 {
 	point* new = malloc(sizeof(point));
 	new->x = x;
 	new->y = y;
 	new->next = NULL;
-	head->next = new;
+	tail->next = new;
 	return new;
 }
 
@@ -35,9 +40,6 @@ struct game_board
 {
 	int dimension;
 	tile **board;
-	point* changes;
-	point* change_head;
-	point* change_start;
 	bool done;
 };
 
@@ -87,16 +89,6 @@ bool get_revealed(game_board* gb, int x, int y)
 unsigned int get_adjacent(game_board* gb, int x, int y)
 {
 	return gb->board[x][y].adjacent;
-}
-
-point* get_change(game_board* gb)
-{
-	return gb->changes;
-}
-
-bool no_changes(game_board* gb)
-{
-	return true;
 }
 
 /********************
@@ -166,9 +158,6 @@ game_board* create_board(int size)
 		gb->board[x] = calloc(gb->dimension,  sizeof(tile));
 	}
 
-	gb->changes = malloc(gb->dimension * gb->dimension * sizeof(point));
-	gb->change_head = NULL;
-	gb->change_start = NULL;
 	gb->done = false;
 
 	srand(time(0));
@@ -184,7 +173,6 @@ void destroy_board(game_board* gb, int size)
 		free(gb->board[x]);
 	}
 	free(gb->board);
-	free(gb->changes);
 	free(gb);
 }
 
@@ -287,6 +275,12 @@ void add_mines(game_board* gb, int x, int y)
 /******************************
 *       REVEALING TILES
 ******************************/ 
+
+
+/*
+* Returns true if (x,y) is on board and
+* tile at (x,y) isn't revealed
+*/
 bool in_bounds(game_board* gb, int x, int y)
 {
 	if (x >= gb->dimension || y >= gb->dimension)
@@ -299,14 +293,15 @@ bool in_bounds(game_board* gb, int x, int y)
 		return true;
 }
 
-void reveal_all_adjacent(game_board* gb, int x, int y)
+point* reveal_all_adjacent(game_board* gb, int x, int y)
 {
-	point* head = malloc(sizeof(point));
-	head->x = x;
-	head->y = y;
-	head->next = NULL;
+	point* tail = malloc(sizeof(point));
+	tail->x = x;
+	tail->y = y;
+	tail->next = NULL;
 
-	point* current = head;
+	point* current = tail;
+	point* head = tail;
 
 	while (current != NULL)
 	{
@@ -318,7 +313,7 @@ void reveal_all_adjacent(game_board* gb, int x, int y)
 			{
 				gb->board[current->x-1][current->y].revealed = true;
 				if (gb->board[current->x-1][current->y].adjacent == 0)
-					head = add(head, current->x-1, current->y);
+					tail = add(tail, current->x-1, current->y);
 			}
 
 			// NORTH EAST
@@ -326,7 +321,7 @@ void reveal_all_adjacent(game_board* gb, int x, int y)
 			{
 				gb->board[current->x-1][current->y+1].revealed = true;
 				if (gb->board[current->x-1][current->y+1].adjacent == 0)
-					head = add(head, current->x-1, current->y+1);
+					tail = add(tail, current->x-1, current->y+1);
 			}
 
 			// EAST
@@ -334,7 +329,7 @@ void reveal_all_adjacent(game_board* gb, int x, int y)
 			{
 				gb->board[current->x][current->y+1].revealed = true;
 				if (gb->board[current->x][current->y+1].adjacent == 0)
-					head = add(head, current->x, current->y+1);
+					tail = add(tail, current->x, current->y+1);
 			}
 			
 			// SOUTH EAST
@@ -342,7 +337,7 @@ void reveal_all_adjacent(game_board* gb, int x, int y)
 			{
 				gb->board[current->x+1][current->y+1].revealed = true;
 				if (gb->board[current->x+1][current->y+1].adjacent == 0)
-					head = add(head, current->x+1, current->y+1);
+					tail = add(tail, current->x+1, current->y+1);
 			}
 
 			// SOUTH
@@ -350,7 +345,7 @@ void reveal_all_adjacent(game_board* gb, int x, int y)
 			{
 				gb->board[current->x+1][current->y].revealed = true;
 				if (gb->board[current->x+1][current->y].adjacent == 0)
-					head = add(head, current->x+1, current->y);
+					tail = add(tail, current->x+1, current->y);
 			}
 
 			// SOUTH WEST
@@ -358,7 +353,7 @@ void reveal_all_adjacent(game_board* gb, int x, int y)
 			{
 				gb->board[current->x+1][current->y-1].revealed = true;
 				if (gb->board[current->x+1][current->y-1].adjacent == 0)
-					head = add(head, current->x+1, current->y-1);
+					tail = add(tail, current->x+1, current->y-1);
 			}
 
 			// WEST
@@ -366,7 +361,7 @@ void reveal_all_adjacent(game_board* gb, int x, int y)
 			{
 				gb->board[current->x][current->y-1].revealed = true;
 				if (gb->board[current->x][current->y-1].adjacent == 0)
-					head = add(head, current->x, current->y-1);
+					tail = add(tail, current->x, current->y-1);
 			}
 
 			// NORTH WEST
@@ -374,16 +369,17 @@ void reveal_all_adjacent(game_board* gb, int x, int y)
 			{
 				gb->board[current->x-1][current->y-1].revealed = true;
 				if (gb->board[current->x-1][current->y-1].adjacent == 0)
-					head = add(head, current->x-1, current->y-1);
+					tail = add(tail, current->x-1, current->y-1);
 			}
 
 		}
 		gb->board[current->x][current->y].revealed = true;
 		current = current->next;
 	}
+	return head;
 }
 
-void reveal_tile(game_board* gb, int x, int y)
+point* reveal_tile(game_board* gb, int x, int y)
 {
 	// GAME OVER!
 	if (gb->board[x][y].mine)
@@ -392,7 +388,7 @@ void reveal_tile(game_board* gb, int x, int y)
 		return;
 	}
 
-	reveal_all_adjacent(gb, x, y);
+	return reveal_all_adjacent(gb, x, y);
 }
 
 /******************************

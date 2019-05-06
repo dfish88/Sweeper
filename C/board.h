@@ -38,5 +38,5 @@ void set_adjacent(game_board* gb, int x, int y, int a);
 void print_board(game_board* gb);
 void print_board_revealed(game_board* gb);
 void add_mines(game_board* gb, int x, int y);
-void reveal_tile(game_board* gb, int x, int y);
+point* reveal_tile(game_board* gb, int x, int y);
 

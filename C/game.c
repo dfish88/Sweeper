@@ -1,5 +1,6 @@
 #include "board.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 int main()
 {
@@ -8,9 +9,19 @@ int main()
 	print_board_revealed(gb);
 	printf("\n");
 	print_board(gb);
-	reveal_tile(gb, 0, 0);
+	point* changes = reveal_tile(gb, 0, 0);
 	printf("\n");
 	print_board(gb);
+
+	point* tmp;
+	while (changes != NULL)
+	{
+		printf("change at (%d, %d)\n", changes->x, changes->y);
+		tmp = changes->next;
+		free(changes);
+		changes = tmp;
+	}
+
 	destroy_board(gb, 4);
 }
 
