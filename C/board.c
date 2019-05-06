@@ -24,15 +24,31 @@ struct game_board
 	int dimension;
 	tile **board;
 	point* changes;
-	int change_head;
+	point* change_head;
+	point* change_start;
 	bool done;
 };
 
 /********************
 *	GETTERS
 ********************/ 
-
 char get_type(game_board* gb, int x, int y)
+{
+	if (!gb->board[x][y].revealed)
+	{
+		if(gb->board[x][y].flag)
+			return 'f';
+		else
+			return 'x';
+	}
+
+	if (gb->board[x][y].mine)
+		return 'm';
+	else
+		return gb->board[x][y].adjacent + '0';
+}
+
+char get_type_revealed(game_board* gb, int x, int y)
 {
 	if (gb->board[x][y].mine)
 		return 'm';
@@ -63,16 +79,12 @@ unsigned int get_adjacent(game_board* gb, int x, int y)
 
 point* get_change(game_board* gb)
 {
-	gb->change_head--;
-	return (gb->changes + gb->change_head);
+	return gb->changes;
 }
 
 bool no_changes(game_board* gb)
 {
-	if(gb->change_head <= 0)
-		return true;
-	else
-		return false;
+	return true;
 }
 
 /********************
@@ -143,7 +155,8 @@ game_board* create_board(int size)
 	}
 
 	gb->changes = malloc(gb->dimension * gb->dimension * sizeof(point));
-	gb->change_head = 0;
+	gb->change_head = NULL;
+	gb->change_start = NULL;
 	gb->done = false;
 
 	srand(time(0));
@@ -262,9 +275,148 @@ void add_mines(game_board* gb, int x, int y)
 /******************************
 *       REVEALING TILES
 ******************************/ 
+bool in_bounds(game_board* gb, int x, int y)
+{
+	if (x >= gb->dimension || y >= gb->dimension)
+		return false;
+	else if (x < 0 || y < 0)
+		return false;
+	else
+		return true;
+}
+
 void reveal_all_adjacent(game_board* gb, int x, int y)
 {
+	point* head = & (point) {x, y, NULL};
+	point* start = head;
+	point* current = head;
+	int r, c;
+
+	// Populate list with tiles that need to be revealed
+	while (current != NULL)
+	{
+		printf("Current tile is (%d, %d)\n", current->x, current->y);
 	
+		// Look at adajcent tiles if current tile is 0
+		if (gb->board[current->x][current->y].adjacent == 0)
+		{
+			r = current->x;
+			c = current->y;			
+
+			// WEST
+			if (in_bounds(gb, r - 1, c) && !gb->board[r-1][c].revealed)
+			{
+				gb->board[r-1][c].revealed = true;
+				
+				if (gb->board[r-1][c].adjacent == 0)
+				{
+					printf("Adding 0 tile to list\n");
+					head->next = & (point) {r-1, c, NULL};
+					head = head->next;
+				}
+			}
+
+			// SOUTH WEST
+			if (in_bounds(gb, r - 1, c + 1) && !gb->board[r-1][c+1].revealed)
+			{
+				gb->board[r-1][c+1].revealed = true;
+				
+				if (gb->board[r-1][c+1].adjacent == 0)
+				{
+					printf("Adding 0 tile to list\n");
+					head->next = & (point) {r-1, c+1, NULL};
+					head = head->next;
+				}
+			}
+
+			// SOUTH
+			if (in_bounds(gb, r, c + 1) && !gb->board[r][c+1].revealed)
+			{
+				gb->board[r][c+1].revealed = true;
+				
+				if (gb->board[r][c+1].adjacent == 0)
+				{
+					printf("Adding 0 tile to list\n");
+					head->next = & (point) {r, c+1, NULL};
+					head = head->next;
+				}
+			}
+			
+			// SOUTH EAST
+			if (in_bounds(gb, r + 1, c + 1) && !gb->board[r+1][c+1].revealed)
+			{
+				gb->board[r+1][c+1].revealed = true;
+				
+				if (gb->board[r+1][c+1].adjacent == 0)
+				{
+					printf("Adding 0 tile to list\n");
+					head->next = & (point) {r+1, c+1, NULL};
+					head = head->next;
+				}
+			}
+
+			// EAST
+			if (in_bounds(gb, r + 1, c) && !gb->board[r+1][c].revealed)
+			{
+				gb->board[r+1][c].revealed = true;
+				
+				if (gb->board[r+1][c].adjacent == 0)
+				{
+					printf("Adding 0 tile to list\n");
+					head->next = & (point) {r+1, c, NULL};
+					head = head->next;
+				}
+			}
+
+			// NORTH EAST
+			if (in_bounds(gb, r + 1, c - 1) && !gb->board[r+1][c-1].revealed)
+			{
+				gb->board[r+1][c-1].revealed = true;
+				
+				if (gb->board[r+1][c-1].adjacent == 0)
+				{
+					printf("Adding 0 tile to list\n");
+					head->next = & (point) {r+1, c-1, NULL};
+					head = head->next;
+				}
+			}
+
+			// NORTH
+			if (in_bounds(gb, r, c - 1) && !gb->board[r][c-1].revealed)
+			{
+				gb->board[r][c-1].revealed = true;
+				
+				if (gb->board[r][c-1].adjacent == 0)
+				{
+					printf("Adding 0 tile to list\n");
+					head->next = & (point) {r, c-1, NULL};
+					head = head->next;
+				}
+			}
+
+			// NORTH WEST
+			if (in_bounds(gb, r - 1, c - 1) && !gb->board[r-1][c-1].revealed)
+			{
+				gb->board[r-1][c-1].revealed = true;
+				
+				if (gb->board[r-1][c-1].adjacent == 0)
+				{
+					printf("Adding 0 tile to list\n");
+					head->next = & (point) {r-1, c-1, NULL};
+					head = head->next;
+				}
+			}
+
+			gb->board[r][c].revealed = true;
+			current = current->next;
+		}
+		// Add to list but don't look at adjacent tiles
+		else
+		{
+			gb->board[current->x][current->y].revealed = true;
+			current = current->next;
+		}	
+	}
 }
 
 void reveal_tile(game_board* gb, int x, int y)
@@ -276,9 +428,7 @@ void reveal_tile(game_board* gb, int x, int y)
 		return;
 	}
 
-	// Reveal all adjacent if tile is a 0
-	if (gb->board[x][y].adjacent == 0)
-		reveal_all_adajcent(gb, x, y);
+	reveal_all_adjacent(gb, x, y);
 }
 
 /******************************
@@ -297,3 +447,18 @@ void print_board(game_board* gb)
 		printf("\n");
 	}
 }
+
+void print_board_revealed(game_board* gb)
+{
+	int x, y;
+
+	for (x = 0; x < gb->dimension; x++)
+	{
+		for (y = 0; y < gb->dimension; y++)
+		{
+			printf(" %c", get_type_revealed(gb, x, y));
+		}
+		printf("\n");
+	}
+}
+
