@@ -287,6 +287,25 @@ bool in_bounds(game_board* gb, int x, int y)
 
 void reveal_all_adjacent(game_board* gb, int x, int y)
 {
+	point* head = malloc(sizeof(point));
+	head->x = x;
+	head->y = y;
+	head->next = NULL;
+
+	point* current = head;
+
+	while (current != NULL)
+	{
+		if (gb->board[current->x][current->y].adjacent == 0)
+		{
+
+		}
+		else
+		{
+			gb->board[current->x][current->y].revealed = true;
+		}
+		current = current->next;
+	}
 }
 
 void reveal_tile(game_board* gb, int x, int y)
