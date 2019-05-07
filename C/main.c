@@ -1,12 +1,12 @@
-#include "board.h"
 #include <stdio.h>
 #include <stdlib.h>
-
 #include <SDL2/SDL.h>
+
+#include "logic.h"
 
 int main()
 {
-	game_board* gb = create_board(8);
+	game* gb = create_board(8);
 	add_mines(gb, 0, 0);
 	printf("\n");
 

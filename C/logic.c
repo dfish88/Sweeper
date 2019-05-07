@@ -2,7 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
-#include "board.h"
+#include "game.h"
+
 /********************
 *     CONSTANTS
 ********************/ 
@@ -39,7 +40,7 @@ typedef struct
 	unsigned int adjacent;
 } tile;
 
-struct game_board
+struct game
 {
 	int dimension;
 	tile **board;
@@ -49,7 +50,7 @@ struct game_board
 /********************
 *	GETTERS
 ********************/ 
-char get_type(game_board* gb, int x, int y)
+char get_type(game* gb, int x, int y)
 {
 	if (!gb->board[x][y].revealed)
 	{
@@ -65,7 +66,7 @@ char get_type(game_board* gb, int x, int y)
 		return gb->board[x][y].adjacent + '0';
 }
 
-char get_type_revealed(game_board* gb, int x, int y)
+char get_type_revealed(game* gb, int x, int y)
 {
 	if (gb->board[x][y].mine)
 		return 'm';
@@ -74,27 +75,27 @@ char get_type_revealed(game_board* gb, int x, int y)
 }
 
 
-bool get_mine(game_board* gb, int x, int y)
+bool get_mine(game* gb, int x, int y)
 {
 	return gb->board[x][y].mine;
 }
 
-bool get_flag(game_board* gb, int x, int y)
+bool get_flag(game* gb, int x, int y)
 {
 	return gb->board[x][y].flag;
 }
 
-bool get_revealed(game_board* gb, int x, int y)
+bool get_revealed(game* gb, int x, int y)
 {
 	return gb->board[x][y].revealed;
 }
 
-unsigned int get_adjacent(game_board* gb, int x, int y)
+unsigned int get_adjacent(game* gb, int x, int y)
 {
 	return gb->board[x][y].adjacent;
 }
 
-bool game_over(game_board* gb)
+bool game_over(game* gb)
 {
 	return gb->done;
 }
@@ -102,7 +103,7 @@ bool game_over(game_board* gb)
 /********************
 *	SETTERS
 ********************/ 
-void add_tile(game_board* gb, int x, int y)
+void add_tile(game* gb, int x, int y)
 {
 	gb->board[x][y].mine = false;
 	gb->board[x][y].flag = false;
@@ -110,22 +111,22 @@ void add_tile(game_board* gb, int x, int y)
 	gb->board[x][y].revealed = false;
 }
 
-void set_mine(game_board* gb, int x, int y)
+void set_mine(game* gb, int x, int y)
 {
 	gb->board[x][y].mine = true;
 }
 
-void set_flag(game_board* gb, int x, int y)
+void set_flag(game* gb, int x, int y)
 {
 	gb->board[x][y].flag = !(gb->board[x][y].flag);
 }
 
-void set_revealed(game_board* gb, int x, int y)
+void set_revealed(game* gb, int x, int y)
 {
 	gb->board[x][y].revealed = true;
 }
 
-void set_adjacent(game_board* gb, int x, int y, int a)
+void set_adjacent(game* gb, int x, int y, int a)
 {
 	gb->board[x][y].adjacent = a;
 }
@@ -133,9 +134,9 @@ void set_adjacent(game_board* gb, int x, int y, int a)
 /******************************
 *    CONSTRUCTORS/DESTRUCTORS
 ******************************/ 
-game_board* create_board(int size)
+game* create_board(int size)
 {
-	game_board* gb = malloc(sizeof(game_board));
+	game* gb = malloc(sizeof(game));
 	gb->dimension = size;
 
 	/*
@@ -173,7 +174,7 @@ game_board* create_board(int size)
 	return gb;
 }
 
-void destroy_board(game_board* gb, int size) 
+void destroy_board(game* gb, int size) 
 {
 	int x;
 	for (x = 0; x < size; x++)
@@ -187,7 +188,7 @@ void destroy_board(game_board* gb, int size)
 /******************************
 *       BUILD BOARD
 ******************************/ 
-bool check_for_mine(game_board* gb, int x, int y)
+bool check_for_mine(game* gb, int x, int y)
 {
 	if (x >= gb->dimension || y >= gb->dimension)
 		return false;
@@ -199,7 +200,7 @@ bool check_for_mine(game_board* gb, int x, int y)
 		return false;
 }
 
-int count_mines(game_board* gb, int x, int y)
+int count_mines(game* gb, int x, int y)
 {
 	int num_mines = 0;
 	// NORTH
@@ -238,7 +239,7 @@ int count_mines(game_board* gb, int x, int y)
 	return num_mines;
 }
 
-void add_mines(game_board* gb, int x, int y)
+void add_mines(game* gb, int x, int y)
 {
 	// Maximum number of mines
 	int limit = (int)((gb->dimension * gb->dimension)/6);
@@ -289,7 +290,7 @@ void add_mines(game_board* gb, int x, int y)
 * Returns true if (x,y) is on board and
 * tile at (x,y) isn't revealed
 */
-bool in_bounds(game_board* gb, int x, int y)
+bool in_bounds(game* gb, int x, int y)
 {
 	if (x >= gb->dimension || y >= gb->dimension)
 		return false;
@@ -301,7 +302,7 @@ bool in_bounds(game_board* gb, int x, int y)
 		return true;
 }
 
-point* reveal_all_adjacent(game_board* gb, int x, int y)
+point* reveal_all_adjacent(game* gb, int x, int y)
 {
 	point* tail = malloc(sizeof(point));
 	tail->x = x;
@@ -339,7 +340,7 @@ point* reveal_all_adjacent(game_board* gb, int x, int y)
 	return head;
 }
 
-point* reveal_tile(game_board* gb, int x, int y)
+point* reveal_tile(game* gb, int x, int y)
 {
 	// GAME OVER!
 	if (gb->board[x][y].mine)
@@ -355,7 +356,7 @@ point* reveal_tile(game_board* gb, int x, int y)
 /******************************
 *       PRINTING BOARD
 ******************************/ 
-void print_board(game_board* gb)
+void print_board(game* gb)
 {
 	int x, y;
 
@@ -369,7 +370,7 @@ void print_board(game_board* gb)
 	}
 }
 
-void print_board_revealed(game_board* gb)
+void print_board_revealed(game* gb)
 {
 	int x, y;
 
