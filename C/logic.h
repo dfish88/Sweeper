@@ -29,5 +29,5 @@ void set_state(game* g, int s);
 void print_board(game* g);
 void print_board_revealed(game* g);
 void add_mines(game* g, int x, int y);
-point* reveal_tile(game* g, int x, int y);
+point* make_move(game* g, int x, int y, bool flag);
 

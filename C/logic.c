@@ -29,6 +29,11 @@ point* add(point* tail, int x, int y)
 	return new;
 }
 
+bool check_win(game* g)
+{
+	return false;
+}
+
 /********************
 *	TYPES
 ********************/ 
@@ -309,7 +314,7 @@ bool in_bounds(game* g, int x, int y)
 		return true;
 }
 
-point* reveal_all_adjacent(game* g, int x, int y)
+point* reveal_tile(game* g, int x, int y)
 {
 	point* tail = malloc(sizeof(point));
 	tail->x = x;
@@ -347,19 +352,6 @@ point* reveal_all_adjacent(game* g, int x, int y)
 	return head;
 }
 
-point* reveal_tile(game* g, int x, int y)
-{
-	// GAME OVER!
-	if (g->board[x][y].mine)
-	{
-		g->state = LOST;
-		g->board[x][y].revealed = true;
-		return NULL;
-	}
-
-	return reveal_all_adjacent(g, x, y);
-}
-
 /******************************
 *       PRINTING BOARD
 ******************************/ 
@@ -391,3 +383,31 @@ void print_board_revealed(game* g)
 	}
 }
 
+/******************************
+*       PLAYING GAME
+******************************/ 
+point* make_move(game* g, int x, int y, bool flag)
+{
+	// Flag tile or remove flag from tile
+	if (flag)
+	{
+		return NULL;
+	}
+
+	// GAME OVER!
+	if (g->board[x][y].mine)
+	{
+		g->state = LOST;
+		g->board[x][y].revealed = true;
+		return NULL;
+	}
+
+	point* head = reveal_tile(g, x, y);
+
+	if (check_win(g))
+	{
+		g->state = WON;
+	}
+
+	return head;
+}

@@ -43,7 +43,7 @@ int main()
 			break;
 		}
 
-		changes = reveal_tile(g, x - '0', y - '0');
+		changes = make_move(g, x - '0', y - '0', false);
 
 		while (changes != NULL)
 		{
