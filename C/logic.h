@@ -24,6 +24,7 @@ void set_mine(game* g, int x, int y);
 void set_flag(game* g, int x, int y);
 void set_revealed(game* g, int x, int y);
 void set_adjacent(game* g, int x, int y, int a);
+void set_state(game* g, int s);
 
 void print_board(game* g);
 void print_board_revealed(game* g);

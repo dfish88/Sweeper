@@ -131,6 +131,13 @@ void set_adjacent(game* g, int x, int y, int a)
 	g->board[x][y].adjacent = a;
 }
 
+void set_state(game* g, int s)
+{
+	if (s > QUIT)
+		return;
+	g->state = s;
+}
+
 /******************************
 *    CONSTRUCTORS/DESTRUCTORS
 ******************************/ 
