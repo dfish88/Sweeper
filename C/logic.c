@@ -215,38 +215,16 @@ bool check_for_mine(game* g, int x, int y)
 int count_mines(game* g, int x, int y)
 {
 	int num_mines = 0;
-	// NORTH
-	if (check_for_mine(g, x - 1, y))
-		num_mines++;
-
-	// NORTH EAST
-	if (check_for_mine(g, x - 1, y + 1))
-		num_mines++;
-
-	// EAST
-	if (check_for_mine(g, x, y + 1))
-		num_mines++;
+	int d, new_x, new_y;
 	
-	// SOUTH EAST
-	if (check_for_mine(g, x + 1, y + 1))
-		num_mines++;
+	for (d = 0; d < DIRECTIONS; d++)
+	{
+		new_x = x + delta_x[d];
+		new_y = y + delta_y[d];
 
-	// SOUTH
-	if (check_for_mine(g, x + 1, y))
-		num_mines++;
-
-	// SOUTH WEST
-	if (check_for_mine(g, x + 1, y - 1))
-		num_mines++;
-
-	// WEST
-	if (check_for_mine(g, x, y - 1))
-		num_mines++;
-
-	// NORTH WEST
-	if (check_for_mine(g, x - 1, y - 1))
-		num_mines++;
-
+		if (check_for_mine(g, new_x, new_y))
+			num_mines++;
+	}
 
 	return num_mines;
 }
