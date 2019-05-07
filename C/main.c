@@ -6,8 +6,8 @@
 
 int main()
 {
-	game* gb = create_board(8);
-	add_mines(gb, 0, 0);
+	game* g = create_board(8);
+	add_mines(g, 0, 0);
 	printf("\n");
 
 	int x;
@@ -21,7 +21,7 @@ int main()
 	while (1)
 	{
 		printf("\e[1;1H\e[2J");
-		print_board(gb);
+		print_board(g);
 
 		printf("Enter x: ");
 		x = getchar();
@@ -37,7 +37,7 @@ int main()
 		if (y == 'q')
 			break;
 
-		changes = reveal_tile(gb, x - '0', y - '0');
+		changes = reveal_tile(g, x - '0', y - '0');
 
 		while (changes != NULL)
 		{
@@ -47,10 +47,10 @@ int main()
 			changes = tmp;
 		}
 
-		if (game_over(gb))
+		if (get_state(g) == LOST)
 		{
 			printf("\e[1;1H\e[2J");
-			print_board(gb);
+			print_board(g);
 			
 			printf("GAME OVER, YOU BLEW UP!\n");
 			break;
@@ -60,6 +60,6 @@ int main()
 
 
 
-	destroy_board(gb, 4);
+	destroy_board(g, 4);
 }
 

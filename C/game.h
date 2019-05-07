@@ -3,6 +3,11 @@
 /********************
 *       TYPES
 ********************/
+#define RUNNING 0
+#define WON 1
+#define LOST 2
+#define QUIT 4
+
 typedef struct game game;                                                                                                                                                                                                                 
 typedef struct point
 {
@@ -10,4 +15,5 @@ typedef struct point
 	int y;
 	struct point * next;
 } point;
+
 
