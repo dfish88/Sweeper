@@ -7,10 +7,8 @@
 *     CONSTANTS
 ********************/ 
 #define DIRECTIONS 8
-#define NORTH_X -1
-#define NORTH_Y 0
-#define NORTH_EAST
-int directions[DIRECTIONS*2] = {-1,0, -1,1, 0,1, 1,1, 1,0, 1,-1, 0,-1, -1,-1};
+const int delta_x[DIRECTIONS] = {-1,-1,0,1,1,1,0,-1};
+const int delta_y[DIRECTIONS] = {0,1,1,1,0,-1,-1,-1};
 
 /********************
 *      HELPERS
@@ -315,14 +313,15 @@ point* reveal_all_adjacent(game_board* gb, int x, int y)
 		// Reveal all adjacent tiles and add 0 tiles to list
 		if (gb->board[current->x][current->y].adjacent == 0)
 		{
-			for(dir = 0; dir < 8; dir++)
+			for(dir = 0; dir < DIRECTIONS; dir++)
 			{
-				if (in_bounds(gb, current->x + delta[dir], current->y + delta[dir+1]))
+				if (in_bounds(gb, current->x + delta_x[dir], current->y + delta_y[dir]))
 				{
-					new_x = current->x + delta[dir];
-					new_y = current->y + delta[dir+1];
+					new_x = current->x + delta_x[dir];
+					new_y = current->y + delta_y[dir];
 
 					gb->board[new_x][new_y].revealed = true;
+
 					if(gb->board[new_x][new_y].adjacent == 0)
 						tail = add(tail, new_x, new_y);
 				}
@@ -341,7 +340,7 @@ point* reveal_tile(game_board* gb, int x, int y)
 	if (gb->board[x][y].mine)
 	{
 		gb->done = true;
-		return;
+		return NULL;
 	}
 
 	return reveal_all_adjacent(gb, x, y);
