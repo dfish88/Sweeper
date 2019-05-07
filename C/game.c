@@ -2,6 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <SDL2/SDL.h>
+
 int main()
 {
 	game_board* gb = create_board(8);
@@ -13,6 +15,11 @@ int main()
 	int c;
 	point* tmp;
 	point* changes;
+
+	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
+	{
+		return EXIT_FAILURE;
+	}
 
 	while (1)
 	{
