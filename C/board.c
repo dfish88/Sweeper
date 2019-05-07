@@ -94,6 +94,11 @@ unsigned int get_adjacent(game_board* gb, int x, int y)
 	return gb->board[x][y].adjacent;
 }
 
+bool game_over(game_board* gb)
+{
+	return gb->done;
+}
+
 /********************
 *	SETTERS
 ********************/ 
@@ -315,10 +320,11 @@ point* reveal_all_adjacent(game_board* gb, int x, int y)
 		{
 			for(dir = 0; dir < DIRECTIONS; dir++)
 			{
-				if (in_bounds(gb, current->x + delta_x[dir], current->y + delta_y[dir]))
+				new_x = current->x + delta_x[dir];
+				new_y = current->y + delta_y[dir];
+
+				if (in_bounds(gb, new_x, new_y)) 
 				{
-					new_x = current->x + delta_x[dir];
-					new_y = current->y + delta_y[dir];
 
 					gb->board[new_x][new_y].revealed = true;
 
@@ -326,7 +332,6 @@ point* reveal_all_adjacent(game_board* gb, int x, int y)
 						tail = add(tail, new_x, new_y);
 				}
 			}
-			//check_adjacent_tiles(gb, current->x, current->y, &tail);
 		}
 		gb->board[current->x][current->y].revealed = true;
 		current = current->next;
@@ -340,6 +345,7 @@ point* reveal_tile(game_board* gb, int x, int y)
 	if (gb->board[x][y].mine)
 	{
 		gb->done = true;
+		gb->board[x][y].revealed = true;
 		return NULL;
 	}
 

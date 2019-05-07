@@ -25,6 +25,7 @@ bool get_mine(game_board* gb, int x, int y);
 bool get_flag(game_board* gb, int x, int y);
 bool get_revealed(game_board* gb, int x, int y);
 unsigned int get_adjacent(game_board* gb, int x, int y);
+bool game_over(game_board* gb);
 
 /********************
 *	SETTERS
