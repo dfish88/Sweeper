@@ -1,6 +1,6 @@
 #include <SDL2/SDL.h>
 
-#include "game.h"
+#include "types.h"
 
 int init_render()
 {

@@ -1,7 +1,7 @@
 #include <stdbool.h> 
 
 /********************
-*       TYPES
+*  TYPES/CONSTANTS
 ********************/
 #define RUNNING 0
 #define WON 1
