@@ -22,6 +22,9 @@ int main()
 		changes = tmp;
 	}
 
+
+	//printf("\e[1;1H\e[2J");
+
 	destroy_board(gb, 4);
 }
 
