@@ -7,6 +7,9 @@ Third iteration planned is functional in Haskell.
 
 Done:
   - Java implementation
-  
-Next Step:
-  - Start C implementation
+ 
+In Progress:
+  - C implementation
+
+To Do:
+  - Haskell implementation
