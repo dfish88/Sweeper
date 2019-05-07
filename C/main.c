@@ -1,8 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <SDL2/SDL.h>
 
 #include "logic.h"
+#include "render.h"
 
 int main()
 {
@@ -16,10 +16,7 @@ int main()
 	point* tmp;
 	point* changes;
 
-	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
-	{
-		return EXIT_FAILURE;
-	}
+	init_render();
 
 	while (1)
 	{
