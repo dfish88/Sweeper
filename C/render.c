@@ -18,6 +18,7 @@ int init_render()
 	{
 		return EXIT_FAILURE;
 	}
+	return 0;
 }
 
 int create_window()
@@ -34,13 +35,14 @@ int create_window()
 		//Get window surface
 		screen = SDL_GetWindowSurface( window );
 	}
+	return 0;
 }
 
-int load_optimized(char* path)
+SDL_Surface* load_optimized(char* path)
 {
 	SDL_Surface* tmp = IMG_Load(path);
 	//Convert surface to screen format
-	SDL_Surface* opt = SDL_ConvertSurface( tmp, screen->format, NULL );
+	SDL_Surface* opt = SDL_ConvertSurface( tmp, screen->format, 0 );
 	SDL_FreeSurface(tmp);
 	return opt;
 }
@@ -76,8 +78,6 @@ void destroy_render()
 
 	//Quit SDL subsystems
 	SDL_Quit();
-
-	return 0;
 }
 
 void make_window()

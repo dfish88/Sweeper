@@ -260,7 +260,6 @@ void add_mines(game* g, int x, int y)
 			// Skip mines that have been added
 			if (!(g->board[r][c].mine))
 			{
-				int a = 0;
 				g->board[r][c].flag = false;
 				g->board[r][c].revealed = false;
 

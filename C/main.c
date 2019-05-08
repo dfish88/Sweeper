@@ -9,13 +9,7 @@ int main()
 	game* g = create_board(8);
 	add_mines(g, 0, 0);
 	printf("\n");
-
-	int x;
-	int y;
-	int c;
-	point* tmp;
-	point* changes;
-
+	
 	make_window();	
 
 	while (get_input() == RUNNING)
@@ -31,5 +25,6 @@ int main()
 
 	destroy_render();
 	destroy_board(g, 4);
+	return 0;
 }
 
