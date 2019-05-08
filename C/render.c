@@ -38,11 +38,17 @@ int create_window()
 
 int load_image()
 {
-	image = SDL_LoadBMP("./lena_gray.bmp");
-	if (image == NULL)
+
+	
+
+	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
 	{
 		printf("Couldn't load image!\n");
 		return -1;	
+	}
+	else
+	{
+		image = IMG_Load("../icons/mine.png");
 	}
 	return 0;
 }
