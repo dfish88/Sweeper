@@ -17,6 +17,7 @@ int main()
 	point* changes;
 
 	init_render();
+	create_window();
 
 	while (get_state(g) == RUNNING)
 	{
@@ -63,7 +64,8 @@ int main()
 		printf("YOU WON!\n");
 	else if (get_state(g) == QUIT)
 		printf("BYE BYE!\n");
-	
+
+	destroy_render();
 	destroy_board(g, 4);
 }
 
