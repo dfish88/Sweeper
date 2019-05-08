@@ -36,6 +36,15 @@ int create_window()
 	}
 }
 
+int load_optimized(char* path)
+{
+	SDL_Surface* tmp = IMG_Load(path);
+	//Convert surface to screen format
+	SDL_Surface* opt = SDL_ConvertSurface( tmp, screen->format, NULL );
+	SDL_FreeSurface(tmp);
+	return opt;
+}
+
 int load_image()
 {
 
@@ -48,7 +57,7 @@ int load_image()
 	}
 	else
 	{
-		image = IMG_Load("../icons/mine.png");
+		image = load_optimized("../icons/mine.png");
 	}
 	return 0;
 }
