@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
 
 #include "types.h"
 
@@ -8,6 +9,7 @@ const int SCREEN_HEIGHT = 400;
 
 SDL_Window* window = NULL;
 SDL_Surface* screen = NULL;
+SDL_Surface* image = NULL;
 
 int init_render()
 {
@@ -31,22 +33,44 @@ int create_window()
 	{
 		//Get window surface
 		screen = SDL_GetWindowSurface( window );
-
-		//Fill the surface white
-		SDL_FillRect( screen, NULL, SDL_MapRGB( screen->format, 0xFF, 0xFF, 0xFF ) );
-
-		//Update the surface
-		SDL_UpdateWindowSurface( window );
 	}
+}
+
+int load_image()
+{
+/*	image = SDL_LoadIMG("../icons/mine.png");
+	if (image == NULL)
+	{
+		printf("Couldn't load image!\n");
+		return -1;	
+	}
+	return 0;
+*/
 }
 
 void destroy_render()
 {
+	SDL_FreeSurface(screen);
+	screen = NULL;
+
+	SDL_FreeSurface(image);
+	image = NULL;
+
 	//Destroy window
 	SDL_DestroyWindow( window );
+	window = NULL;
 
 	//Quit SDL subsystems
 	SDL_Quit();
 
 	return 0;
+}
+
+void make_window()
+{
+	init_render();
+	create_window();
+	//load_image();
+	//SDL_BlitSurface( image, NULL, screen, NULL );
+	//SDL_UpdateWindowSurface(window);
 }

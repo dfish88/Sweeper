@@ -1,3 +1,2 @@
-int init_render();
-int create_window();
+void make_window();
 void destroy_render();

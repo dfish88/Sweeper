@@ -16,8 +16,7 @@ int main()
 	point* tmp;
 	point* changes;
 
-	init_render();
-	create_window();
+	make_window();	
 
 	while (get_state(g) == RUNNING)
 	{
