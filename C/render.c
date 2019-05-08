@@ -38,14 +38,13 @@ int create_window()
 
 int load_image()
 {
-/*	image = SDL_LoadIMG("../icons/mine.png");
+	image = SDL_LoadBMP("./lena_gray.bmp");
 	if (image == NULL)
 	{
 		printf("Couldn't load image!\n");
 		return -1;	
 	}
 	return 0;
-*/
 }
 
 void destroy_render()
@@ -70,7 +69,22 @@ void make_window()
 {
 	init_render();
 	create_window();
-	//load_image();
-	//SDL_BlitSurface( image, NULL, screen, NULL );
-	//SDL_UpdateWindowSurface(window);
+	load_image();
+	SDL_BlitSurface( image, NULL, screen, NULL );
+	SDL_UpdateWindowSurface(window);
 }
+
+int get_input()
+{
+	SDL_Event e;	
+	while(SDL_PollEvent(&e) != 0)
+	{
+		if(e.type == SDL_QUIT)
+		{
+			printf("QUIT!\n");
+			return QUIT;
+		}
+	}
+	return RUNNING;
+}
+
