@@ -6,13 +6,22 @@
 //Screen dimension constants
 const int SCREEN_WIDTH = 400;
 const int SCREEN_HEIGHT = 400;
-const int NUM_IMAGES = 19;
+const int ADJACENT = 9;
 
-SDL_Surface** images;;
+// Images used for game
+SDL_Surface** adjacent;
+SDL_Surface* flag;
+SDL_Surface* mine;
+SDL_Surface* covered;
+SDL_Surface* boom;
+SDL_Surface* wrong;
+SDL_Surface* happy;
+SDL_Surface* surprise;
+SDL_Surface* dead;
+SDL_Surface* glasses;
 
 SDL_Window* window = NULL;
 SDL_Surface* screen = NULL;
-SDL_Surface* image = NULL;
 
 void load_images();
 int create_window();
@@ -29,7 +38,7 @@ int init_render()
 		return EXIT_FAILURE;
 	}
 
-	images = malloc(NUM_IMAGES * sizeof(SDL_Surface*));
+	adjacent = malloc(ADJACENT * sizeof(SDL_Surface*));
 	create_window();
 	load_images();
 
@@ -64,33 +73,23 @@ SDL_Surface* load_optimized(char* path)
 
 void load_images()
 {
-
-	images[0] = load_optimized("../icons/0.png");
-	images[1] = load_optimized("../icons/1.png");
-	images[2] = load_optimized("../icons/2.png");
-	images[3] = load_optimized("../icons/3.png");
-	images[4] = load_optimized("../icons/4.png");
-	images[5] = load_optimized("../icons/5.png");
-	images[6] = load_optimized("../icons/6.png");
-	images[7] = load_optimized("../icons/7.png");
-	images[8] = load_optimized("../icons/8.png");
-}
-
-int load_image()
-{
-	image = load_optimized("../icons/mine.png");
-	return 0;
+	adjacent[0] = load_optimized("../icons/0.png");
+	adjacent[1] = load_optimized("../icons/1.png");
+	adjacent[2] = load_optimized("../icons/2.png");
+	adjacent[3] = load_optimized("../icons/3.png");
+	adjacent[4] = load_optimized("../icons/4.png");
+	adjacent[5] = load_optimized("../icons/5.png");
+	adjacent[6] = load_optimized("../icons/6.png");
+	adjacent[7] = load_optimized("../icons/7.png");
+	adjacent[8] = load_optimized("../icons/8.png");
 }
 
 void destroy_render()
 {
-	free(images);
+	free(adjacent);
 
 	SDL_FreeSurface(screen);
 	screen = NULL;
-
-	SDL_FreeSurface(image);
-	image = NULL;
 
 	//Destroy window
 	SDL_DestroyWindow( window );
@@ -103,8 +102,7 @@ void destroy_render()
 void make_window()
 {
 	init_render();
-	load_image();
-	SDL_BlitSurface( images[0], NULL, screen, NULL );
+	SDL_BlitSurface( adjacent[0], NULL, screen, NULL );
 	SDL_UpdateWindowSurface(window);
 }
 
@@ -114,10 +112,10 @@ int get_input()
 	static int cur_img = 1;
 	while(SDL_PollEvent(&e) != 0)
 	{
-		SDL_BlitSurface( images[cur_img], NULL, screen, NULL );
+		SDL_BlitSurface( adjacent[cur_img], NULL, screen, NULL );
 		SDL_UpdateWindowSurface(window);
 		cur_img++;
-		cur_img = cur_img % 9;
+		cur_img = cur_img % ADJACENT;
 		
 		if(e.type == SDL_QUIT)
 		{
