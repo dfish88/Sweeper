@@ -7,9 +7,9 @@
 /********************
 *     CONSTANTS
 ********************/ 
-#define DIRECTIONS 8
-const int delta_x[DIRECTIONS] = {-1,-1,0,1,1,1,0,-1};
-const int delta_y[DIRECTIONS] = {0,1,1,1,0,-1,-1,-1};
+const int DIRECTIONS = 8;
+const int delta_x[] = {-1,-1,0,1,1,1,0,-1};
+const int delta_y[] = {0,1,1,1,0,-1,-1,-1};
 
 /********************
 *      HELPERS
@@ -138,7 +138,7 @@ void set_adjacent(game* g, int x, int y, int a)
 
 void set_state(game* g, int s)
 {
-	if (s > QUIT)
+	if (s > STATE_QUIT)
 		return;
 	g->state = s;
 }
@@ -150,27 +150,6 @@ game* create_board(int size)
 {
 	game* g = malloc(sizeof(game));
 	g->dimension = size;
-
-	/*
-	int x, y;
-	g->board = malloc(g->dimension * sizeof(tile *));
-	for (x = 0; x < g->dimension; x++)
-	{
-		g->board[x] = malloc(g->dimension * sizeof(tile));
-		for (y = 0; y < g->dimension; y++)
-		{
-			g->board[x][y].mine = false;
-			g->board[x][y].flag = false;
-			g->board[x][y].revealed = false;
-			g->board[x][y].adjacent = 0;
-		}
-	}
-
-	g->changes = malloc(g->dimension * g->dimension * sizeof(point));
-	g->change_head = 0;
-
-	return g;
-	*/
 	
 	int x;
 	g->board = malloc(g->dimension * sizeof(tile *));
@@ -179,7 +158,7 @@ game* create_board(int size)
 		g->board[x] = calloc(g->dimension,  sizeof(tile));
 	}
 
-	g->state = RUNNING;
+	g->state = STATE_RUNNING;
 
 	srand(time(0));
 
@@ -374,7 +353,7 @@ point* make_move(game* g, int x, int y, bool flag)
 	// GAME OVER!
 	if (g->board[x][y].mine)
 	{
-		g->state = LOST;
+		g->state = STATE_LOST;
 		g->board[x][y].revealed = true;
 		return NULL;
 	}
@@ -383,7 +362,7 @@ point* make_move(game* g, int x, int y, bool flag)
 
 	if (check_win(g))
 	{
-		g->state = WON;
+		g->state = STATE_WON;
 	}
 
 	return head;
