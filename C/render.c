@@ -2,6 +2,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "types.h"
+#include "render.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 400;
@@ -9,23 +10,26 @@ const int SCREEN_HEIGHT = 400;
 const int IMAGE_SIZE = 50;
 const int ADJACENT = 9;
 
-// Images used for game
-SDL_Texture** adjacent;
-SDL_Texture* flag;
-SDL_Texture* mine;
-SDL_Texture* covered;
-SDL_Texture* boom;
-SDL_Texture* wrong;
-SDL_Texture* happy;
-SDL_Texture* surprise;
-SDL_Texture* dead;
-SDL_Texture* glasses;
+struct renderer
+{
+	// Images used for game
+	SDL_Texture** adjacent;
+	SDL_Texture* flag;
+	SDL_Texture* mine;
+	SDL_Texture* covered;
+	SDL_Texture* boom;
+	SDL_Texture* wrong;
+	SDL_Texture* happy;
+	SDL_Texture* surprise;
+	SDL_Texture* dead;
+	SDL_Texture* glasses;
 
-SDL_Window* window;
-SDL_Renderer* renderer;
-int dimension;
+	SDL_Window* window;
+	SDL_Renderer* renderer;
+	int dimension;
 
-SDL_Rect** board;
+	SDL_Rect** board;
+};
 
 void load_images();
 int create_window();

@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "types.h"
+#include "logic.h"
 
 /********************
 *     CONSTANTS

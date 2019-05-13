@@ -1,5 +1,13 @@
 #include "types.h"
 
+typedef struct game game;                                                                                                                                                                                                                 
+typedef struct point
+{
+	int x;
+	int y;
+	struct point * next;
+} point;
+
 /********************
 *    INIT/DESTROY
 ********************/ 
