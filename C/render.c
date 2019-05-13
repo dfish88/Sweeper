@@ -153,6 +153,14 @@ void make_window()
 	SDL_RenderPresent(renderer);
 }
 
+void convert_to_tile(int x, int y)
+{
+	int tile_x = x / IMAGE_SIZE; 
+	int tile_y = y / IMAGE_SIZE;
+
+	printf("Clicked on tile (%d, %d)\n", tile_x, tile_y);
+}
+
 int get_input()
 {
 	SDL_Event e;	
@@ -163,7 +171,8 @@ int get_input()
 			//Get mouse position
 			int x, y;
 			SDL_GetMouseState( &x, &y );
-			printf("clicked on (%d,%d)!\n", x, y);
+
+			convert_to_tile(x, y);
 		}
 
 		if(e.type == SDL_QUIT)
