@@ -55,7 +55,6 @@ int init_render(int d)
 
 
 	
-	int r = 0;
 	for (i = 0; i < dimension; i++)
 	{
 		for (j = 0; j < dimension; j++)
@@ -67,8 +66,7 @@ int init_render(int d)
 
 			SDL_RenderSetViewport(renderer, &board[i][j]);
 
-			SDL_RenderCopy(renderer, adjacent[r], NULL, NULL);
-			r = (r + 1) % ADJACENT;
+			SDL_RenderCopy(renderer, covered, NULL, NULL);
 		}
 	}
 
@@ -128,6 +126,8 @@ void load_images()
 	adjacent[6] = load_optimized("../icons/6.png");
 	adjacent[7] = load_optimized("../icons/7.png");
 	adjacent[8] = load_optimized("../icons/8.png");
+
+	covered = load_optimized("../icons/blank.png");
 }
 
 void destroy_render()
@@ -158,6 +158,14 @@ int get_input()
 	SDL_Event e;	
 	while(SDL_PollEvent(&e) != 0)
 	{
+		if(e.type == SDL_MOUSEBUTTONUP)
+		{
+			//Get mouse position
+			int x, y;
+			SDL_GetMouseState( &x, &y );
+			printf("clicked on (%d,%d)!\n", x, y);
+		}
+
 		if(e.type == SDL_QUIT)
 		{
 			printf("QUIT!\n");
