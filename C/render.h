@@ -1,5 +1,7 @@
 typedef struct renderer renderer;
+extern const int IMAGE_SIZE;
 
-void make_window();
-void destroy_render();
-int get_input();
+renderer* create_renderer(int d);
+void destroy_renderer(renderer* r);
+
+SDL_Renderer* get_renderer(renderer* r);

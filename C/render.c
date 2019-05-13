@@ -7,7 +7,6 @@
 //Screen dimension constants
 const int SCREEN_WIDTH = 400;
 const int SCREEN_HEIGHT = 400;
-const int IMAGE_SIZE = 50;
 const int ADJACENT = 9;
 
 struct renderer
@@ -31,6 +30,74 @@ struct renderer
 	SDL_Rect** board;
 };
 
+SDL_Renderer* get_renderer(renderer* r)
+{
+	return r->rend;
+}
+
+bool create_window(renderer* r)
+{
+	//Create window
+	r->window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+	if( r->window == NULL )
+	{
+		return true;
+	}
+	else
+	{
+		//Create renderer for window
+		r->rend = SDL_CreateRenderer( r->window, -1, SDL_RENDERER_ACCELERATED );
+		if( r->rend == NULL )
+		{
+			return true;
+		}
+		else
+		{
+			//Initialize PNG loading
+			int imgFlags = IMG_INIT_PNG;
+			if( !( IMG_Init( imgFlags ) & imgFlags ) )
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+SDL_Texture* load_texture(renderer* r, char* path)
+{
+	SDL_Surface* tmp = IMG_Load(path);
+	SDL_Texture* opt = SDL_CreateTextureFromSurface(r->rend, tmp);
+	SDL_FreeSurface(tmp);
+	return opt;
+}
+
+void load_images(renderer* r)
+{
+	r->adjacent[0] = load_texture(r, "../icons/0.png");
+	r->adjacent[1] = load_texture(r, "../icons/1.png");
+	r->adjacent[2] = load_texture(r, "../icons/2.png");
+	r->adjacent[3] = load_texture(r, "../icons/3.png");
+	r->adjacent[4] = load_texture(r, "../icons/4.png");
+	r->adjacent[5] = load_texture(r, "../icons/5.png");
+	r->adjacent[6] = load_texture(r, "../icons/6.png");
+	r->adjacent[7] = load_texture(r, "../icons/7.png");
+	r->adjacent[8] = load_texture(r, "../icons/8.png");
+
+	r->covered = load_texture(r, "../icons/blank.png");
+	r->flag = load_texture(r, "../icons/flag.png");
+	r->mine = load_texture(r, "../icons/mine.png");
+	r->boom = load_texture(r, "../icons/boom.png");
+	r->wrong = load_texture(r, "../icons/wrong.png");
+	r->dead = load_texture(r, "../icons/dead.png");
+	r->glasses = load_texture(r, "../icons/glasses.png");
+	r->happy = load_texture(r, "../icons/smile.png");
+	r->surprise = load_texture(r, "../icons/click.png");
+}
+
+/******************************
+*    CONSTRUCTORS/DESTRUCTORS
+******************************/ 
 renderer* create_renderer(int d)
 {
 	renderer* r = malloc(sizeof(renderer));
@@ -43,161 +110,63 @@ renderer* create_renderer(int d)
 	for (x = 0; x < r->dimension; x++)
 		r->board[x] = malloc(r->dimension * sizeof(SDL_Rect));
 
-	return r;
-}
 
-void load_images();
-int create_window();
-
-int init_render(int d)
-{
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
 	{
-		return EXIT_FAILURE;
+		return NULL;
 	}
 
 	if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG))
 	{
-		return EXIT_FAILURE;
+		return NULL;
 	}
-
-	adjacent = malloc(ADJACENT * sizeof(SDL_Texture*));
-	create_window();
-	load_images();
-
-	dimension = d;
+	
+	load_images(r);
+	create_window(r);
 
 	int i, j;
-	board = malloc(dimension * sizeof(SDL_Rect*));
-	for (i = 0; i < dimension; i++)
-		board[i] = malloc(dimension * sizeof(SDL_Rect));
-
-	for (i = 0; i < dimension; i++)
+	for (i = 0; i < r->dimension; i++)	
 	{
-		for (j = 0; j < dimension; j++)
+		for (j = 0; j < r->dimension; j++)
 		{
-			board[i][j].x = j * IMAGE_SIZE;
-			board[i][j].y = i * IMAGE_SIZE;
-			board[i][j].w = IMAGE_SIZE;
-			board[i][j].h = IMAGE_SIZE;
+			r->board[i][j].x = j * IMAGE_SIZE;
+			r->board[i][j].y = i * IMAGE_SIZE;
+			r->board[i][j].w = IMAGE_SIZE;
+			r->board[i][j].h = IMAGE_SIZE;
 
-			SDL_RenderSetViewport(renderer, &board[i][j]);
-
-			SDL_RenderCopy(renderer, covered, NULL, NULL);
+			SDL_RenderSetViewport(r->rend, &r->board[i][j]);
+			SDL_RenderCopy(r->rend, load_texture(r, "../icons/blank.png"), 0, 0);
 		}
 	}
-
-	return 0;
+	return r;
 }
 
-int create_window()
+void destroy_renderer(renderer* r)
 {
-	//Create window
-	window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-	if( window == NULL )
-	{
-		printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-		return EXIT_FAILURE;
-	}
-	else
-	{
-		//Create renderer for window
-		renderer = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
-		if( renderer == NULL )
-		{
-			printf( "Renderer could not be created! SDL Error: %s\n", SDL_GetError() );
-		}
-		else
-		{
-			//Initialize renderer color
-			//SDL_SetRenderDrawColor( renderer, 0xFF, 0xFF, 0xFF, 0xFF );
+	int i;
+	for(i = 0; i < r->dimension; i++)
+		free(r->adjacent[i]);
+	free(r->adjacent);
 
-			//Initialize PNG loading
-			int imgFlags = IMG_INIT_PNG;
-			if( !( IMG_Init( imgFlags ) & imgFlags ) )
-			{
-			    printf( "SDL_image could not initialize! SDL_image Error: %s\n", IMG_GetError() );
-			}
-		}
-	}
-	return 0;
-}
-
-SDL_Texture* load_optimized(char* path)
-{
-	SDL_Surface* tmp = IMG_Load(path);
-	//Convert surface to screen format
-	SDL_Texture* opt = SDL_CreateTextureFromSurface(renderer, tmp);
-	SDL_FreeSurface(tmp);
-	return opt;
-}
-
-void load_images()
-{
-	adjacent[0] = load_optimized("../icons/0.png");
-	adjacent[1] = load_optimized("../icons/1.png");
-	adjacent[2] = load_optimized("../icons/2.png");
-	adjacent[3] = load_optimized("../icons/3.png");
-	adjacent[4] = load_optimized("../icons/4.png");
-	adjacent[5] = load_optimized("../icons/5.png");
-	adjacent[6] = load_optimized("../icons/6.png");
-	adjacent[7] = load_optimized("../icons/7.png");
-	adjacent[8] = load_optimized("../icons/8.png");
-
-	covered = load_optimized("../icons/blank.png");
-}
-
-void destroy_render()
-{
-	free(adjacent);
+	free(r->covered);
+	free(r->flag);
+	free(r->mine);
+	free(r->boom);
+	free(r->wrong);
+	free(r->dead);
+	free(r->glasses);
+	free(r->happy);
+	free(r->surprise);
 
 	//Destroy window
-	SDL_DestroyWindow( window );
-	window = NULL;
+	SDL_DestroyWindow( r->window );
 
-	int i;
-	for (i = 0; i < dimension; i++)
-		free(board[i]);
-	free(board);
+	for(i = 0; i < r->dimension; i++)
+		free(r->board[i]);
+	free(r->board);
+
+	free(r);
 
 	//Quit SDL subsystems
 	SDL_Quit();
 }
-
-void make_window()
-{
-	init_render(8);
-	SDL_RenderPresent(renderer);
-}
-
-void convert_to_tile(int x, int y)
-{
-	int tile_x = x / IMAGE_SIZE; 
-	int tile_y = y / IMAGE_SIZE;
-
-	printf("Clicked on tile (%d, %d)\n", tile_x, tile_y);
-}
-
-int get_input()
-{
-	SDL_Event e;	
-	while(SDL_PollEvent(&e) != 0)
-	{
-		if(e.type == SDL_MOUSEBUTTONUP)
-		{
-			//Get mouse position
-			int x, y;
-			SDL_GetMouseState( &x, &y );
-
-			convert_to_tile(x, y);
-		}
-
-		if(e.type == SDL_QUIT)
-		{
-			printf("QUIT!\n");
-			return STATE_QUIT;
-		}
-	}
-	return STATE_RUNNING;
-}
-
