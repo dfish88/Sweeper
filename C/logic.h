@@ -11,8 +11,8 @@ typedef struct point
 /********************
 *    INIT/DESTROY
 ********************/ 
-game* create_board(int size);
-void destroy_board(game* g, int size);
+game* create_game(int size);
+void destroy_game(game* g, int size);
 
 /********************
 *	GETTERS

@@ -147,7 +147,7 @@ void set_state(game* g, int s)
 /******************************
 *    CONSTRUCTORS/DESTRUCTORS
 ******************************/ 
-game* create_board(int size)
+game* create_game(int size)
 {
 	game* g = malloc(sizeof(game));
 	g->dimension = size;
@@ -166,7 +166,7 @@ game* create_board(int size)
 	return g;
 }
 
-void destroy_board(game* g, int size) 
+void destroy_game(game* g, int size) 
 {
 	int x;
 	for (x = 0; x < size; x++)

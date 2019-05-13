@@ -25,11 +25,26 @@ struct renderer
 	SDL_Texture* glasses;
 
 	SDL_Window* window;
-	SDL_Renderer* renderer;
+	SDL_Renderer* rend;
 	int dimension;
 
 	SDL_Rect** board;
 };
+
+renderer* create_renderer(int d)
+{
+	renderer* r = malloc(sizeof(renderer));
+	r->dimension = d;
+
+	r->adjacent = malloc(ADJACENT * sizeof(SDL_Texture*));
+
+	int x;
+	r->board = malloc(r->dimension * sizeof(SDL_Rect*));
+	for (x = 0; x < r->dimension; x++)
+		r->board[x] = malloc(r->dimension * sizeof(SDL_Rect));
+
+	return r;
+}
 
 void load_images();
 int create_window();
@@ -57,8 +72,6 @@ int init_render(int d)
 	for (i = 0; i < dimension; i++)
 		board[i] = malloc(dimension * sizeof(SDL_Rect));
 
-
-	
 	for (i = 0; i < dimension; i++)
 	{
 		for (j = 0; j < dimension; j++)

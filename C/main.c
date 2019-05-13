@@ -11,7 +11,7 @@ const int STATE_QUIT = 3;
 
 int main()
 {
-	game* g = create_board(8);
+	game* g = create_game(8);
 	add_mines(g, 0, 0);
 	printf("\n");
 	
@@ -29,7 +29,7 @@ int main()
 		printf("BYE BYE!\n");
 
 	destroy_render();
-	destroy_board(g, 4);
+	destroy_game(g, 4);
 	return 0;
 }
 
