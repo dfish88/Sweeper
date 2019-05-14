@@ -145,18 +145,18 @@ void destroy_renderer(renderer* r)
 {
 	int i;
 	for(i = 0; i < r->dimension; i++)
-		free(r->adjacent[i]);
+		SDL_DestroyTexture(r->adjacent[i]);
 	free(r->adjacent);
 
-	free(r->covered);
-	free(r->flag);
-	free(r->mine);
-	free(r->boom);
-	free(r->wrong);
-	free(r->dead);
-	free(r->glasses);
-	free(r->happy);
-	free(r->surprise);
+	SDL_DestroyTexture(r->covered);
+	SDL_DestroyTexture(r->flag);
+	SDL_DestroyTexture(r->mine);
+	SDL_DestroyTexture(r->boom);
+	SDL_DestroyTexture(r->wrong);
+	SDL_DestroyTexture(r->dead);
+	SDL_DestroyTexture(r->glasses);
+	SDL_DestroyTexture(r->happy);
+	SDL_DestroyTexture(r->surprise);
 
 	//Destroy window
 	SDL_DestroyWindow( r->window );
@@ -164,6 +164,8 @@ void destroy_renderer(renderer* r)
 	for(i = 0; i < r->dimension; i++)
 		free(r->board[i]);
 	free(r->board);
+
+	SDL_DestroyRenderer(r->rend);
 
 	free(r);
 
