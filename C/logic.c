@@ -271,7 +271,12 @@ bool in_bounds(game* g, int x, int y)
 	else
 		return true;
 }
-
+/*
+* Reveals tile at x y and adds to linked list that tracks changes. 
+* If tile is a 0 then we add all adjacent tiles to list and reveal them.
+* If any of those are 0 tiles we do the same.
+* Returns the linked list of changes so graphics can be updated.
+*/
 point* reveal_tile(game* g, int x, int y)
 {
 	g->board[x][y].revealed = true;
@@ -288,7 +293,7 @@ point* reveal_tile(game* g, int x, int y)
 
 	while (current != NULL)
 	{
-		// Reveal all adjacent tiles and add 0 tiles to list
+		// Add all adjacent tiles to list if tile is a 0
 		if (g->board[current->x][current->y].adjacent == 0)
 		{
 			for(dir = 0; dir < DIRECTIONS; dir++)
