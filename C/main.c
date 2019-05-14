@@ -29,7 +29,10 @@ int main()
 				//Get mouse position
 				int x, y;
 				SDL_GetMouseState( &x, &y );
-				printf("Clicked on tile: (%d, %d)\n", x/IMAGE_SIZE, y/IMAGE_SIZE);
+				
+				printf("Clicked on (%d, %d)\n", y/IMAGE_SIZE, x/IMAGE_SIZE);
+				render_game(r, make_move(g, y/IMAGE_SIZE, x/IMAGE_SIZE, false));
+
 			}
 
 			if(e.type == SDL_QUIT)

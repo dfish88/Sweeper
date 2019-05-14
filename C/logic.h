@@ -1,12 +1,6 @@
 #include "types.h"
 
 typedef struct game game;                                                                                                                                                                                                                 
-typedef struct point
-{
-	int x;
-	int y;
-	struct point * next;
-} point;
 
 /********************
 *    INIT/DESTROY
@@ -34,8 +28,6 @@ void set_revealed(game* g, int x, int y);
 void set_adjacent(game* g, int x, int y, int a);
 void set_state(game* g, int s);
 
-void print_board(game* g);
-void print_board_revealed(game* g);
 void add_mines(game* g, int x, int y);
 point* make_move(game* g, int x, int y, bool flag);
 

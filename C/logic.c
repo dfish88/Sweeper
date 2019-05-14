@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include "types.h"
 #include "logic.h"
 
@@ -20,11 +21,12 @@ const int delta_y[] = {0,1,1,1,0,-1,-1,-1};
 * Used to add to linked lists which are used to track
 * changes and reveal tiles.
 */ 
-point* add(point* tail, int x, int y)
+point* add(point* tail, int x, int y, char c)
 {
 	point* new = malloc(sizeof(point));
 	new->x = x;
 	new->y = y;
+	new->c = c;
 	new->next = NULL;
 	tail->next = new;
 	return new;
@@ -254,7 +256,6 @@ void add_mines(game* g, int x, int y)
 *       REVEALING TILES
 ******************************/ 
 
-
 /*
 * Returns true if (x,y) is on board and
 * tile at (x,y) isn't revealed
@@ -273,9 +274,11 @@ bool in_bounds(game* g, int x, int y)
 
 point* reveal_tile(game* g, int x, int y)
 {
+	g->board[x][y].revealed = true;
 	point* tail = malloc(sizeof(point));
 	tail->x = x;
 	tail->y = y;
+	tail->c = get_type(g, x, y);
 	tail->next = NULL;
 
 	point* current = tail;
@@ -295,49 +298,14 @@ point* reveal_tile(game* g, int x, int y)
 
 				if (in_bounds(g, new_x, new_y)) 
 				{
-
 					g->board[new_x][new_y].revealed = true;
-
-					if(g->board[new_x][new_y].adjacent == 0)
-						tail = add(tail, new_x, new_y);
+					tail = add(tail, new_x, new_y, get_type(g, new_x, new_y));
 				}
 			}
 		}
-		g->board[current->x][current->y].revealed = true;
 		current = current->next;
 	}
 	return head;
-}
-
-/******************************
-*       PRINTING BOARD
-******************************/ 
-void print_board(game* g)
-{
-	int x, y;
-
-	for (x = 0; x < g->dimension; x++)
-	{
-		for (y = 0; y < g->dimension; y++)
-		{
-			printf(" %c", get_type(g, x, y));
-		}
-		printf("\n");
-	}
-}
-
-void print_board_revealed(game* g)
-{
-	int x, y;
-
-	for (x = 0; x < g->dimension; x++)
-	{
-		for (y = 0; y < g->dimension; y++)
-		{
-			printf(" %c", get_type_revealed(g, x, y));
-		}
-		printf("\n");
-	}
 }
 
 /******************************
