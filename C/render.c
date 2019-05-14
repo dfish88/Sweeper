@@ -121,8 +121,8 @@ renderer* create_renderer(int d)
 		return NULL;
 	}
 	
-	load_images(r);
 	create_window(r);
+	load_images(r);
 
 	int i, j;
 	for (i = 0; i < r->dimension; i++)	
@@ -135,7 +135,7 @@ renderer* create_renderer(int d)
 			r->board[i][j].h = IMAGE_SIZE;
 
 			SDL_RenderSetViewport(r->rend, &r->board[i][j]);
-			SDL_RenderCopy(r->rend, load_texture(r, "../icons/blank.png"), 0, 0);
+			SDL_RenderCopy(r->rend, r->covered, 0, 0);
 		}
 	}
 	return r;
