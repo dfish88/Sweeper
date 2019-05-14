@@ -1,5 +1,5 @@
 CC = gcc
-FILES = logic.c render.c main.c
+FILES = logic.c graphics.c main.c
 CFLAGS = -Wall
 LFLAGS = -lSDL2 -lSDL2_image
 OUT = mine

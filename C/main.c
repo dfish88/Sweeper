@@ -5,7 +5,7 @@
 #include <SDL2/SDL_image.h>
 
 #include "logic.h"
-#include "render.h"
+#include "graphics.h"
 
 const int STATE_RUNNING = 0;
 const int STATE_WON = 1;
@@ -17,8 +17,7 @@ int main()
 {
 	game* g = create_game(8);
 	add_mines(g, 0, 0);
-	renderer* r = create_renderer(8);
-	SDL_RenderPresent(get_renderer(r));
+	graphics* r = create_graphics(8);
 
 	SDL_Event e;	
 	while (get_state(g) == STATE_RUNNING)
@@ -41,7 +40,7 @@ int main()
 		}
 	}
 
-	destroy_renderer(r);
+	destroy_graphics(r);
 	destroy_game(g, 4);
 	return 0;
 }
