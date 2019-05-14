@@ -90,7 +90,7 @@ void load_images(graphics* g)
 	g->surprise = load_texture(g, "../icons/click.png");
 }
 
-void render_game(graphics* g, point* changes)
+void render_game_running(graphics* g, point* changes)
 {
 	point* tmp;
 	while (changes != NULL)
@@ -98,13 +98,40 @@ void render_game(graphics* g, point* changes)
 		SDL_RenderSetViewport(g->rend, &g->board[changes->x][changes->y]);
 		printf("Changed at (%d, %d) to %c\n", changes->x, changes->y, changes->c);
 		SDL_RenderCopy(g->rend, g->adjacent[changes->c - '0'], 0, 0);
-		//printf("Change at (%d, %d)\n", changes->x, changes->y);
 		tmp = changes->next;
 		free(changes);
 		changes = tmp;
 	}
 	SDL_RenderPresent(g->rend);
 } 
+
+void render_game_lost(graphics* g, point* changes)
+{
+	point* tmp;
+	bool first = true;
+	while (changes != NULL)
+	{
+		SDL_RenderSetViewport(g->rend, &g->board[changes->x][changes->y]);
+		printf("Changed at (%d, %d) to %c\n", changes->x, changes->y, changes->c);
+		if (first)
+		{
+			printf("Rendering boom\n");
+			SDL_RenderCopy(g->rend, g->boom, 0, 0);
+			first = false;
+		}
+		else
+		{
+			printf("rendering mine\n");
+			SDL_RenderCopy(g->rend, g->mine, 0, 0);
+		}
+			
+		tmp = changes->next;
+		free(changes);
+		changes = tmp;
+	}
+	SDL_RenderPresent(g->rend);
+
+}
 
 /******************************
 *    CONSTRUCTORS/DESTRUCTORS

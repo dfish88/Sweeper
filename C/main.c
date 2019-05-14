@@ -18,9 +18,10 @@ int main()
 	game* g = create_game(8);
 	add_mines(g, 0, 0);
 	graphics* r = create_graphics(8);
+	point* changes;
 
 	SDL_Event e;	
-	while (get_state(g) == STATE_RUNNING)
+	while (get_state(g) != STATE_QUIT)
 	{
 		while(SDL_PollEvent(&e) != 0)
 		{
@@ -31,8 +32,15 @@ int main()
 				SDL_GetMouseState( &x, &y );
 				
 				printf("Clicked on (%d, %d)\n", y/IMAGE_SIZE, x/IMAGE_SIZE);
-				render_game(r, make_move(g, y/IMAGE_SIZE, x/IMAGE_SIZE, false));
+				if (get_state(g) == STATE_RUNNING)
+					changes = make_move(g, y/IMAGE_SIZE, x/IMAGE_SIZE, false);
 
+				if (get_state(g) == STATE_RUNNING)
+					render_game_running(r, changes); 
+				else if (get_state(g) == STATE_LOST)
+					render_game_lost(r, changes);
+
+				changes = NULL;
 			}
 
 			if(e.type == SDL_QUIT)

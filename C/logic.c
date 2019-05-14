@@ -313,6 +313,30 @@ point* reveal_tile(game* g, int x, int y)
 	return head;
 }
 
+point* reveal_mines(game* g, int x, int y)
+{
+	point* tail = malloc(sizeof(point));
+	tail->x = x;
+	tail->y = y;
+	tail->c = 'b';
+	tail->next = NULL;
+	point* head = tail;
+
+	int i, j;
+	for (i = 0; i < g->dimension; i++)
+	{
+		for (j = 0; j < g->dimension; j++)
+		{
+			if (g->board[i][j].mine && !g->board[i][j].revealed)
+			{
+				g->board[i][j].revealed = true;
+				tail = add(tail, i, j, 'm');
+			}
+		}	
+	}
+	return head;
+}
+
 /******************************
 *       PLAYING GAME
 ******************************/ 
@@ -327,9 +351,9 @@ point* make_move(game* g, int x, int y, bool flag)
 	// GAME OVER!
 	if (g->board[x][y].mine)
 	{
-		g->state = STATE_LOST;
 		g->board[x][y].revealed = true;
-		return NULL;
+		g->state = STATE_LOST;
+		return reveal_mines(g, x, y);
 	}
 
 	point* head = reveal_tile(g, x, y);
