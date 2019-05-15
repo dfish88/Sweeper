@@ -28,6 +28,5 @@ void set_revealed(game* g, int x, int y);
 void set_adjacent(game* g, int x, int y, int a);
 void set_state(game* g, int s);
 
-void add_mines(game* g, int x, int y);
 point* make_move(game* g, int x, int y, bool flag);
 

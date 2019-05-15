@@ -30,6 +30,7 @@ struct game
 	int tiles_left;
 	tile **board;
 	int state;
+	bool first_move;
 };
 /********************
 *      HELPERS
@@ -178,6 +179,7 @@ game* create_game(int size)
 	g->state = STATE_RUNNING;
 
 	srand(time(0));
+	g->first_move = true;
 
 	return g;
 }
@@ -366,14 +368,43 @@ point* reveal_mines(game* g, int x, int y)
 ******************************/ 
 point* make_move(game* g, int x, int y, bool flag)
 {
-	if (g->board[x][y].revealed)
-		return NULL;
-
 	// Flag tile or remove flag from tile
 	if (flag)
 	{
-		return NULL;
+		if (!g->board[x][y].revealed)
+		{
+			if (!g->board[x][y].flag)
+			{
+				g->board[x][y].flag = true;
+				point* tmp = malloc(sizeof(point));
+				tmp->x = x;
+				tmp->y = y;
+				tmp->c = 'f';
+				tmp->next = NULL;
+				return tmp;
+			}
+			else
+			{
+				g->board[x][y].flag = false;
+				point* tmp = malloc(sizeof(point));
+				tmp->x = x;
+				tmp->y = y;
+				tmp->c = ' ';
+				tmp->next = NULL;
+				return tmp;
+			}
+			
+		}
 	}
+
+	if (g->first_move)
+	{
+		add_mines(g, x, y);
+		g->first_move = false;
+	}
+
+	if (g->board[x][y].revealed)
+		return NULL;
 
 	// GAME OVER!
 	if (g->board[x][y].mine)

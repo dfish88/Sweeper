@@ -97,7 +97,12 @@ void render_game_running(graphics* g, point* changes)
 	{
 		SDL_RenderSetViewport(g->rend, &g->board[changes->x][changes->y]);
 		printf("Changed at (%d, %d) to %c\n", changes->x, changes->y, changes->c);
-		SDL_RenderCopy(g->rend, g->adjacent[changes->c - '0'], 0, 0);
+		if (changes->c == 'f')
+			SDL_RenderCopy(g->rend, g->flag, 0, 0);
+		else if (changes->c == ' ')
+			SDL_RenderCopy(g->rend, g->covered, 0, 0);
+		else
+			SDL_RenderCopy(g->rend, g->adjacent[changes->c - '0'], 0, 0);
 		tmp = changes->next;
 		free(changes);
 		changes = tmp;
