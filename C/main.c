@@ -16,9 +16,9 @@ const int IMAGE_SIZE = 50;
 int main()
 {
 	game* g = create_game(6);
-	add_mines(g, 0, 0);
 	graphics* r = create_graphics(6);
 	point* changes;
+	bool first_move = true;
 
 	SDL_Event e;	
 	while (get_state(g) != STATE_QUIT)
@@ -38,6 +38,13 @@ int main()
 				SDL_GetMouseState( &x, &y );
 				
 				printf("Clicked on (%d, %d)\n", y/IMAGE_SIZE, x/IMAGE_SIZE);
+	
+				if (first_move)
+				{
+					add_mines(g, y/IMAGE_SIZE, x/IMAGE_SIZE);
+					first_move = false;
+				}
+
 				changes = make_move(g, y/IMAGE_SIZE, x/IMAGE_SIZE, false);
 
 				if (get_state(g) == STATE_RUNNING)
