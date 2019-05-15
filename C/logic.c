@@ -242,11 +242,16 @@ void add_mines(game* g, int x, int y)
 		if (x == rand_x && y == rand_y)
 			continue;
 
+		// Don't add mine where there is already a mine
+		if (g->board[rand_x][rand_y].mine)
+			continue;
+
 		g->board[rand_x][rand_y].mine = true;
 		g->board[rand_x][rand_y].flag = false;
 		g->board[rand_x][rand_y].revealed = false;
 		g->board[rand_x][rand_y].adjacent = 0;
 		placed++;
+		printf("Placed mine at (%d,%d)\n", rand_x, rand_y);
 	}
 
 	g->tiles_left = (g->dimension * g->dimension) - placed;

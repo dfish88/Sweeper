@@ -45,14 +45,13 @@ int main()
 				else if (get_state(g) == STATE_LOST)
 					render_game_lost(r, changes);
 				else if (get_state(g) == STATE_WON)
+				{
 					render_game_won(r, changes);
+					printf("You Won!\n");
+				}
 
 				changes = NULL;
 			}
-
-			if(get_state(g) == STATE_WON)
-				printf("YOU WON!\n");
-
 		}
 	}
 
