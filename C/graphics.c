@@ -5,8 +5,8 @@
 #include "graphics.h"
 
 //Screen dimension constants
-const int SCREEN_WIDTH = 400;
-const int SCREEN_HEIGHT = 400;
+const int SCREEN_WIDTH = 300;
+const int SCREEN_HEIGHT = 300;
 const int ADJACENT = 9;
 
 struct graphics
@@ -131,6 +131,21 @@ void render_game_lost(graphics* g, point* changes)
 	}
 	SDL_RenderPresent(g->rend);
 
+}
+
+void render_game_won(graphics* g, point* changes)
+{
+	point* tmp;
+	while (changes != NULL)
+	{
+		SDL_RenderSetViewport(g->rend, &g->board[changes->x][changes->y]);
+		printf("Changed at (%d, %d) to %c\n", changes->x, changes->y, changes->c);
+		SDL_RenderCopy(g->rend, g->adjacent[changes->c - '0'], 0, 0);
+		tmp = changes->next;
+		free(changes);
+		changes = tmp;
+	}
+	SDL_RenderPresent(g->rend);
 }
 
 /******************************

@@ -14,6 +14,24 @@ const int delta_x[] = {-1,-1,0,1,1,1,0,-1};
 const int delta_y[] = {0,1,1,1,0,-1,-1,-1};
 
 /********************
+*	TYPES
+********************/ 
+typedef struct
+{
+	bool mine;
+	bool flag;
+	bool revealed;
+	unsigned int adjacent;
+} tile;
+
+struct game
+{
+	int dimension;
+	int tiles_left;
+	tile **board;
+	int state;
+};
+/********************
 *      HELPERS
 ********************/ 
 
@@ -34,26 +52,22 @@ point* add(point* tail, int x, int y, char c)
 
 bool check_win(game* g)
 {
-	return false;
+	if (g->tiles_left <= 0)
+		return true;
+	else
+		return false;
 }
 
-/********************
-*	TYPES
-********************/ 
-typedef struct
+void reveal(game* g, int x, int y)
 {
-	bool mine;
-	bool flag;
-	bool revealed;
-	unsigned int adjacent;
-} tile;
+	if (!g->board[x][y].revealed)
+	{
+		g->board[x][y].revealed = true;
+		g->tiles_left--;
+		printf("Revealed tile (%d,%d), %d left\n", x, y, g->tiles_left);
+	}
+}
 
-struct game
-{
-	int dimension;
-	tile **board;
-	int state;
-};
 
 /********************
 *	GETTERS
@@ -216,6 +230,7 @@ void add_mines(game* g, int x, int y)
 	// Maximum number of mines
 	int limit = (int)((g->dimension * g->dimension)/6);
 	int num_mines;
+	int placed = 0;
 
 	// Randomly place mines
 	for (num_mines = 0; num_mines < limit; num_mines++)
@@ -231,7 +246,11 @@ void add_mines(game* g, int x, int y)
 		g->board[rand_x][rand_y].flag = false;
 		g->board[rand_x][rand_y].revealed = false;
 		g->board[rand_x][rand_y].adjacent = 0;
+		placed++;
 	}
+
+	g->tiles_left = (g->dimension * g->dimension) - placed;
+	printf("Added mines, need to reveal %d tiles to win\n", g->tiles_left);
 
 	// Place all adjacent tiles
 	int r, c;
@@ -279,7 +298,7 @@ bool in_bounds(game* g, int x, int y)
 */
 point* reveal_tile(game* g, int x, int y)
 {
-	g->board[x][y].revealed = true;
+	reveal(g, x, y);
 	point* tail = malloc(sizeof(point));
 	tail->x = x;
 	tail->y = y;
@@ -303,7 +322,7 @@ point* reveal_tile(game* g, int x, int y)
 
 				if (in_bounds(g, new_x, new_y)) 
 				{
-					g->board[new_x][new_y].revealed = true;
+					reveal(g, new_x, new_y);
 					tail = add(tail, new_x, new_y, get_type(g, new_x, new_y));
 				}
 			}
@@ -342,6 +361,9 @@ point* reveal_mines(game* g, int x, int y)
 ******************************/ 
 point* make_move(game* g, int x, int y, bool flag)
 {
+	if (g->board[x][y].revealed)
+		return NULL;
+
 	// Flag tile or remove flag from tile
 	if (flag)
 	{
