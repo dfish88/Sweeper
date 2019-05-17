@@ -90,6 +90,9 @@ void load_images(graphics* g)
 	g->surprise = load_texture(g, "../icons/click.png");
 }
 
+/******************************
+*     RENDERING THE GAME
+******************************/ 
 void render_game_running(graphics* g, point* changes)
 {
 	point* tmp;
