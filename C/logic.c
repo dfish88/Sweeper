@@ -353,10 +353,15 @@ point* reveal_mines(game* g, int x, int y)
 	{
 		for (j = 0; j < g->dimension; j++)
 		{
-			if (g->board[i][j].mine && !g->board[i][j].revealed)
+			if (g->board[i][j].mine && !g->board[i][j].revealed && !g->board[i][j].flag)
 			{
 				g->board[i][j].revealed = true;
 				tail = add(tail, i, j, 'm');
+			}
+
+			if (g->board[i][j].flag && !g->board[i][j].mine && !g->board[i][j].revealed)
+			{
+				tail = add(tail, i, j, 'w');
 			}
 		}	
 	}
