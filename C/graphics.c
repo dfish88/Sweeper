@@ -8,6 +8,7 @@
 const int SCREEN_WIDTH = 300;
 const int SCREEN_HEIGHT = 350;
 const int ADJACENT = 9;
+const int TOP_PANEL_BUTTONS = 6;
 
 struct graphics
 {
@@ -167,7 +168,7 @@ graphics* create_graphics(int d)
 		g->board[x] = malloc(g->dimension * sizeof(SDL_Rect));
 
 
-	g->top_panel = malloc(g->dimension * sizeof(SDL_Rect));
+	g->top_panel = malloc(TOP_PANEL_BUTTONS * sizeof(SDL_Rect));
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
 	{
@@ -181,17 +182,49 @@ graphics* create_graphics(int d)
 	
 	create_window(g);
 	load_images(g);
-
-	for (x = 0; x < g->dimension; x++)
-	{
-		g->top_panel[x].x = x * IMAGE_SIZE;
-		g->top_panel[x].y = 0;
-		g->top_panel[x].w = IMAGE_SIZE;
-		g->top_panel[x].h = IMAGE_SIZE;
 	
-		SDL_RenderSetViewport(g->rend, &g->top_panel[x]);
-		SDL_RenderCopy(g->rend, g->happy, 0, 0);
-	}
+	// Hint button
+	g->top_panel[0].x = 0;
+	g->top_panel[0].y = 0;
+	g->top_panel[0].w = 2 * IMAGE_SIZE;
+	g->top_panel[0].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[0]);
+
+	// Space
+	g->top_panel[1].x = 2 * IMAGE_SIZE;
+	g->top_panel[1].y = 0;
+	g->top_panel[1].w = IMAGE_SIZE;
+	g->top_panel[1].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
+	SDL_RenderCopy(g->rend, g->happy, 0, 0);
+
+	// Face
+	g->top_panel[2].x = 3 * IMAGE_SIZE;
+	g->top_panel[2].y = 0;
+	g->top_panel[2].w = IMAGE_SIZE;
+	g->top_panel[2].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[2]);
+
+	// Space
+	g->top_panel[3].x = 4 * IMAGE_SIZE;
+	g->top_panel[3].y = 0;
+	g->top_panel[3].w = IMAGE_SIZE;
+	g->top_panel[3].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[3]);
+
+	// Restart
+	g->top_panel[4].x = 5 * IMAGE_SIZE;
+	g->top_panel[4].y = 0;
+	g->top_panel[4].w = 2 * IMAGE_SIZE;
+	g->top_panel[4].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[4]);
+
+	// Timer
+	g->top_panel[5].x = 7 * IMAGE_SIZE;
+	g->top_panel[5].y = 0;
+	g->top_panel[5].w = IMAGE_SIZE;
+	g->top_panel[5].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[5]);
 
 	int i, j;
 	for (i = 0; i < g->dimension; i++)	
