@@ -6,7 +6,7 @@
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 300;
-const int SCREEN_HEIGHT = 300;
+const int SCREEN_HEIGHT = 350;
 const int ADJACENT = 9;
 
 struct graphics
@@ -28,6 +28,7 @@ struct graphics
 	int dimension;
 
 	SDL_Rect** board;
+	SDL_Rect* top_panel;
 };
 
 bool create_window(graphics* g)
@@ -166,6 +167,8 @@ graphics* create_graphics(int d)
 		g->board[x] = malloc(g->dimension * sizeof(SDL_Rect));
 
 
+	g->top_panel = malloc(g->dimension * sizeof(SDL_Rect));
+
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
 	{
 		return NULL;
@@ -179,13 +182,24 @@ graphics* create_graphics(int d)
 	create_window(g);
 	load_images(g);
 
+	for (x = 0; x < g->dimension; x++)
+	{
+		g->top_panel[x].x = x * IMAGE_SIZE;
+		g->top_panel[x].y = 0;
+		g->top_panel[x].w = IMAGE_SIZE;
+		g->top_panel[x].h = IMAGE_SIZE;
+	
+		SDL_RenderSetViewport(g->rend, &g->top_panel[x]);
+		SDL_RenderCopy(g->rend, g->happy, 0, 0);
+	}
+
 	int i, j;
 	for (i = 0; i < g->dimension; i++)	
 	{
 		for (j = 0; j < g->dimension; j++)
 		{
 			g->board[i][j].x = j * IMAGE_SIZE;
-			g->board[i][j].y = i * IMAGE_SIZE;
+			g->board[i][j].y = (i * IMAGE_SIZE) + IMAGE_SIZE;
 			g->board[i][j].w = IMAGE_SIZE;
 			g->board[i][j].h = IMAGE_SIZE;
 

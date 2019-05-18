@@ -38,7 +38,8 @@ int main()
 				SDL_GetMouseState( &x, &y );
 				printf("Clicked on (%d, %d)\n", y/IMAGE_SIZE, x/IMAGE_SIZE);
 	
-				changes = make_move(g, y/IMAGE_SIZE, x/IMAGE_SIZE, false);
+				if ( (y/IMAGE_SIZE) >= 1)
+					changes = make_move(g, (y/IMAGE_SIZE) - 1, x/IMAGE_SIZE, false);
 
 				if (get_state(g) == STATE_RUNNING)
 					render_game_running(r, changes); 
@@ -60,7 +61,8 @@ int main()
 				SDL_GetMouseState( &x, &y );
 				printf("Clicked on (%d, %d)\n", y/IMAGE_SIZE, x/IMAGE_SIZE);
 
-				changes = make_move(g, y/IMAGE_SIZE, x/IMAGE_SIZE, true);
+				if ( (y/IMAGE_SIZE) >= 1)
+					changes = make_move(g, (y/IMAGE_SIZE) - 1, x/IMAGE_SIZE, true);
 				render_game_running(r, changes);
 
 				changes = NULL;
