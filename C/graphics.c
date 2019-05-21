@@ -268,6 +268,8 @@ void destroy_graphics(graphics* g)
 		free(g->board[i]);
 	free(g->board);
 
+	free(g->top_panel);
+
 	SDL_DestroyRenderer(g->rend);
 
 	free(g);
