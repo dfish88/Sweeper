@@ -6,8 +6,9 @@
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 300;
-const int SCREEN_HEIGHT = 300;
+const int SCREEN_HEIGHT = 350;
 const int ADJACENT = 9;
+const int TOP_PANEL_BUTTONS = 6;
 
 struct graphics
 {
@@ -28,6 +29,7 @@ struct graphics
 	int dimension;
 
 	SDL_Rect** board;
+	SDL_Rect* top_panel;
 };
 
 bool create_window(graphics* g)
@@ -90,6 +92,9 @@ void load_images(graphics* g)
 	g->surprise = load_texture(g, "../icons/click.png");
 }
 
+/******************************
+*     RENDERING THE GAME
+******************************/ 
 void render_game_running(graphics* g, point* changes)
 {
 	point* tmp;
@@ -113,39 +118,23 @@ void render_game_running(graphics* g, point* changes)
 void render_game_lost(graphics* g, point* changes)
 {
 	point* tmp;
-	bool first = true;
 	while (changes != NULL)
 	{
 		SDL_RenderSetViewport(g->rend, &g->board[changes->x][changes->y]);
 		printf("Changed at (%d, %d) to %c\n", changes->x, changes->y, changes->c);
 
-		switch (changes->c)
-		{
-			case 'b':
-				SDL_RenderCopy(g->rend, g->boom, 0, 0);
-				first = false;
-				break;
-			
-			case 'm':
-				printf("rendering mine\n");
-				SDL_RenderCopy(g->rend, g->mine, 0, 0);
-				break;
+		if (changes->c == 'b')
+			SDL_RenderCopy(g->rend, g->boom, 0, 0);
+		else if (changes->c == 'm')
+			SDL_RenderCopy(g->rend, g->mine, 0, 0);
+		else if (changes->c == 'w')
+			SDL_RenderCopy(g->rend, g->wrong, 0, 0);
 
-			case 'w':
-				printf("rendering wrong\n");
-				SDL_RenderCopy(g->rend, g->wrong, 0, 0);
-				break;
-
-			default:
-				break;
-		}
-			
 		tmp = changes->next;
 		free(changes);
 		changes = tmp;
 	}
 	SDL_RenderPresent(g->rend);
-
 }
 
 void render_game_won(graphics* g, point* changes)
@@ -179,6 +168,8 @@ graphics* create_graphics(int d)
 		g->board[x] = malloc(g->dimension * sizeof(SDL_Rect));
 
 
+	g->top_panel = malloc(TOP_PANEL_BUTTONS * sizeof(SDL_Rect));
+
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
 	{
 		return NULL;
@@ -191,6 +182,49 @@ graphics* create_graphics(int d)
 	
 	create_window(g);
 	load_images(g);
+	
+	// Hint button
+	g->top_panel[0].x = 0;
+	g->top_panel[0].y = 0;
+	g->top_panel[0].w = 2 * IMAGE_SIZE;
+	g->top_panel[0].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[0]);
+
+	// Space
+	g->top_panel[1].x = 2 * IMAGE_SIZE;
+	g->top_panel[1].y = 0;
+	g->top_panel[1].w = IMAGE_SIZE;
+	g->top_panel[1].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
+	SDL_RenderCopy(g->rend, g->happy, 0, 0);
+
+	// Face
+	g->top_panel[2].x = 3 * IMAGE_SIZE;
+	g->top_panel[2].y = 0;
+	g->top_panel[2].w = IMAGE_SIZE;
+	g->top_panel[2].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[2]);
+
+	// Space
+	g->top_panel[3].x = 4 * IMAGE_SIZE;
+	g->top_panel[3].y = 0;
+	g->top_panel[3].w = IMAGE_SIZE;
+	g->top_panel[3].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[3]);
+
+	// Restart
+	g->top_panel[4].x = 5 * IMAGE_SIZE;
+	g->top_panel[4].y = 0;
+	g->top_panel[4].w = 2 * IMAGE_SIZE;
+	g->top_panel[4].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[4]);
+
+	// Timer
+	g->top_panel[5].x = 7 * IMAGE_SIZE;
+	g->top_panel[5].y = 0;
+	g->top_panel[5].w = IMAGE_SIZE;
+	g->top_panel[5].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(g->rend, &g->top_panel[5]);
 
 	int i, j;
 	for (i = 0; i < g->dimension; i++)	
@@ -198,7 +232,7 @@ graphics* create_graphics(int d)
 		for (j = 0; j < g->dimension; j++)
 		{
 			g->board[i][j].x = j * IMAGE_SIZE;
-			g->board[i][j].y = i * IMAGE_SIZE;
+			g->board[i][j].y = (i * IMAGE_SIZE) + IMAGE_SIZE;
 			g->board[i][j].w = IMAGE_SIZE;
 			g->board[i][j].h = IMAGE_SIZE;
 
@@ -233,6 +267,8 @@ void destroy_graphics(graphics* g)
 	for(i = 0; i < g->dimension; i++)
 		free(g->board[i]);
 	free(g->board);
+
+	free(g->top_panel);
 
 	SDL_DestroyRenderer(g->rend);
 
