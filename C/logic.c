@@ -379,6 +379,13 @@ point* reveal_mines(game* g, int x, int y)
 ******************************/ 
 point* make_move(game* g, int x, int y, bool flag)
 {
+	// Build board on first click
+	if (g->first_move)
+	{
+		add_mines(g, x, y);
+		g->first_move = false;
+	}
+
 	// Flag tile or remove flag from tile
 	if (flag)
 	{
@@ -406,12 +413,6 @@ point* make_move(game* g, int x, int y, bool flag)
 			}
 			
 		}
-	}
-
-	if (g->first_move)
-	{
-		add_mines(g, x, y);
-		g->first_move = false;
 	}
 
 	if (g->board[x][y].revealed)
