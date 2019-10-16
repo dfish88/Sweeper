@@ -118,16 +118,26 @@ void render_game_lost(graphics* g, point* changes)
 	{
 		SDL_RenderSetViewport(g->rend, &g->board[changes->x][changes->y]);
 		printf("Changed at (%d, %d) to %c\n", changes->x, changes->y, changes->c);
-		if (first)
+
+		switch (changes->c)
 		{
-			printf("Rendering boom\n");
-			SDL_RenderCopy(g->rend, g->boom, 0, 0);
-			first = false;
-		}
-		else
-		{
-			printf("rendering mine\n");
-			SDL_RenderCopy(g->rend, g->mine, 0, 0);
+			case 'b':
+				SDL_RenderCopy(g->rend, g->boom, 0, 0);
+				first = false;
+				break;
+			
+			case 'm':
+				printf("rendering mine\n");
+				SDL_RenderCopy(g->rend, g->mine, 0, 0);
+				break;
+
+			case 'w':
+				printf("rendering wrong\n");
+				SDL_RenderCopy(g->rend, g->wrong, 0, 0);
+				break;
+
+			default:
+				break;
 		}
 			
 		tmp = changes->next;

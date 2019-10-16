@@ -297,6 +297,7 @@ bool in_bounds(game* g, int x, int y)
 	else
 		return true;
 }
+
 /*
 * Reveals tile at x y and adds to linked list that tracks changes. 
 * If tile is a 0 then we add all adjacent tiles to list and reveal them.
@@ -339,6 +340,9 @@ point* reveal_tile(game* g, int x, int y)
 	return head;
 }
 
+/*
+* Called when player clicks on mine, reveal mines and check flags.
+*/
 point* reveal_mines(game* g, int x, int y)
 {
 	point* tail = malloc(sizeof(point));
@@ -353,10 +357,17 @@ point* reveal_mines(game* g, int x, int y)
 	{
 		for (j = 0; j < g->dimension; j++)
 		{
-			if (g->board[i][j].mine && !g->board[i][j].revealed)
+			// Mines that are not revealed and are not flags
+			if (g->board[i][j].mine && !g->board[i][j].revealed && !g->board[i][j].flag)
 			{
 				g->board[i][j].revealed = true;
 				tail = add(tail, i, j, 'm');
+			}
+			// Flags that are not on mines
+			else if (!g->board[i][j].mine && g->board[i][j].flag)
+			{
+				g->board[i][j].revealed = true;
+				tail = add(tail, i, j, 'w');
 			}
 		}	
 	}
