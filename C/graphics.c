@@ -196,9 +196,9 @@ graphics* create_graphics(int d)
 	g->top_panel[1].w = IMAGE_SIZE;
 	g->top_panel[1].h = IMAGE_SIZE;
 	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
-	SDL_RenderCopy(g->rend, g->happy, 0, 0);
 
 	// Face
+	SDL_RenderCopy(g->rend, g->happy, 0, 0);
 	g->top_panel[2].x = 3 * IMAGE_SIZE;
 	g->top_panel[2].y = 0;
 	g->top_panel[2].w = IMAGE_SIZE;
