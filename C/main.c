@@ -31,6 +31,13 @@ int main()
 				break;
 			}
 
+
+			// Mouse button clicked down but not released
+			if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT && get_state(g) == STATE_RUNNING)
+			{
+				render_face_on_click(r);
+			}
+
 			// Left click when game is running
 			if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT && get_state(g) == STATE_RUNNING)
 			{

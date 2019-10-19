@@ -23,6 +23,7 @@ struct graphics
 	SDL_Texture* surprise;
 	SDL_Texture* dead;
 	SDL_Texture* glasses;
+	SDL_Texture* empty;
 
 	SDL_Window* window;
 	SDL_Renderer* rend;
@@ -90,6 +91,7 @@ void load_images(graphics* g)
 	g->glasses = load_texture(g, "../icons/glasses.png");
 	g->happy = load_texture(g, "../icons/smile.png");
 	g->surprise = load_texture(g, "../icons/click.png");
+	g->empty = load_texture(g, "../icons/empty.png");
 }
 
 /******************************
@@ -113,6 +115,10 @@ void render_game_running(graphics* g, point* changes)
 		changes = tmp;
 	}
 	SDL_RenderPresent(g->rend);
+
+	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
+	SDL_RenderCopy(g->rend, g->happy, 0, 0);
+	SDL_RenderPresent(g->rend);
 } 
 
 void render_game_lost(graphics* g, point* changes)
@@ -135,6 +141,10 @@ void render_game_lost(graphics* g, point* changes)
 		changes = tmp;
 	}
 	SDL_RenderPresent(g->rend);
+
+	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
+	SDL_RenderCopy(g->rend, g->dead, 0, 0);
+	SDL_RenderPresent(g->rend);
 }
 
 void render_game_won(graphics* g, point* changes)
@@ -149,6 +159,17 @@ void render_game_won(graphics* g, point* changes)
 		free(changes);
 		changes = tmp;
 	}
+	SDL_RenderPresent(g->rend);
+
+	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
+	SDL_RenderCopy(g->rend, g->glasses, 0, 0);
+	SDL_RenderPresent(g->rend);
+}
+
+void render_face_on_click(graphics* g)
+{
+	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
+	SDL_RenderCopy(g->rend, g->surprise, 0, 0);
 	SDL_RenderPresent(g->rend);
 }
 
@@ -184,6 +205,7 @@ graphics* create_graphics(int d)
 	load_images(g);
 	
 	// Hint button
+	SDL_RenderCopy(g->rend, g->empty, 0, 0);
 	g->top_panel[0].x = 0;
 	g->top_panel[0].y = 0;
 	g->top_panel[0].w = 2 * IMAGE_SIZE;
@@ -191,6 +213,7 @@ graphics* create_graphics(int d)
 	SDL_RenderSetViewport(g->rend, &g->top_panel[0]);
 
 	// Space
+	SDL_RenderCopy(g->rend, g->empty, 0, 0);
 	g->top_panel[1].x = 2 * IMAGE_SIZE;
 	g->top_panel[1].y = 0;
 	g->top_panel[1].w = IMAGE_SIZE;
@@ -206,6 +229,7 @@ graphics* create_graphics(int d)
 	SDL_RenderSetViewport(g->rend, &g->top_panel[2]);
 
 	// Space
+	SDL_RenderCopy(g->rend, g->empty, 0, 0);
 	g->top_panel[3].x = 4 * IMAGE_SIZE;
 	g->top_panel[3].y = 0;
 	g->top_panel[3].w = IMAGE_SIZE;
@@ -213,6 +237,7 @@ graphics* create_graphics(int d)
 	SDL_RenderSetViewport(g->rend, &g->top_panel[3]);
 
 	// Restart
+	SDL_RenderCopy(g->rend, g->empty, 0, 0);
 	g->top_panel[4].x = 5 * IMAGE_SIZE;
 	g->top_panel[4].y = 0;
 	g->top_panel[4].w = 2 * IMAGE_SIZE;
@@ -220,6 +245,7 @@ graphics* create_graphics(int d)
 	SDL_RenderSetViewport(g->rend, &g->top_panel[4]);
 
 	// Timer
+	SDL_RenderCopy(g->rend, g->empty, 0, 0);
 	g->top_panel[5].x = 7 * IMAGE_SIZE;
 	g->top_panel[5].y = 0;
 	g->top_panel[5].w = IMAGE_SIZE;
@@ -260,6 +286,7 @@ void destroy_graphics(graphics* g)
 	SDL_DestroyTexture(g->glasses);
 	SDL_DestroyTexture(g->happy);
 	SDL_DestroyTexture(g->surprise);
+	SDL_DestroyTexture(g->empty);
 
 	//Destroy window
 	SDL_DestroyWindow( g->window );

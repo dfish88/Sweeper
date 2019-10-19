@@ -7,3 +7,4 @@ void destroy_graphics(graphics* r);
 void render_game_running(graphics* g, point* changes);
 void render_game_won(graphics* g, point* changes);
 void render_game_lost(graphics* g, point* changes);
+void render_face_on_click(graphics* g);
