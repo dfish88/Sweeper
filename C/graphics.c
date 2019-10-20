@@ -98,7 +98,7 @@ void load_images(graphics* g)
 	g->empty = load_texture(g, "../icons/empty.png");
 
 	// Load font	
-	g->button_font = TTF_OpenFont("../font/OpenSans-Regular.ttf", 14);
+	g->button_font = TTF_OpenFont("../font/OpenSans-Regular.ttf", 100);
 	if (g->button_font == NULL)
 	{
 		printf("Couldn't load font\n");
@@ -241,7 +241,7 @@ graphics* create_graphics(int d)
 	// Hint button
 	g->top_panel[0].x = 0;
 	g->top_panel[0].y = 0;
-	g->top_panel[0].w = IMAGE_SIZE;
+	g->top_panel[0].w = 1.5 * IMAGE_SIZE;
 	g->top_panel[0].h = IMAGE_SIZE;
 	SDL_RenderSetViewport(g->rend, &g->top_panel[0]);
 	SDL_RenderCopy(g->rend, g->hint, 0, 0);
