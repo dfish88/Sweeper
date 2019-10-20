@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include "types.h"
 #include "graphics.h"
@@ -24,9 +25,11 @@ struct graphics
 	SDL_Texture* dead;
 	SDL_Texture* glasses;
 	SDL_Texture* empty;
+	SDL_Texture* hint;
 
 	SDL_Window* window;
 	SDL_Renderer* rend;
+	TTF_Font* button_font;
 	int dimension;
 
 	SDL_Rect** board;
@@ -59,6 +62,7 @@ bool create_window(graphics* g)
 			}
 		}
 	}
+
 	return false;
 }
 
@@ -92,6 +96,31 @@ void load_images(graphics* g)
 	g->happy = load_texture(g, "../icons/smile.png");
 	g->surprise = load_texture(g, "../icons/click.png");
 	g->empty = load_texture(g, "../icons/empty.png");
+
+	// Load font	
+	g->button_font = TTF_OpenFont("../font/OpenSans-Regular.ttf", 14);
+	if (g->button_font == NULL)
+	{
+		printf("Couldn't load font\n");
+	}
+
+	// Hint button
+	SDL_Color text_color = {0,0,0};
+	SDL_Surface* hint_surface = TTF_RenderText_Solid(g->button_font, "Hint?", text_color);
+	if (hint_surface == NULL)
+	{
+		printf("TTF_OpenFont: %s\n", TTF_GetError());
+	}
+	else
+	{
+		g->hint = SDL_CreateTextureFromSurface(g->rend, hint_surface);
+		if (g->hint == NULL)
+		{
+			printf("Error loading text 2\n");
+		}
+
+	}
+	SDL_FreeSurface(hint_surface);
 }
 
 /******************************
@@ -200,20 +229,24 @@ graphics* create_graphics(int d)
 	{
 		return NULL;
 	}
+
+	if (TTF_Init() == -1)
+	{
+		return NULL;
+	}
 	
 	create_window(g);
 	load_images(g);
 	
 	// Hint button
-	SDL_RenderCopy(g->rend, g->empty, 0, 0);
 	g->top_panel[0].x = 0;
 	g->top_panel[0].y = 0;
-	g->top_panel[0].w = 2 * IMAGE_SIZE;
+	g->top_panel[0].w = IMAGE_SIZE;
 	g->top_panel[0].h = IMAGE_SIZE;
 	SDL_RenderSetViewport(g->rend, &g->top_panel[0]);
+	SDL_RenderCopy(g->rend, g->hint, 0, 0);
 
 	// Space
-	SDL_RenderCopy(g->rend, g->empty, 0, 0);
 	g->top_panel[1].x = 2 * IMAGE_SIZE;
 	g->top_panel[1].y = 0;
 	g->top_panel[1].w = IMAGE_SIZE;
@@ -229,7 +262,6 @@ graphics* create_graphics(int d)
 	SDL_RenderSetViewport(g->rend, &g->top_panel[2]);
 
 	// Space
-	SDL_RenderCopy(g->rend, g->empty, 0, 0);
 	g->top_panel[3].x = 4 * IMAGE_SIZE;
 	g->top_panel[3].y = 0;
 	g->top_panel[3].w = IMAGE_SIZE;
@@ -237,7 +269,6 @@ graphics* create_graphics(int d)
 	SDL_RenderSetViewport(g->rend, &g->top_panel[3]);
 
 	// Restart
-	SDL_RenderCopy(g->rend, g->empty, 0, 0);
 	g->top_panel[4].x = 5 * IMAGE_SIZE;
 	g->top_panel[4].y = 0;
 	g->top_panel[4].w = 2 * IMAGE_SIZE;
@@ -245,7 +276,6 @@ graphics* create_graphics(int d)
 	SDL_RenderSetViewport(g->rend, &g->top_panel[4]);
 
 	// Timer
-	SDL_RenderCopy(g->rend, g->empty, 0, 0);
 	g->top_panel[5].x = 7 * IMAGE_SIZE;
 	g->top_panel[5].y = 0;
 	g->top_panel[5].w = IMAGE_SIZE;
@@ -287,9 +317,11 @@ void destroy_graphics(graphics* g)
 	SDL_DestroyTexture(g->happy);
 	SDL_DestroyTexture(g->surprise);
 	SDL_DestroyTexture(g->empty);
+	SDL_DestroyTexture(g->hint);
 
 	//Destroy window
 	SDL_DestroyWindow( g->window );
+	TTF_CloseFont(g->button_font);
 
 	for(i = 0; i < g->dimension; i++)
 		free(g->board[i]);

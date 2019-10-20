@@ -35,6 +35,16 @@ int main()
 			// Mouse button clicked down but not released
 			if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT && get_state(g) == STATE_RUNNING)
 			{
+				//Get mouse position
+				SDL_GetMouseState( &x, &y );
+
+				// First row clicked, ignore
+				if (y/IMAGE_SIZE == 0)
+				{
+					printf("First row, skipping\n");
+					break;
+				}
+
 				render_face_on_click(r);
 			}
 
