@@ -243,6 +243,8 @@ graphics* create_graphics(int d)
 	g->top_panel[0].y = 0;
 	g->top_panel[0].w = 1.5 * IMAGE_SIZE;
 	g->top_panel[0].h = IMAGE_SIZE;
+	SDL_SetRenderDrawColor(g->rend, 255, 255, 255, 255);
+	SDL_RenderFillRect(g->rend, &g->top_panel[0]);
 	SDL_RenderSetViewport(g->rend, &g->top_panel[0]);
 	SDL_RenderCopy(g->rend, g->hint, 0, 0);
 
@@ -281,6 +283,7 @@ graphics* create_graphics(int d)
 	g->top_panel[5].w = IMAGE_SIZE;
 	g->top_panel[5].h = IMAGE_SIZE;
 	SDL_RenderSetViewport(g->rend, &g->top_panel[5]);
+
 
 	int i, j;
 	for (i = 0; i < g->dimension; i++)	
