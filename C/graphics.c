@@ -98,7 +98,7 @@ void load_images(graphics* g)
 	g->empty = load_texture(g, "../icons/empty.png");
 
 	// Load font	
-	g->button_font = TTF_OpenFont("../font/OpenSans-Regular.ttf", 100);
+	g->button_font = TTF_OpenFont("../font/OpenSans-Regular.ttf", 20);
 	if (g->button_font == NULL)
 	{
 		printf("Couldn't load font\n");
@@ -109,7 +109,7 @@ void load_images(graphics* g)
 	SDL_Surface* hint_surface = TTF_RenderText_Solid(g->button_font, "Hint?", text_color);
 	if (hint_surface == NULL)
 	{
-		printf("TTF_OpenFont: %s\n", TTF_GetError());
+		printf("TTF_OpenRont: %s\n", TTF_GetError());
 	}
 	else
 	{
@@ -120,6 +120,9 @@ void load_images(graphics* g)
 		}
 
 	}
+	printf("Text width: %d\n", hint_surface->w);
+	printf("Text height: %d\n", hint_surface->h);
+
 	SDL_FreeSurface(hint_surface);
 }
 
@@ -241,8 +244,8 @@ graphics* create_graphics(int d)
 	// Hint button
 	g->top_panel[0].x = 0;
 	g->top_panel[0].y = 0;
-	g->top_panel[0].w = 1.5 * IMAGE_SIZE;
-	g->top_panel[0].h = IMAGE_SIZE;
+	g->top_panel[0].w = 48;
+	g->top_panel[0].h = 28;
 	SDL_SetRenderDrawColor(g->rend, 255, 255, 255, 255);
 	SDL_RenderFillRect(g->rend, &g->top_panel[0]);
 	SDL_RenderSetViewport(g->rend, &g->top_panel[0]);
