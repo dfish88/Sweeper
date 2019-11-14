@@ -435,3 +435,11 @@ point* make_move(game* g, int x, int y, bool flag)
 
 	return head;
 }
+
+void restart(game** g)
+{
+	// Re-build the board
+	int size = (*g)->dimension;
+	destroy_game(*g, size);
+	*g = create_game(size);
+}

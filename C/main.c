@@ -55,8 +55,16 @@ int main()
 				SDL_GetMouseState( &x, &y );
 				printf("Clicked on (%d, %d)\n", y/IMAGE_SIZE, x/IMAGE_SIZE);
 
+				// Restart button clicked
+				if (y/IMAGE_SIZE == 0 && (x/IMAGE_SIZE == 3 || x/IMAGE_SIZE == 4))
+				{
+					printf("Restart Button Clicked!!\n");
+					restart(&g);
+					render_game_restart(r);
+					break;
+				}
 				// First row clicked, ignore
-				if (y/IMAGE_SIZE == 0)
+				else if (y/IMAGE_SIZE == 0)
 				{
 					printf("First row, skipping\n");
 					break;

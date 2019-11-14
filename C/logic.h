@@ -29,4 +29,5 @@ void set_adjacent(game* g, int x, int y, int a);
 void set_state(game* g, int s);
 
 point* make_move(game* g, int x, int y, bool flag);
+void restart(game** g);
 

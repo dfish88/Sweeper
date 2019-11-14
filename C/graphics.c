@@ -128,6 +128,20 @@ void render_game_running(graphics* g, point* changes)
 	SDL_RenderPresent(g->rend);
 } 
 
+void render_game_restart(graphics* g)
+{
+	int i, j;
+	for (i = 0; i < g->dimension; i++)	
+	{
+		for (j = 0; j < g->dimension; j++)
+		{
+			SDL_RenderSetViewport(g->rend, &g->board[i][j]);
+			SDL_RenderCopy(g->rend, g->covered, 0, 0);
+		}
+	}
+	SDL_RenderPresent(g->rend);
+}
+
 void render_game_lost(graphics* g, point* changes)
 {
 	point* tmp;
