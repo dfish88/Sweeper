@@ -47,6 +47,22 @@ int main()
 
 				render_face_on_click(r);
 			}
+			
+			// Left click when game is over (restart button)
+			if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT && (get_state(g) == STATE_WON || get_state(g) == STATE_LOST))
+			{
+				//Get mouse position
+				SDL_GetMouseState( &x, &y );
+
+				// Restart button clicked
+				if (y/IMAGE_SIZE == 0 && (x/IMAGE_SIZE == 3 || x/IMAGE_SIZE == 4))
+				{
+					printf("Restart Button Clicked!!\n");
+					restart(&g);
+					render_game_restart(r);
+					break;
+				}
+			}
 
 			// Left click when game is running
 			if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT && get_state(g) == STATE_RUNNING)
