@@ -13,9 +13,6 @@ const int SCREEN_HEIGHT = 350;
 const int ADJACENT = 9;
 const int TOP_PANEL_BUTTONS = 4;
 
-int thread_state = 0;
-pthread_t tid;
-
 struct graphics
 {
 	// Images used for game
@@ -40,6 +37,9 @@ struct graphics
 
 	SDL_Rect** board;
 	SDL_Rect* top_panel;
+
+	int timer_state;
+	pthread_t *timer_thread;
 };
 
 bool create_window(graphics* g)
@@ -199,7 +199,7 @@ void render_face_on_click(graphics* g)
 	SDL_RenderPresent(g->rend);
 }
 
-void *threadproc(void *arg)
+void *render_timer(void *arg)
 {
 	int* pthread_state = arg;
 	int sec = 0;
@@ -212,13 +212,14 @@ void *threadproc(void *arg)
 
 		if ((*pthread_state) == -1)
 		{
-			printf("Killing thread~\n");
+			printf("Killing thread\n");
 			pthread_exit(0);
 			break;
 		}
 	}
 	return 0;
 }
+
 /******************************
 *    CONSTRUCTORS/DESTRUCTORS
 ******************************/ 
@@ -303,7 +304,8 @@ graphics* create_graphics(int d)
 	}
 
 	// Timer thread
-	pthread_create(&tid, NULL, &threadproc, (void *)&thread_state);
+	g->timer_thread = malloc(sizeof(pthread_t));
+	pthread_create(g->timer_thread, NULL, &render_timer, (void *)&(g->timer_state));
 
 	SDL_RenderPresent(g->rend);
 	return g;
@@ -342,11 +344,14 @@ void destroy_graphics(graphics* g)
 
 	SDL_DestroyRenderer(g->rend);
 
-	free(g);
 
 	// Stop timer thread
-	thread_state = -1;
-	pthread_join(tid, NULL);
+	g->timer_state = -1;
+	pthread_join(*(g->timer_thread), NULL);
+	free(g->timer_thread);
+
+	free(g);
+
 
 	//Quit SDL subsystems
 	SDL_Quit();
