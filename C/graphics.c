@@ -1,6 +1,8 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
+#include <pthread.h>
+#include <unistd.h>
 
 #include "types.h"
 #include "graphics.h"
@@ -10,6 +12,9 @@ const int SCREEN_WIDTH = 300;
 const int SCREEN_HEIGHT = 350;
 const int ADJACENT = 9;
 const int TOP_PANEL_BUTTONS = 4;
+
+int thread_state = 0;
+pthread_t tid;
 
 struct graphics
 {
@@ -194,6 +199,26 @@ void render_face_on_click(graphics* g)
 	SDL_RenderPresent(g->rend);
 }
 
+void *threadproc(void *arg)
+{
+	int* pthread_state = arg;
+	int sec = 0;
+	while(1)
+	{
+		sleep(1);
+		printf("Seconds passed: %d\n", sec);
+		printf("Thread state: %d\n", (*pthread_state));
+		sec++;
+
+		if ((*pthread_state) == -1)
+		{
+			printf("Killing thread~\n");
+			pthread_exit(0);
+			break;
+		}
+	}
+	return 0;
+}
 /******************************
 *    CONSTRUCTORS/DESTRUCTORS
 ******************************/ 
@@ -276,12 +301,18 @@ graphics* create_graphics(int d)
 			SDL_RenderCopy(g->rend, g->covered, 0, 0);
 		}
 	}
+
+	// Timer thread
+	pthread_create(&tid, NULL, &threadproc, (void *)&thread_state);
+
 	SDL_RenderPresent(g->rend);
 	return g;
 }
 
+
 void destroy_graphics(graphics* g)
 {
+
 	int i;
 	for(i = 0; i < g->dimension; i++)
 		SDL_DestroyTexture(g->adjacent[i]);
@@ -312,6 +343,10 @@ void destroy_graphics(graphics* g)
 	SDL_DestroyRenderer(g->rend);
 
 	free(g);
+
+	// Stop timer thread
+	thread_state = -1;
+	pthread_join(tid, NULL);
 
 	//Quit SDL subsystems
 	SDL_Quit();
