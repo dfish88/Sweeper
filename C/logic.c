@@ -24,14 +24,15 @@ typedef struct
 	unsigned int adjacent;
 } tile;
 
-struct game
-{
-	int dimension;
-	int tiles_left;
-	tile **board;
-	int state;
-	bool first_move;
-};
+/********************
+*	DATA
+********************/ 
+int dimension;
+int tiles_left;
+tile **game_board;
+int state;
+bool first_move;
+
 /********************
 *      HELPERS
 ********************/ 
@@ -51,21 +52,21 @@ point* add(point* tail, int x, int y, char c)
 	return new;
 }
 
-bool check_win(game* g)
+bool check_win()
 {
-	if (g->tiles_left <= 0)
+	if (tiles_left <= 0)
 		return true;
 	else
 		return false;
 }
 
-void reveal(game* g, int x, int y)
+void reveal(int x, int y)
 {
-	if (!g->board[x][y].revealed)
+	if (!game_board[x][y].revealed)
 	{
-		g->board[x][y].revealed = true;
-		g->tiles_left--;
-		printf("Revealed tile (%d,%d), %d left\n", x, y, g->tiles_left);
+		game_board[x][y].revealed = true;
+		tiles_left--;
+		printf("Revealed tile (%d,%d), %d left\n", x, y, tiles_left);
 	}
 }
 
@@ -73,144 +74,140 @@ void reveal(game* g, int x, int y)
 /********************
 *	GETTERS
 ********************/ 
-char get_type(game* g, int x, int y)
+char get_type(int x, int y)
 {
-	if (!g->board[x][y].revealed)
+	if (!game_board[x][y].revealed)
 	{
-		if(g->board[x][y].flag)
+		if(game_board[x][y].flag)
 			return 'f';
 		else
 			return 'x';
 	}
 
-	if (g->board[x][y].mine)
+	if (game_board[x][y].mine)
 		return 'm';
 	else
-		return g->board[x][y].adjacent + '0';
+		return game_board[x][y].adjacent + '0';
 }
 
-char get_type_revealed(game* g, int x, int y)
+char get_type_revealed(int x, int y)
 {
-	if (g->board[x][y].mine)
+	if (game_board[x][y].mine)
 		return 'm';
 	else
-		return g->board[x][y].adjacent + '0';
+		return game_board[x][y].adjacent + '0';
 }
 
 
-bool get_mine(game* g, int x, int y)
+bool get_mine(int x, int y)
 {
-	return g->board[x][y].mine;
+	return game_board[x][y].mine;
 }
 
-bool get_flag(game* g, int x, int y)
+bool get_flag(int x, int y)
 {
-	return g->board[x][y].flag;
+	return game_board[x][y].flag;
 }
 
-bool get_revealed(game* g, int x, int y)
+bool get_revealed(int x, int y)
 {
-	return g->board[x][y].revealed;
+	return game_board[x][y].revealed;
 }
 
-unsigned int get_adjacent(game* g, int x, int y)
+unsigned int get_adjacent(int x, int y)
 {
-	return g->board[x][y].adjacent;
+	return game_board[x][y].adjacent;
 }
 
-int get_state(game* g)
+int get_state()
 {
-	return g->state;
+	return state;
 }
 
 /********************
 *	SETTERS
 ********************/ 
-void add_tile(game* g, int x, int y)
+void add_tile(int x, int y)
 {
-	g->board[x][y].mine = false;
-	g->board[x][y].flag = false;
-	g->board[x][y].adjacent = 0;
-	g->board[x][y].revealed = false;
+	game_board[x][y].mine = false;
+	game_board[x][y].flag = false;
+	game_board[x][y].adjacent = 0;
+	game_board[x][y].revealed = false;
 }
 
-void set_mine(game* g, int x, int y)
+void set_mine(int x, int y)
 {
-	g->board[x][y].mine = true;
+	game_board[x][y].mine = true;
 }
 
-void set_flag(game* g, int x, int y)
+void set_flag(int x, int y)
 {
-	g->board[x][y].flag = !(g->board[x][y].flag);
+	game_board[x][y].flag = !(game_board[x][y].flag);
 }
 
-void set_revealed(game* g, int x, int y)
+void set_revealed(int x, int y)
 {
-	g->board[x][y].revealed = true;
+	game_board[x][y].revealed = true;
 }
 
-void set_adjacent(game* g, int x, int y, int a)
+void set_adjacent(int x, int y, int a)
 {
-	g->board[x][y].adjacent = a;
+	game_board[x][y].adjacent = a;
 }
 
-void set_state(game* g, int s)
+void set_state(int s)
 {
 	if (s > STATE_QUIT)
 		return;
-	g->state = s;
+	state = s;
 }
 
 /******************************
 *    CONSTRUCTORS/DESTRUCTORS
 ******************************/ 
-game* create_game(int size)
+void create_game(int size)
 {
-	game* g = malloc(sizeof(game));
-	g->dimension = size;
+	dimension = size;
 	
 	int x;
-	g->board = malloc(g->dimension * sizeof(tile *));
-	for (x = 0; x < g->dimension; x++)
+	game_board = malloc(dimension * sizeof(tile *));
+	for (x = 0; x < dimension; x++)
 	{
-		g->board[x] = calloc(g->dimension,  sizeof(tile));
+		game_board[x] = calloc(dimension,  sizeof(tile));
 	}
 
-	g->state = STATE_RUNNING;
+	state = STATE_RUNNING;
 
 	srand(time(0));
-	g->first_move = true;
-
-	return g;
+	first_move = true;
 }
 
-void destroy_game(game* g, int size) 
+void destroy_game(int size) 
 {
 	int x;
 	for (x = 0; x < size; x++)
 	{
-		free(g->board[x]);
+		free(game_board[x]);
 	}
-	free(g->board);
-	free(g);
+	free(game_board);
 }
 
 /******************************
 *       BUILD BOARD
 ******************************/ 
-bool check_for_mine(game* g, int x, int y)
+bool check_for_mine(int x, int y)
 {
-	if (x >= g->dimension || y >= g->dimension)
+	if (x >= dimension || y >= dimension)
 		return false;
 	else if (x < 0 || y < 0)
 		return false;
-	else if (g->board[x][y].mine)
+	else if (game_board[x][y].mine)
 		return true;
 	else
 		return false;
 }
 
-int count_mines(game* g, int x, int y)
+int count_mines(int x, int y)
 {
 	int num_mines = 0;
 	int d, new_x, new_y;
@@ -220,59 +217,59 @@ int count_mines(game* g, int x, int y)
 		new_x = x + delta_x[d];
 		new_y = y + delta_y[d];
 
-		if (check_for_mine(g, new_x, new_y))
+		if (check_for_mine(new_x, new_y))
 			num_mines++;
 	}
 
 	return num_mines;
 }
 
-void add_mines(game* g, int x, int y)
+void add_mines(int x, int y)
 {
 	// Maximum number of mines
-	int limit = (int)((g->dimension * g->dimension)/6);
+	int limit = (int)((dimension * dimension)/6);
 	int num_mines;
 	int placed = 0;
 
 	// Randomly place mines
 	for (num_mines = 0; num_mines < limit; num_mines++)
 	{
-		int rand_x = rand() % g->dimension;
-		int rand_y = rand() % g->dimension;
+		int rand_x = rand() % dimension;
+		int rand_y = rand() % dimension;
 
 		// Don't place mine on first tile clicked
 		if (x == rand_x && y == rand_y)
 			continue;
 
 		// Don't add mine where there is already a mine
-		if (g->board[rand_x][rand_y].mine)
+		if (game_board[rand_x][rand_y].mine)
 			continue;
 
-		g->board[rand_x][rand_y].mine = true;
-		g->board[rand_x][rand_y].flag = false;
-		g->board[rand_x][rand_y].revealed = false;
-		g->board[rand_x][rand_y].adjacent = 0;
+		game_board[rand_x][rand_y].mine = true;
+		game_board[rand_x][rand_y].flag = false;
+		game_board[rand_x][rand_y].revealed = false;
+		game_board[rand_x][rand_y].adjacent = 0;
 		placed++;
 		printf("Placed mine at (%d,%d)\n", rand_x, rand_y);
 	}
 
-	g->tiles_left = (g->dimension * g->dimension) - placed;
-	printf("Added mines, need to reveal %d tiles to win\n", g->tiles_left);
+	tiles_left = (dimension * dimension) - placed;
+	printf("Added mines, need to reveal %d tiles to win\n", tiles_left);
 
 	// Place all adjacent tiles
 	int r, c;
-	for (r = 0; r < g->dimension; r++)
+	for (r = 0; r < dimension; r++)
 	{
-		for (c = 0; c < g->dimension; c++)
+		for (c = 0; c < dimension; c++)
 		{
 			// Skip mines that have been added
-			if (!(g->board[r][c].mine))
+			if (!(game_board[r][c].mine))
 			{
-				g->board[r][c].flag = false;
-				g->board[r][c].revealed = false;
+				game_board[r][c].flag = false;
+				game_board[r][c].revealed = false;
 
 				// Find how many mines tile is adjacent to
-				g->board[r][c].adjacent = count_mines(g, r, c);
+				game_board[r][c].adjacent = count_mines(r, c);
 			}
 		}
 	}
@@ -283,16 +280,16 @@ void add_mines(game* g, int x, int y)
 ******************************/ 
 
 /*
-* Returns true if (x,y) is on board and
+* Returns true if (x,y) is on game_board and
 * tile at (x,y) isn't revealed
 */
-bool in_bounds(game* g, int x, int y)
+bool in_bounds(int x, int y)
 {
-	if (x >= g->dimension || y >= g->dimension)
+	if (x >= dimension || y >= dimension)
 		return false;
 	else if (x < 0 || y < 0)
 		return false;
-	else if (g->board[x][y].revealed)
+	else if (game_board[x][y].revealed)
 		return false;
 	else
 		return true;
@@ -304,13 +301,13 @@ bool in_bounds(game* g, int x, int y)
 * If any of those are 0 tiles we do the same.
 * Returns the linked list of changes so graphics can be updated.
 */
-point* reveal_tile(game* g, int x, int y)
+point* reveal_tile(int x, int y)
 {
-	reveal(g, x, y);
+	reveal(x, y);
 	point* tail = malloc(sizeof(point));
 	tail->x = x;
 	tail->y = y;
-	tail->c = get_type(g, x, y);
+	tail->c = get_type(x, y);
 	tail->next = NULL;
 
 	point* current = tail;
@@ -321,17 +318,17 @@ point* reveal_tile(game* g, int x, int y)
 	while (current != NULL)
 	{
 		// Add all adjacent tiles to list if tile is a 0
-		if (g->board[current->x][current->y].adjacent == 0)
+		if (game_board[current->x][current->y].adjacent == 0)
 		{
 			for(dir = 0; dir < DIRECTIONS; dir++)
 			{
 				new_x = current->x + delta_x[dir];
 				new_y = current->y + delta_y[dir];
 
-				if (in_bounds(g, new_x, new_y)) 
+				if (in_bounds( new_x, new_y)) 
 				{
-					reveal(g, new_x, new_y);
-					tail = add(tail, new_x, new_y, get_type(g, new_x, new_y));
+					reveal(new_x, new_y);
+					tail = add(tail, new_x, new_y, get_type(new_x, new_y));
 				}
 			}
 		}
@@ -343,7 +340,7 @@ point* reveal_tile(game* g, int x, int y)
 /*
 * Called when player clicks on mine, reveal mines and check flags.
 */
-point* reveal_mines(game* g, int x, int y)
+point* reveal_mines(int x, int y)
 {
 	point* tail = malloc(sizeof(point));
 	tail->x = x;
@@ -353,20 +350,20 @@ point* reveal_mines(game* g, int x, int y)
 	point* head = tail;
 
 	int i, j;
-	for (i = 0; i < g->dimension; i++)
+	for (i = 0; i < dimension; i++)
 	{
-		for (j = 0; j < g->dimension; j++)
+		for (j = 0; j < dimension; j++)
 		{
 			// Mines that are not revealed and are not flags
-			if (g->board[i][j].mine && !g->board[i][j].revealed && !g->board[i][j].flag)
+			if (game_board[i][j].mine && !game_board[i][j].revealed && !game_board[i][j].flag)
 			{
-				g->board[i][j].revealed = true;
+				game_board[i][j].revealed = true;
 				tail = add(tail, i, j, 'm');
 			}
 			// Flags that are not on mines
-			else if (!g->board[i][j].mine && g->board[i][j].flag)
+			else if (!game_board[i][j].mine && game_board[i][j].flag)
 			{
-				g->board[i][j].revealed = true;
+				game_board[i][j].revealed = true;
 				tail = add(tail, i, j, 'w');
 			}
 		}	
@@ -377,23 +374,23 @@ point* reveal_mines(game* g, int x, int y)
 /******************************
 *       PLAYING GAME
 ******************************/ 
-point* make_move(game* g, int x, int y, bool flag)
+point* make_move(int x, int y, bool flag)
 {
-	// Build board on first click
-	if (g->first_move)
+	// Build game_board on first click
+	if (first_move)
 	{
-		add_mines(g, x, y);
-		g->first_move = false;
+		add_mines(x, y);
+		first_move = false;
 	}
 
 	// Flag tile or remove flag from tile
 	if (flag)
 	{
-		if (!g->board[x][y].revealed)
+		if (!game_board[x][y].revealed)
 		{
-			if (!g->board[x][y].flag)
+			if (!game_board[x][y].flag)
 			{
-				g->board[x][y].flag = true;
+				game_board[x][y].flag = true;
 				point* tmp = malloc(sizeof(point));
 				tmp->x = x;
 				tmp->y = y;
@@ -403,7 +400,7 @@ point* make_move(game* g, int x, int y, bool flag)
 			}
 			else
 			{
-				g->board[x][y].flag = false;
+				game_board[x][y].flag = false;
 				point* tmp = malloc(sizeof(point));
 				tmp->x = x;
 				tmp->y = y;
@@ -415,31 +412,30 @@ point* make_move(game* g, int x, int y, bool flag)
 		}
 	}
 
-	if (g->board[x][y].revealed)
+	if (game_board[x][y].revealed)
 		return NULL;
 
 	// GAME OVER!
-	if (g->board[x][y].mine)
+	if (game_board[x][y].mine)
 	{
-		g->board[x][y].revealed = true;
-		g->state = STATE_LOST;
-		return reveal_mines(g, x, y);
+		game_board[x][y].revealed = true;
+		state = STATE_LOST;
+		return reveal_mines(x, y);
 	}
 
-	point* head = reveal_tile(g, x, y);
+	point* head = reveal_tile(x, y);
 
-	if (check_win(g))
+	if (check_win())
 	{
-		g->state = STATE_WON;
+		state = STATE_WON;
 	}
 
 	return head;
 }
 
-void restart(game** g)
+void restart_game()
 {
-	// Re-build the board
-	int size = (*g)->dimension;
-	destroy_game(*g, size);
-	*g = create_game(size);
+	// Re-build the game_board
+	destroy_game(dimension);
+	create_game(dimension);
 }

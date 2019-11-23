@@ -15,25 +15,25 @@ const int IMAGE_SIZE = 50;
 
 int main()
 {
-	game* g = create_game(6);
-	graphics* r = create_graphics(6);
+	create_game(6);
+	create_graphics(6);
 	point* changes;
 	int x, y;
 
 	SDL_Event e;	
-	while (get_state(g) != STATE_QUIT)
+	while (get_state() != STATE_QUIT)
 	{
 		while(SDL_PollEvent(&e) != 0)
 		{
 			if(e.type == SDL_QUIT)
 			{
-				set_state(g, STATE_QUIT);
+				set_state(STATE_QUIT);
 				break;
 			}
 
 
 			// Mouse button clicked down but not released
-			if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT && get_state(g) == STATE_RUNNING)
+			if(e.type == SDL_MOUSEBUTTONDOWN && e.button.button == SDL_BUTTON_LEFT && get_state() == STATE_RUNNING)
 			{
 				//Get mouse position
 				SDL_GetMouseState( &x, &y );
@@ -45,11 +45,11 @@ int main()
 					break;
 				}
 
-				render_face_on_click(r);
+				render_face_on_click();
 			}
 			
 			// Left click when game is over (restart button)
-			if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT && (get_state(g) == STATE_WON || get_state(g) == STATE_LOST))
+			if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT && (get_state() == STATE_WON || get_state() == STATE_LOST))
 			{
 				//Get mouse position
 				SDL_GetMouseState( &x, &y );
@@ -58,14 +58,14 @@ int main()
 				if (y/IMAGE_SIZE == 0 && (x/IMAGE_SIZE == 3 || x/IMAGE_SIZE == 4))
 				{
 					printf("Restart Button Clicked!!\n");
-					restart(&g);
-					render_game_restart(r);
+					restart_game();
+					render_game_restart();
 					break;
 				}
 			}
 
 			// Left click when game is running
-			if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT && get_state(g) == STATE_RUNNING)
+			if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_LEFT && get_state() == STATE_RUNNING)
 			{
 				//Get mouse position
 				SDL_GetMouseState( &x, &y );
@@ -75,8 +75,8 @@ int main()
 				if (y/IMAGE_SIZE == 0 && (x/IMAGE_SIZE == 3 || x/IMAGE_SIZE == 4))
 				{
 					printf("Restart Button Clicked!!\n");
-					restart(&g);
-					render_game_restart(r);
+					restart_game();
+					render_game_restart();
 					break;
 				}
 				// First row clicked, ignore
@@ -87,15 +87,15 @@ int main()
 				}
 	
 				if ( (y/IMAGE_SIZE) >= 1)
-					changes = make_move(g, (y/IMAGE_SIZE) - 1, x/IMAGE_SIZE, false);
+					changes = make_move((y/IMAGE_SIZE) - 1, x/IMAGE_SIZE, false);
 
-				if (get_state(g) == STATE_RUNNING)
-					render_game_running(r, changes); 
-				else if (get_state(g) == STATE_LOST)
-					render_game_lost(r, changes);
-				else if (get_state(g) == STATE_WON)
+				if (get_state() == STATE_RUNNING)
+					render_game_running(changes); 
+				else if (get_state() == STATE_LOST)
+					render_game_lost(changes);
+				else if (get_state() == STATE_WON)
 				{
-					render_game_won(r, changes);
+					render_game_won(changes);
 					printf("You Won!\n");
 				}
 
@@ -103,23 +103,23 @@ int main()
 			}
 			
 			// Righ click when game is running
-			if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_RIGHT && get_state(g) == STATE_RUNNING)
+			if(e.type == SDL_MOUSEBUTTONUP && e.button.button == SDL_BUTTON_RIGHT && get_state() == STATE_RUNNING)
 			{
 				//Get mouse position
 				SDL_GetMouseState( &x, &y );
 				printf("Clicked on (%d, %d)\n", y/IMAGE_SIZE, x/IMAGE_SIZE);
 
 				if ( (y/IMAGE_SIZE) >= 1)
-					changes = make_move(g, (y/IMAGE_SIZE) - 1, x/IMAGE_SIZE, true);
-				render_game_running(r, changes);
+					changes = make_move((y/IMAGE_SIZE) - 1, x/IMAGE_SIZE, true);
+				render_game_running(changes);
 
 				changes = NULL;
 			}
 		}
 	}
 
-	destroy_graphics(r);
-	destroy_game(g, 6);
+	destroy_graphics();
+	destroy_game(6);
 	return 0;
 }
 

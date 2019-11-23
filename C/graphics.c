@@ -13,48 +13,45 @@ const int SCREEN_HEIGHT = 350;
 const int ADJACENT = 9;
 const int TOP_PANEL_BUTTONS = 4;
 
-struct graphics
-{
-	// Images used for game
-	SDL_Texture** adjacent;
-	SDL_Texture* flag;
-	SDL_Texture* mine;
-	SDL_Texture* covered;
-	SDL_Texture* boom;
-	SDL_Texture* wrong;
-	SDL_Texture* happy;
-	SDL_Texture* surprise;
-	SDL_Texture* dead;
-	SDL_Texture* glasses;
-	SDL_Texture* empty;
-	SDL_Texture* hint;
-	SDL_Texture* restart;
+// Images used for game
+SDL_Texture** adjacent;
+SDL_Texture* flag;
+SDL_Texture* mine;
+SDL_Texture* covered;
+SDL_Texture* boom;
+SDL_Texture* wrong;
+SDL_Texture* happy;
+SDL_Texture* surprise;
+SDL_Texture* dead;
+SDL_Texture* glasses;
+SDL_Texture* empty;
+SDL_Texture* hint;
+SDL_Texture* restart;
 
-	SDL_Window* window;
-	SDL_Renderer* rend;
-	TTF_Font* button_font;
-	int dimension;
+SDL_Window* window;
+SDL_Renderer* rend;
+TTF_Font* button_font;
+int dimension;
 
-	SDL_Rect** board;
-	SDL_Rect* top_panel;
+SDL_Rect** board;
+SDL_Rect* top_panel;
 
-	int timer_state;
-	pthread_t *timer_thread;
-};
+int timer_state;
+pthread_t *timer_thread;
 
-bool create_window(graphics* g)
+bool create_window()
 {
 	//Create window
-	g->window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-	if( g->window == NULL )
+	window = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+	if( window == NULL )
 	{
 		return true;
 	}
 	else
 	{
 		//Create graphics for window
-		g->rend = SDL_CreateRenderer( g->window, -1, SDL_RENDERER_ACCELERATED );
-		if( g->rend == NULL )
+		rend = SDL_CreateRenderer( window, -1, SDL_RENDERER_ACCELERATED );
+		if( rend == NULL )
 		{
 			return true;
 		}
@@ -72,131 +69,132 @@ bool create_window(graphics* g)
 	return false;
 }
 
-SDL_Texture* load_texture(graphics* g, char* path)
+SDL_Texture* load_texture(char* path)
 {
 	SDL_Surface* tmp = IMG_Load(path);
-	SDL_Texture* opt = SDL_CreateTextureFromSurface(g->rend, tmp);
+	SDL_Texture* opt = SDL_CreateTextureFromSurface(rend, tmp);
 	SDL_FreeSurface(tmp);
 	return opt;
 }
 
-void load_images(graphics* g)
+void load_images()
 {
-	g->adjacent[0] = load_texture(g, "../icons/0.png");
-	g->adjacent[1] = load_texture(g, "../icons/1.png");
-	g->adjacent[2] = load_texture(g, "../icons/2.png");
-	g->adjacent[3] = load_texture(g, "../icons/3.png");
-	g->adjacent[4] = load_texture(g, "../icons/4.png");
-	g->adjacent[5] = load_texture(g, "../icons/5.png");
-	g->adjacent[6] = load_texture(g, "../icons/6.png");
-	g->adjacent[7] = load_texture(g, "../icons/7.png");
-	g->adjacent[8] = load_texture(g, "../icons/8.png");
+	restart = load_texture("../icons/restart.png");
+	adjacent[0] = load_texture("../icons/0.png");
+	adjacent[1] = load_texture("../icons/1.png");
+	adjacent[2] = load_texture("../icons/2.png");
+	adjacent[3] = load_texture("../icons/3.png");
+	adjacent[4] = load_texture("../icons/4.png");
+	adjacent[5] = load_texture("../icons/5.png");
+	adjacent[6] = load_texture("../icons/6.png");
+	adjacent[7] = load_texture("../icons/7.png");
+	adjacent[8] = load_texture("../icons/8.png");
 
-	g->covered = load_texture(g, "../icons/blank.png");
-	g->flag = load_texture(g, "../icons/flag.png");
-	g->mine = load_texture(g, "../icons/mine.png");
-	g->boom = load_texture(g, "../icons/boom.png");
-	g->wrong = load_texture(g, "../icons/wrong.png");
-	g->dead = load_texture(g, "../icons/dead.png");
-	g->glasses = load_texture(g, "../icons/glasses.png");
-	g->happy = load_texture(g, "../icons/smile.png");
-	g->surprise = load_texture(g, "../icons/click.png");
-	g->empty = load_texture(g, "../icons/empty.png");
-	g->hint = load_texture(g, "../icons/hint.png");
-	g->restart = load_texture(g, "../icons/restart.png");
+
+	covered = load_texture("../icons/blank.png");
+	flag = load_texture("../icons/flag.png");
+	mine = load_texture("../icons/mine.png");
+	boom = load_texture("../icons/boom.png");
+	wrong = load_texture("../icons/wrong.png");
+	dead = load_texture("../icons/dead.png");
+	glasses = load_texture("../icons/glasses.png");
+	happy = load_texture("../icons/smile.png");
+	surprise = load_texture("../icons/click.png");
+	empty = load_texture("../icons/empty.png");
+	hint = load_texture("../icons/hint.png");
 }
 
 /******************************
 *     RENDERING THE GAME
 ******************************/ 
-void render_game_running(graphics* g, point* changes)
+void render_game_running(point* changes)
 {
 	point* tmp;
 	while (changes != NULL)
 	{
-		SDL_RenderSetViewport(g->rend, &g->board[changes->x][changes->y]);
+		SDL_RenderSetViewport(rend, &board[changes->x][changes->y]);
 		printf("Changed at (%d, %d) to %c\n", changes->x, changes->y, changes->c);
 		if (changes->c == 'f')
-			SDL_RenderCopy(g->rend, g->flag, 0, 0);
+			SDL_RenderCopy(rend, flag, 0, 0);
 		else if (changes->c == ' ')
-			SDL_RenderCopy(g->rend, g->covered, 0, 0);
+			SDL_RenderCopy(rend, covered, 0, 0);
 		else
-			SDL_RenderCopy(g->rend, g->adjacent[changes->c - '0'], 0, 0);
+			SDL_RenderCopy(rend, adjacent[changes->c - '0'], 0, 0);
 		tmp = changes->next;
 		free(changes);
 		changes = tmp;
 	}
-	SDL_RenderPresent(g->rend);
+	SDL_RenderPresent(rend);
 
-	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
-	SDL_RenderCopy(g->rend, g->happy, 0, 0);
-	SDL_RenderPresent(g->rend);
+	SDL_RenderSetViewport(rend, &top_panel[1]);
+	SDL_RenderCopy(rend, happy, 0, 0);
+	SDL_RenderPresent(rend);
 } 
 
-void render_game_restart(graphics* g)
+void render_game_restart()
 {
 	int i, j;
-	for (i = 0; i < g->dimension; i++)	
+	for (i = 0; i < dimension; i++)	
 	{
-		for (j = 0; j < g->dimension; j++)
+		for (j = 0; j < dimension; j++)
 		{
-			SDL_RenderSetViewport(g->rend, &g->board[i][j]);
-			SDL_RenderCopy(g->rend, g->covered, 0, 0);
+			SDL_RenderSetViewport(rend, &board[i][j]);
+			SDL_RenderCopy(rend, covered, 0, 0);
 		}
 	}
-	SDL_RenderPresent(g->rend);
+	SDL_RenderPresent(rend);
 }
 
-void render_game_lost(graphics* g, point* changes)
+void render_game_lost(point* changes)
 {
 	point* tmp;
 	while (changes != NULL)
 	{
-		SDL_RenderSetViewport(g->rend, &g->board[changes->x][changes->y]);
+		SDL_RenderSetViewport(rend, &board[changes->x][changes->y]);
 		printf("Changed at (%d, %d) to %c\n", changes->x, changes->y, changes->c);
 
 		if (changes->c == 'b')
-			SDL_RenderCopy(g->rend, g->boom, 0, 0);
+			SDL_RenderCopy(rend, boom, 0, 0);
 		else if (changes->c == 'm')
-			SDL_RenderCopy(g->rend, g->mine, 0, 0);
+			SDL_RenderCopy(rend, mine, 0, 0);
 		else if (changes->c == 'w')
-			SDL_RenderCopy(g->rend, g->wrong, 0, 0);
+			SDL_RenderCopy(rend, wrong, 0, 0);
 
 		tmp = changes->next;
 		free(changes);
 		changes = tmp;
 	}
-	SDL_RenderPresent(g->rend);
+	SDL_RenderPresent(rend);
 
-	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
-	SDL_RenderCopy(g->rend, g->dead, 0, 0);
-	SDL_RenderPresent(g->rend);
+	SDL_RenderSetViewport(rend, &top_panel[1]);
+	SDL_RenderCopy(rend, dead, 0, 0);
+	SDL_RenderPresent(rend);
 }
 
-void render_game_won(graphics* g, point* changes)
+void render_game_won(point* changes)
 {
 	point* tmp;
 	while (changes != NULL)
 	{
-		SDL_RenderSetViewport(g->rend, &g->board[changes->x][changes->y]);
+		SDL_RenderSetViewport(rend, &board[changes->x][changes->y]);
 		printf("Changed at (%d, %d) to %c\n", changes->x, changes->y, changes->c);
-		SDL_RenderCopy(g->rend, g->adjacent[changes->c - '0'], 0, 0);
+		SDL_RenderCopy(rend, adjacent[changes->c - '0'], 0, 0);
 		tmp = changes->next;
 		free(changes);
 		changes = tmp;
 	}
-	SDL_RenderPresent(g->rend);
+	SDL_RenderPresent(rend);
 
-	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
-	SDL_RenderCopy(g->rend, g->glasses, 0, 0);
-	SDL_RenderPresent(g->rend);
+	SDL_RenderSetViewport(rend, &top_panel[1]);
+	SDL_RenderCopy(rend, glasses, 0, 0);
+	SDL_RenderPresent(rend);
 }
 
-void render_face_on_click(graphics* g)
+void render_face_on_click()
 {
-	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
-	SDL_RenderCopy(g->rend, g->surprise, 0, 0);
-	SDL_RenderPresent(g->rend);
+	SDL_RenderSetViewport(rend, &top_panel[1]);
+	SDL_RenderCopy(rend, surprise, 0, 0);
+	SDL_RenderPresent(rend);
 }
 
 void *render_timer(void *arg)
@@ -223,20 +221,19 @@ void *render_timer(void *arg)
 /******************************
 *    CONSTRUCTORS/DESTRUCTORS
 ******************************/ 
-graphics* create_graphics(int d)
+void create_graphics(int d)
 {
-	graphics* g = malloc(sizeof(graphics));
-	g->dimension = d;
+	printf("Creating graphics\n");
+	dimension = d;
 
-	g->adjacent = malloc(ADJACENT * sizeof(SDL_Texture*));
+	adjacent = malloc(ADJACENT * sizeof(SDL_Texture*));
 
 	int x;
-	g->board = malloc(g->dimension * sizeof(SDL_Rect*));
-	for (x = 0; x < g->dimension; x++)
-		g->board[x] = malloc(g->dimension * sizeof(SDL_Rect));
+	board = malloc(dimension * sizeof(SDL_Rect*));
+	for (x = 0; x < dimension; x++)
+		board[x] = malloc(dimension * sizeof(SDL_Rect));
 
-
-	g->top_panel = malloc(TOP_PANEL_BUTTONS * sizeof(SDL_Rect));
+	top_panel = malloc(TOP_PANEL_BUTTONS * sizeof(SDL_Rect));
 
 	if (SDL_Init(SDL_INIT_VIDEO) != 0) 
 	{
@@ -252,106 +249,111 @@ graphics* create_graphics(int d)
 	{
 		return NULL;
 	}
+
+	printf("Created board\n");
 	
-	create_window(g);
-	load_images(g);
+	create_window();
+	printf("Created window\n");
+	load_images();
+	printf("Created images\n");
 	
 	// Hint button
-	g->top_panel[0].x = 0;
-	g->top_panel[0].y = 0;
-	g->top_panel[0].w = 2 * IMAGE_SIZE;
-	g->top_panel[0].h = IMAGE_SIZE;
-	SDL_RenderSetViewport(g->rend, &g->top_panel[0]);
-	SDL_RenderCopy(g->rend, g->hint, 0, 0);
+	top_panel[0].x = 0;
+	top_panel[0].y = 0;
+	top_panel[0].w = 2 * IMAGE_SIZE;
+	top_panel[0].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(rend, &top_panel[0]);
+	SDL_RenderCopy(rend, hint, 0, 0);
 
 	// Face
-	g->top_panel[1].x = 2 * IMAGE_SIZE;
-	g->top_panel[1].y = 0;
-	g->top_panel[1].w = IMAGE_SIZE;
-	g->top_panel[1].h = IMAGE_SIZE;
-	SDL_RenderSetViewport(g->rend, &g->top_panel[1]);
-	SDL_RenderCopy(g->rend, g->happy, 0, 0);
+	top_panel[1].x = 2 * IMAGE_SIZE;
+	top_panel[1].y = 0;
+	top_panel[1].w = IMAGE_SIZE;
+	top_panel[1].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(rend, &top_panel[1]);
+	SDL_RenderCopy(rend, happy, 0, 0);
 
 	// Restart
-	g->top_panel[2].x = 3 * IMAGE_SIZE;
-	g->top_panel[2].y = 0;
-	g->top_panel[2].w = 2 * IMAGE_SIZE;
-	g->top_panel[2].h = IMAGE_SIZE;
-	SDL_RenderSetViewport(g->rend, &g->top_panel[2]);
-	SDL_RenderCopy(g->rend, g->restart, 0, 0);
+	top_panel[2].x = 3 * IMAGE_SIZE;
+	top_panel[2].y = 0;
+	top_panel[2].w = 2 * IMAGE_SIZE;
+	top_panel[2].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(rend, &top_panel[2]);
+	SDL_RenderCopy(rend, restart, 0, 0);
 
 	// Timer
-	g->top_panel[3].x = 5 * IMAGE_SIZE;
-	g->top_panel[3].y = 0;
-	g->top_panel[3].w = IMAGE_SIZE;
-	g->top_panel[3].h = IMAGE_SIZE;
-	SDL_RenderSetViewport(g->rend, &g->top_panel[3]);
+	top_panel[3].x = 5 * IMAGE_SIZE;
+	top_panel[3].y = 0;
+	top_panel[3].w = IMAGE_SIZE;
+	top_panel[3].h = IMAGE_SIZE;
+	SDL_RenderSetViewport(rend, &top_panel[3]);
 
+	printf("Created top panel\n");
 
 	int i, j;
-	for (i = 0; i < g->dimension; i++)	
+	for (i = 0; i < dimension; i++)	
 	{
-		for (j = 0; j < g->dimension; j++)
+		for (j = 0; j < dimension; j++)
 		{
-			g->board[i][j].x = j * IMAGE_SIZE;
-			g->board[i][j].y = (i * IMAGE_SIZE) + IMAGE_SIZE;
-			g->board[i][j].w = IMAGE_SIZE;
-			g->board[i][j].h = IMAGE_SIZE;
+			board[i][j].x = j * IMAGE_SIZE;
+			board[i][j].y = (i * IMAGE_SIZE) + IMAGE_SIZE;
+			board[i][j].w = IMAGE_SIZE;
+			board[i][j].h = IMAGE_SIZE;
 
-			SDL_RenderSetViewport(g->rend, &g->board[i][j]);
-			SDL_RenderCopy(g->rend, g->covered, 0, 0);
+			SDL_RenderSetViewport(rend, &board[i][j]);
+			SDL_RenderCopy(rend, covered, 0, 0);
 		}
 	}
 
-	// Timer thread
-	g->timer_thread = malloc(sizeof(pthread_t));
-	pthread_create(g->timer_thread, NULL, &render_timer, (void *)&(g->timer_state));
+	printf("Created each tile\n");
 
-	SDL_RenderPresent(g->rend);
-	return g;
+	// Timer thread
+	timer_thread = malloc(sizeof(pthread_t));
+	pthread_create(timer_thread, NULL, &render_timer, (void *)&(timer_state));
+
+	printf("Created timer thread\n");
+
+	SDL_RenderPresent(rend);
 }
 
 
-void destroy_graphics(graphics* g)
+void destroy_graphics()
 {
 
 	int i;
-	for(i = 0; i < g->dimension; i++)
-		SDL_DestroyTexture(g->adjacent[i]);
-	free(g->adjacent);
+	for(i = 0; i < dimension; i++)
+		SDL_DestroyTexture(adjacent[i]);
+	free(adjacent);
 
-	SDL_DestroyTexture(g->covered);
-	SDL_DestroyTexture(g->flag);
-	SDL_DestroyTexture(g->mine);
-	SDL_DestroyTexture(g->boom);
-	SDL_DestroyTexture(g->wrong);
-	SDL_DestroyTexture(g->dead);
-	SDL_DestroyTexture(g->glasses);
-	SDL_DestroyTexture(g->happy);
-	SDL_DestroyTexture(g->surprise);
-	SDL_DestroyTexture(g->empty);
-	SDL_DestroyTexture(g->hint);
-	SDL_DestroyTexture(g->restart);
+	SDL_DestroyTexture(covered);
+	SDL_DestroyTexture(flag);
+	SDL_DestroyTexture(mine);
+	SDL_DestroyTexture(boom);
+	SDL_DestroyTexture(wrong);
+	SDL_DestroyTexture(dead);
+	SDL_DestroyTexture(glasses);
+	SDL_DestroyTexture(happy);
+	SDL_DestroyTexture(surprise);
+	SDL_DestroyTexture(empty);
+	SDL_DestroyTexture(hint);
+	SDL_DestroyTexture(restart);
 
 	//Destroy window
-	SDL_DestroyWindow( g->window );
+	SDL_DestroyWindow( window );
 
-	for(i = 0; i < g->dimension; i++)
-		free(g->board[i]);
-	free(g->board);
+	for(i = 0; i < dimension; i++)
+		free(board[i]);
+	free(board);
 
-	free(g->top_panel);
+	free(top_panel);
 
-	SDL_DestroyRenderer(g->rend);
+	SDL_DestroyRenderer(rend);
 
 
 	// Stop timer thread
-	g->timer_state = -1;
-	pthread_join(*(g->timer_thread), NULL);
-	free(g->timer_thread);
-
-	free(g);
-
+	timer_state = -1;
+	pthread_join(*(timer_thread), NULL);
+	free(timer_thread);
 
 	//Quit SDL subsystems
 	SDL_Quit();
