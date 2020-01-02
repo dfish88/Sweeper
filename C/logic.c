@@ -14,18 +14,7 @@ const int delta_x[] = {-1,-1,0,1,1,1,0,-1};
 const int delta_y[] = {0,1,1,1,0,-1,-1,-1};
 
 /********************
-*	TYPES
-********************/ 
-typedef struct
-{
-	bool mine;
-	bool flag;
-	bool revealed;
-	unsigned int adjacent;
-} tile;
-
-/********************
-*	DATA
+*      HELPERS
 ********************/ 
 int dimension;
 int tiles_left;
@@ -33,9 +22,6 @@ tile **game_board;
 int state;
 bool first_move;
 
-/********************
-*      HELPERS
-********************/ 
 
 /*
 * Used to add to linked lists which are used to track
