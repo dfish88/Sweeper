@@ -11,7 +11,6 @@ typedef struct
 	unsigned int adjacent;
 } tile;
 
-/*
 typedef struct
 {
 	int dimension;
@@ -20,13 +19,6 @@ typedef struct
 	int state;
 	bool first_move;
 } game;
-*/
-
-/********************
-*    INIT/DESTROY
-********************/ 
-void create_game(int size);
-void destroy_game(int size);
 
 /********************
 *	GETTERS
@@ -48,6 +40,6 @@ void set_revealed(int x, int y);
 void set_adjacent(int x, int y, int a);
 void set_state(int s);
 
-point* make_move(int x, int y, bool flag);
+point* make_move(game* g, int x, int y, bool flag);
 void restart_game();
 

@@ -149,36 +149,6 @@ void set_state(int s)
 }
 
 /******************************
-*    CONSTRUCTORS/DESTRUCTORS
-******************************/ 
-void create_game(int size)
-{
-	dimension = size;
-	
-	int x;
-	game_board = malloc(dimension * sizeof(tile *));
-	for (x = 0; x < dimension; x++)
-	{
-		game_board[x] = calloc(dimension,  sizeof(tile));
-	}
-
-	state = STATE_RUNNING;
-
-	srand(time(0));
-	first_move = true;
-}
-
-void destroy_game(int size) 
-{
-	int x;
-	for (x = 0; x < size; x++)
-	{
-		free(game_board[x]);
-	}
-	free(game_board);
-}
-
-/******************************
 *       BUILD BOARD
 ******************************/ 
 bool check_for_mine(int x, int y)
@@ -216,6 +186,7 @@ void add_mines(int x, int y)
 	int limit = (int)((dimension * dimension)/6);
 	int num_mines;
 	int placed = 0;
+	srand(time(0));
 
 	// Randomly place mines
 	for (num_mines = 0; num_mines < limit; num_mines++)
@@ -360,7 +331,7 @@ point* reveal_mines(int x, int y)
 /******************************
 *       PLAYING GAME
 ******************************/ 
-point* make_move(int x, int y, bool flag)
+point* make_move(game* g, int x, int y, bool flag)
 {
 	// Build game_board on first click
 	if (first_move)
