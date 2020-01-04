@@ -18,10 +18,10 @@ void create_game(game* g, int size)
 	g->dimension = size;
 	
 	int x;
-	g->game_board = malloc(dimension * sizeof(tile *));
-	for (x = 0; x < dimension; x++)
+	g->game_board = malloc(g->dimension * sizeof(tile *));
+	for (x = 0; x < g->dimension; x++)
 	{
-		g->game_board[x] = calloc(dimension,  sizeof(tile));
+		g->game_board[x] = calloc(g->dimension,  sizeof(tile));
 	}
 
 	g->state = STATE_RUNNING;
@@ -32,7 +32,7 @@ void create_game(game* g, int size)
 void destroy_game(game** g) 
 {
 	int x;
-	for (x = 0; x < (*g)->size; x++)
+	for (x = 0; x < (*g)->dimension; x++)
 	{
 		free((*g)->game_board[x]);
 	}
