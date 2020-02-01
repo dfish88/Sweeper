@@ -86,8 +86,10 @@ int main()
 				if (y/IMAGE_SIZE == 0 && (x/IMAGE_SIZE == 3 || x/IMAGE_SIZE == 4))
 				{
 					printf("Restart Button Clicked!!\n");
-					//restart_game();
-					//render_game_restart();
+					destroy_game(&g);
+					g = malloc(sizeof(game));
+					create_game(g, 6);
+					render_game_restart();
 					break;
 				}
 			}
@@ -103,8 +105,10 @@ int main()
 				if (y/IMAGE_SIZE == 0 && (x/IMAGE_SIZE == 3 || x/IMAGE_SIZE == 4))
 				{
 					printf("Restart Button Clicked!!\n");
-					//restart_game();
-					//render_game_restart();
+					destroy_game(&g);
+					g = malloc(sizeof(game));
+					create_game(g, 6);
+					render_game_restart();
 					break;
 				}
 				// First row clicked, ignore
@@ -147,7 +151,7 @@ int main()
 	}
 
 	destroy_graphics();
-	//destroy_game(&g);
+	destroy_game(&g);
 	return 0;
 }
 

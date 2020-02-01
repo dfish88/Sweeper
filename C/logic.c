@@ -318,9 +318,3 @@ point* make_move(game* g, int x, int y, bool flag)
 	return head;
 }
 
-void restart_game()
-{
-	// Re-build the game_board
-	//destroy_game(dimension);
-	//create_game(dimension);
-}

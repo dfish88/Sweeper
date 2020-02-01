@@ -131,6 +131,27 @@ void render_game_running(point* changes)
 	SDL_RenderPresent(rend);
 } 
 
+void *render_timer(void *arg)
+{
+	int* pthread_state = arg;
+	int sec = 0;
+	while(1)
+	{
+		sleep(1);
+		printf("Seconds passed: %d\n", sec);
+		printf("Thread state: %d\n", (*pthread_state));
+		sec++;
+
+		if ((*pthread_state) == -1)
+		{
+			printf("Killing thread\n");
+			pthread_exit(0);
+			break;
+		}
+	}
+	return 0;
+}
+
 void render_game_restart()
 {
 	int i, j;
@@ -142,6 +163,17 @@ void render_game_restart()
 			SDL_RenderCopy(rend, covered, 0, 0);
 		}
 	}
+
+	// Stop timer thread
+	timer_state = -1;
+	pthread_join(*(timer_thread), NULL);
+	free(timer_thread);
+
+	// Create timer thread
+	timer_state = 1;
+	timer_thread = malloc(sizeof(pthread_t));
+	pthread_create(timer_thread, NULL, &render_timer, (void *)&(timer_state));
+
 	SDL_RenderPresent(rend);
 }
 
@@ -197,26 +229,6 @@ void render_face_on_click()
 	SDL_RenderPresent(rend);
 }
 
-void *render_timer(void *arg)
-{
-	int* pthread_state = arg;
-	int sec = 0;
-	while(1)
-	{
-		sleep(1);
-		printf("Seconds passed: %d\n", sec);
-		printf("Thread state: %d\n", (*pthread_state));
-		sec++;
-
-		if ((*pthread_state) == -1)
-		{
-			printf("Killing thread\n");
-			pthread_exit(0);
-			break;
-		}
-	}
-	return 0;
-}
 
 /******************************
 *    CONSTRUCTORS/DESTRUCTORS
@@ -307,7 +319,8 @@ void create_graphics(int d)
 
 	printf("Created each tile\n");
 
-	// Timer thread
+	// Create timer thread
+	timer_state = 1;
 	timer_thread = malloc(sizeof(pthread_t));
 	pthread_create(timer_thread, NULL, &render_timer, (void *)&(timer_state));
 
