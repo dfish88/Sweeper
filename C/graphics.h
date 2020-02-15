@@ -1,3 +1,5 @@
+#include "types.h"
+
 extern const int IMAGE_SIZE;
 
 void create_graphics(int d);

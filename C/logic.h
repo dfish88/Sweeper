@@ -21,5 +21,4 @@ typedef struct
 } game;
 
 point* make_move(game* g, int x, int y, bool flag);
-void restart_game();
 
