@@ -10,10 +10,12 @@ def main():
 	root = tkinter.Tk()
 	root.title("Sweeper!")
 	root.grid()
+	button_img = tkinter.PhotoImage(file="../icons/blank.png")
+
 
 	for x in range(w):
 		for y in range(h):
-			temp = tkinter.Button(root, text="test")
+			temp = tkinter.Button(root, image=button_img, highlightthickness=0, bd=0, relief=SUNKEN, command = lambda x=x, y=y: print(str(x) + "," + str(y)))
 			temp.grid(row = x, column=y)
 
 	root.mainloop()
