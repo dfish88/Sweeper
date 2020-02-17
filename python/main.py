@@ -5,22 +5,20 @@ BUTTON_DIM = 50
 
 def main():
 
+	# Make Top bar
+
 	# Make window
-	w, h = 8, 8
+	row, col = 8, 8
 	root = tkinter.Tk()
 	root.title("Sweeper!")
 	root.grid()
-	button_img = tkinter.PhotoImage(file="../icons/blank.png")
+	blank = tkinter.PhotoImage(file="../icons/blank.png")
 
-
-	for x in range(w):
-		for y in range(h):
-			temp = tkinter.Button(root, image=button_img, highlightthickness=0, bd=0, relief=SUNKEN, command = lambda x=x, y=y: print(str(x) + "," + str(y)))
-			temp.grid(row = x, column=y)
+	for r in range(row):
+		for c in range(col):
+			callback = lambda x=r, y=c: print(str(x) + ", " + str(y))
+			temp = tkinter.Button(root, image=blank, highlightthickness=0, bd=0, relief=SUNKEN, command = callback)
+			temp.grid(row = r, column=c)
 
 	root.mainloop()
-
-
-	# Make the board
-	board = [[' ' for x in range(w)] for y in range(h)]
 main()
