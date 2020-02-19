@@ -10,7 +10,7 @@ def start_game(size, old_frame, window):
 	old_frame.grid_forget()
 	
 	game_frame = tkinter.Frame(window, width=BUTTON_DIM*8, height=BUTTON_DIM*8)
-	game_frame.grid(row=2, column=0, sticky="nsew")
+	game_frame.grid(row=1, column=0, sticky="nsew")
 	#game_frame.grid_propagate(0)
 
 	# Make window
@@ -22,7 +22,7 @@ def start_game(size, old_frame, window):
 			callback = lambda x=r, y=c: print(str(x) + ", " + str(y))
 			temp = tkinter.Button(game_frame, image=blank, highlightthickness=0, bd=0, relief=SUNKEN, command = callback)
 			temp.grid(row=r, column=c)
-	asdfadf
+	game_frame.tkraise()
 
 def main():
 
