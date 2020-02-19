@@ -8,6 +8,7 @@ def main():
 	# Create main window
 	root = tkinter.Tk()
 	root.title("Sweeper!")
+	root.resizable(width=False, height=False)
 
 	# Top frame has hint, smiley, restart, and timer
 	top_frame = tkinter.Frame(root, width=BUTTON_DIM*8, height=BUTTON_DIM)
