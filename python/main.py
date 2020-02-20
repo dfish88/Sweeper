@@ -1,4 +1,3 @@
-import sys
 import tkinter
 from tkinter import *
 
@@ -6,7 +5,7 @@ BUTTON_DIM = 50
 EASY_DIM = 8
 HARD_DIM = 16
 
-def start_game(size, container, img):
+def start_game(size, container, img, window):
 	
 	game_frame = tkinter.Frame(container, width=BUTTON_DIM*8, height=BUTTON_DIM*8)
 	game_frame.grid(row=0, column=0, sticky="nsew")
@@ -17,10 +16,16 @@ def start_game(size, container, img):
 		game_frame.rowconfigure(r, weight=1)
 		for c in range(col):
 			callback = lambda x=r, y=c: print(str(x) + ", " + str(y))
-			temp = tkinter.Button(game_frame, image=img, highlightthickness=0, bd=0, padx=0, pady=0, relief=FLAT, command = callback)
+			temp = tkinter.Button(game_frame, image=img, highlightthickness=0, bd=0, padx=0, pady=0, relief=SUNKEN, command = callback)
 			game_frame.columnconfigure(c, weight=1)
-			#temp = tkinter.Button(game_frame, image=img, command = callback)
-			temp.grid(row=r, column=c, sticky="nsew")
+			temp.grid(row=r, column=c)
+
+	window.update()
+	w = game_frame.winfo_width()
+	x = window.winfo_x()
+	h = game_frame.winfo_height()
+	y = window.winfo_y()
+	window.geometry(str(w) + "x" + str(h) + "+500+150")
 	game_frame.tkraise()
 
 # Load all the icons used during the game
@@ -46,11 +51,17 @@ def load_icons(img_dic):
 	img_dic['s'] = tkinter.PhotoImage(file="../icons/smile.png")
 	img_dic['w'] = tkinter.PhotoImage(file="../icons/wrong.png")
 
+def restart_game(frame, window):
+
+	frame.tkraise()
+	window.geometry("400x425+500+150")
+
 def main():
 
 	# Create main window
 	root = tkinter.Tk()
 	root.title("Sweeper!")
+	root.geometry("400x425+500+150")
 	root.resizable(width=False, height=False)
 
 	# Top frame has hint, smiley, restart, and timer
@@ -70,7 +81,7 @@ def main():
 	hint = tkinter.Button(top_frame, text="Hint?")
 	smile_img = tkinter.PhotoImage(file="../icons/smile.png")
 	smile = tkinter.Label(top_frame, image=smile_img)
-	restart = tkinter.Button(top_frame, text="Restart?", command=lambda:difficulty.tkraise())
+	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(difficulty, root))
 	timer = tkinter.Label(top_frame, text="0:00")
 
 	hint.grid(row=0, column=0, columnspan=2, sticky="nsew")
@@ -87,8 +98,8 @@ def main():
 	load_icons(icons)
 
 	# Offer two choices of difficulty
-	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(EASY_DIM, bottom_frame, icons['b']))
-	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(HARD_DIM, bottom_frame, icons['b']))
+	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(EASY_DIM, bottom_frame, icons['b'], root))
+	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(HARD_DIM, bottom_frame, icons['b'], root))
 
 	difficulty.rowconfigure(0, weight=1)
 	easy.grid(row=0, column=0, columnspan=4, rowspan=8, sticky="nsew")
