@@ -14,10 +14,13 @@ def start_game(size, container, img):
 	# Make window
 	row, col = size, size
 	for r in range(row):
+		game_frame.rowconfigure(r, weight=1)
 		for c in range(col):
 			callback = lambda x=r, y=c: print(str(x) + ", " + str(y))
-			temp = tkinter.Button(game_frame, image=img, highlightthickness=0, bd=0, relief=SUNKEN, command = callback)
-			temp.grid(row=r, column=c)
+			temp = tkinter.Button(game_frame, image=img, highlightthickness=0, bd=0, padx=0, pady=0, relief=FLAT, command = callback)
+			game_frame.columnconfigure(c, weight=1)
+			#temp = tkinter.Button(game_frame, image=img, command = callback)
+			temp.grid(row=r, column=c, sticky="nsew")
 	game_frame.tkraise()
 
 # Load all the icons used during the game
@@ -59,15 +62,15 @@ def main():
 	bottom_frame.grid(row=1, column=0, sticky="nsew")
 	
 	# game board frame has mine field
-	game_board = tkinter.Frame(bottom_frame, width=BUTTON_DIM*8, height=BUTTON_DIM*8)
-	game_board.grid(row=0, column=0, sticky="nsew")
-	game_board.grid_propagate(0)
+	difficulty = tkinter.Frame(bottom_frame, width=BUTTON_DIM*8, height=BUTTON_DIM*8)
+	difficulty.grid(row=0, column=0, sticky="nsew")
+	difficulty.grid_propagate(0)
 
 	# Make Top bar that has hint, smiley, restart, timer
 	hint = tkinter.Button(top_frame, text="Hint?")
 	smile_img = tkinter.PhotoImage(file="../icons/smile.png")
 	smile = tkinter.Label(top_frame, image=smile_img)
-	restart = tkinter.Button(top_frame, text="Restart?")
+	restart = tkinter.Button(top_frame, text="Restart?", command=lambda:difficulty.tkraise())
 	timer = tkinter.Label(top_frame, text="0:00")
 
 	hint.grid(row=0, column=0, columnspan=2, sticky="nsew")
@@ -84,14 +87,14 @@ def main():
 	load_icons(icons)
 
 	# Offer two choices of difficulty
-	easy = tkinter.Button(game_board, text="8x8 (Easy)", command=lambda:start_game(EASY_DIM, bottom_frame, icons['b']))
-	hard = tkinter.Button(game_board, text="16x16 (Hard)", command=lambda:start_game(HARD_DIM, bottom_frame, icons['b']))
+	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(EASY_DIM, bottom_frame, icons['b']))
+	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(HARD_DIM, bottom_frame, icons['b']))
 
-	game_board.rowconfigure(0, weight=1)
+	difficulty.rowconfigure(0, weight=1)
 	easy.grid(row=0, column=0, columnspan=4, rowspan=8, sticky="nsew")
-	game_board.columnconfigure(0, weight=1)
+	difficulty.columnconfigure(0, weight=1)
 	hard.grid(row=0, column=4, columnspan=4, rowspan=8, sticky="nsew")
-	game_board.columnconfigure(4, weight=1)
+	difficulty.columnconfigure(4, weight=1)
 
 	root.mainloop()
 main()
