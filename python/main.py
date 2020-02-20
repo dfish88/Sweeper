@@ -10,20 +10,15 @@ def start_game(size, container, img):
 	
 	game_frame = tkinter.Frame(container, width=BUTTON_DIM*8, height=BUTTON_DIM*8)
 	game_frame.grid(row=0, column=0, sticky="nsew")
-	btn = tkinter.Button(game_frame, image=img, command=lambda: print("hi"))
-	btn.grid(row=0, column=0)
-	game_frame.tkraise()
 
 	# Make window
-	'''
 	row, col = size, size
-
 	for r in range(row):
 		for c in range(col):
 			callback = lambda x=r, y=c: print(str(x) + ", " + str(y))
-			temp = tkinter.Button(game_frame, image=blank, highlightthickness=0, bd=0, relief=SUNKEN, command = callback)
+			temp = tkinter.Button(game_frame, image=img, highlightthickness=0, bd=0, relief=SUNKEN, command = callback)
 			temp.grid(row=r, column=c)
-	'''
+	game_frame.tkraise()
 
 # Load all the icons used during the game
 def load_icons(img_dic):
@@ -66,6 +61,7 @@ def main():
 	# game board frame has mine field
 	game_board = tkinter.Frame(bottom_frame, width=BUTTON_DIM*8, height=BUTTON_DIM*8)
 	game_board.grid(row=0, column=0, sticky="nsew")
+	game_board.grid_propagate(0)
 
 	# Make Top bar that has hint, smiley, restart, timer
 	hint = tkinter.Button(top_frame, text="Hint?")
