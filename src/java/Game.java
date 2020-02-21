@@ -177,24 +177,24 @@ public class Game
 	{
 		try
 		{
-			icons.put(' ', new ImageIcon("../icons/blank.png"));
-			icons.put('0', new ImageIcon("../icons/0.png"));
-			icons.put('1', new ImageIcon("../icons/1.png"));
-			icons.put('2', new ImageIcon("../icons/2.png"));
-			icons.put('3', new ImageIcon("../icons/3.png"));
-			icons.put('4', new ImageIcon("../icons/4.png"));
-			icons.put('5', new ImageIcon("../icons/5.png"));
-			icons.put('6', new ImageIcon("../icons/6.png"));
-			icons.put('7', new ImageIcon("../icons/7.png"));
-			icons.put('8', new ImageIcon("../icons/8.png"));
-			icons.put('m', new ImageIcon("../icons/mine.png"));
-			icons.put('f', new ImageIcon("../icons/flag.png"));
-			icons.put('b', new ImageIcon("../icons/boom.png"));
-			icons.put('w', new ImageIcon("../icons/wrong.png"));
-			icons.put('s', new ImageIcon("../icons/smile.png"));
-			icons.put('c', new ImageIcon("../icons/click.png"));
-			icons.put('d', new ImageIcon("../icons/dead.png"));
-			icons.put('g', new ImageIcon("../icons/glasses.png"));
+			icons.put(' ', new ImageIcon("../../img/blank.png"));
+			icons.put('0', new ImageIcon("../../img/0.png"));
+			icons.put('1', new ImageIcon("../../img/1.png"));
+			icons.put('2', new ImageIcon("../../img/2.png"));
+			icons.put('3', new ImageIcon("../../img/3.png"));
+			icons.put('4', new ImageIcon("../../img/4.png"));
+			icons.put('5', new ImageIcon("../../img/5.png"));
+			icons.put('6', new ImageIcon("../../img/6.png"));
+			icons.put('7', new ImageIcon("../../img/7.png"));
+			icons.put('8', new ImageIcon("../../img/8.png"));
+			icons.put('m', new ImageIcon("../../img/mine.png"));
+			icons.put('f', new ImageIcon("../../img/flag.png"));
+			icons.put('b', new ImageIcon("../../img/boom.png"));
+			icons.put('w', new ImageIcon("../../img/wrong.png"));
+			icons.put('s', new ImageIcon("../../img/smile.png"));
+			icons.put('c', new ImageIcon("../../img/click.png"));
+			icons.put('d', new ImageIcon("../../img/dead.png"));
+			icons.put('g', new ImageIcon("../../img/glasses.png"));
 		}
 		catch (Exception e)
 		{
