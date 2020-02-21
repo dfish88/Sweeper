@@ -1,40 +1,7 @@
 import tkinter
 from tkinter import *
-
-BUTTON_DIM = 50
-EASY_DIM = 8
-HARD_DIM = 16
-
-def start_game(size, frames, img, window):
-
-	difficulty = 'easy'
-	dim = BUTTON_DIM*EASY_DIM
-	if size == HARD_DIM:
-		difficulty = 'hard'
-		dim = BUTTON_DIM*HARD_DIM
-
-	if frames[difficulty] == None:
-	
-		# Crate frame
-		game_frame = tkinter.Frame(frames['bottom'], width=dim, height=dim)
-		game_frame.grid(row=0, column=0)
-		frames[difficulty] = game_frame
-
-		for r in range(size):
-			frames[difficulty].rowconfigure(r, weight=1)
-			for c in range(size):
-				frames[difficulty].columnconfigure(c, weight=1)
-				callback = lambda x=r, y=c: print(str(x) + ", " + str(y))
-				temp = tkinter.Button(frames[difficulty], image=img, highlightthickness=0, bd=0, relief=SUNKEN, command = callback)
-				temp.grid(row=r, column=c)
-
-	window.update()
-	w,h = frames[difficulty].winfo_width(), frames[difficulty].winfo_height() + frames['top'].winfo_height()
-	frames['difficulty'].grid_forget()
-	window.geometry(str(w) + "x" + str(h) + "+500+150")
-	frames[difficulty].grid()
-	frames[difficulty].tkraise()
-
+import const
+from graphics import start_game, restart_game
 
 # Load all the icons used during the game
 def load_icons(img_dic):
@@ -59,18 +26,6 @@ def load_icons(img_dic):
 	img_dic['s'] = tkinter.PhotoImage(file="../../img/smile.png")
 	img_dic['w'] = tkinter.PhotoImage(file="../../img/wrong.png")
 
-def restart_game(frames, window):
-
-	try:
-		frames['easy'].grid_forget()
-		frames['hard'].grid_forget()
-	except:
-		pass
-
-	frames['difficulty'].grid()
-	frames['difficulty'].tkraise()
-	frames['difficulty'].grid_propagate(0)
-	window.geometry("400x425+500+150")
 
 def main():
 
@@ -84,28 +39,32 @@ def main():
 	frames = {'easy': None, 'hard': None}
 
 	# Top frame has hint, smiley, restart, and timer
-	top_frame = tkinter.Frame(root, width=BUTTON_DIM*8, height=BUTTON_DIM)
+	top_frame = tkinter.Frame(root, width=const.BUTTON_DIM*8, height=const.BUTTON_DIM)
 	top_frame.grid(row=0, column=0, sticky="nsew")
 	frames['top'] = top_frame
 
-	# Bottom frame has game board frame
+	# Bottom frame has either gameboard or diffculty frame
 	bottom_frame = tkinter.Frame(root)
 	bottom_frame.grid(row=1, column=0, sticky="nsew")
 	frames['bottom'] = bottom_frame
 	
-	# game board frame has mine field
-	difficulty = tkinter.Frame(bottom_frame, width=BUTTON_DIM*8, height=BUTTON_DIM*8)
+	# difficulty frame for starting screen
+	difficulty = tkinter.Frame(bottom_frame, width=const.BUTTON_DIM*8, height=const.BUTTON_DIM*8)
 	difficulty.grid(row=0, column=0, sticky="nsew")
 	difficulty.grid_propagate(0)
 	frames['difficulty'] = difficulty
 
-	# Make Top bar that has hint, smiley, restart, timer
+	# Load all icons for game
+	icons = {}
+	load_icons(icons)
+
+	# Make buttons for top frame
 	hint = tkinter.Button(top_frame, text="Hint?")
-	smile_img = tkinter.PhotoImage(file="../../img/smile.png")
-	smile = tkinter.Label(top_frame, image=smile_img)
+	smile = tkinter.Label(top_frame, image=icons['s'])
 	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(frames, root))
 	timer = tkinter.Label(top_frame, text="0:00")
 
+	# Place buttons in top frame
 	hint.grid(row=0, column=0, columnspan=2, sticky="nsew")
 	top_frame.columnconfigure(0, weight=1)
 	smile.grid(row=0, column=3)
@@ -115,14 +74,12 @@ def main():
 	timer.grid(row=0, column=7)
 	top_frame.columnconfigure(7, weight=1)
 
-	# Load all icons for game
-	icons = {}
-	load_icons(icons)
 
-	# Offer two choices of difficulty
-	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(EASY_DIM, frames, icons['b'], root))
-	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(HARD_DIM, frames, icons['b'], root))
+	# Create easy and hard buttons for starting screen
+	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(const.EASY_DIM, frames, icons['b'], root))
+	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(const.HARD_DIM, frames, icons['b'], root))
 
+	# Place easy and hard buttons in bottom frame in difficulty frame
 	difficulty.rowconfigure(0, weight=1)
 	easy.grid(row=0, column=0, columnspan=4, rowspan=8, sticky="nsew")
 	difficulty.columnconfigure(0, weight=1)
