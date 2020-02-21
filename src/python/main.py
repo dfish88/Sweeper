@@ -29,7 +29,7 @@ def start_game(size, frames, img, window):
 				temp.grid(row=r, column=c)
 
 	window.update()
-	w,h = frames[difficulty].winfo_width(), frames[difficulty].winfo_height()
+	w,h = frames[difficulty].winfo_width(), frames[difficulty].winfo_height() + frames['top'].winfo_height()
 	frames['difficulty'].grid_forget()
 	window.geometry(str(w) + "x" + str(h) + "+500+150")
 	frames[difficulty].grid()
@@ -39,25 +39,25 @@ def start_game(size, frames, img, window):
 # Load all the icons used during the game
 def load_icons(img_dic):
 
-	img_dic['0'] = tkinter.PhotoImage(file="../icons/0.png")
-	img_dic['1'] = tkinter.PhotoImage(file="../icons/0.png")
-	img_dic['2'] = tkinter.PhotoImage(file="../icons/0.png")
-	img_dic['3'] = tkinter.PhotoImage(file="../icons/0.png")
-	img_dic['4'] = tkinter.PhotoImage(file="../icons/0.png")
-	img_dic['5'] = tkinter.PhotoImage(file="../icons/0.png")
-	img_dic['6'] = tkinter.PhotoImage(file="../icons/0.png")
-	img_dic['7'] = tkinter.PhotoImage(file="../icons/0.png")
-	img_dic['8'] = tkinter.PhotoImage(file="../icons/0.png")
-	img_dic['b'] = tkinter.PhotoImage(file="../icons/blank.png")
-	img_dic['bm'] = tkinter.PhotoImage(file="../icons/boom.png")
-	img_dic['c'] = tkinter.PhotoImage(file="../icons/click.png")
-	img_dic['d'] = tkinter.PhotoImage(file="../icons/dead.png")
-	img_dic['e'] = tkinter.PhotoImage(file="../icons/empty.png")
-	img_dic['f'] = tkinter.PhotoImage(file="../icons/flag.png")
-	img_dic['g'] = tkinter.PhotoImage(file="../icons/glasses.png")
-	img_dic['m'] = tkinter.PhotoImage(file="../icons/mine.png")
-	img_dic['s'] = tkinter.PhotoImage(file="../icons/smile.png")
-	img_dic['w'] = tkinter.PhotoImage(file="../icons/wrong.png")
+	img_dic['0'] = tkinter.PhotoImage(file="../../img/0.png")
+	img_dic['1'] = tkinter.PhotoImage(file="../../img/0.png")
+	img_dic['2'] = tkinter.PhotoImage(file="../../img/0.png")
+	img_dic['3'] = tkinter.PhotoImage(file="../../img/0.png")
+	img_dic['4'] = tkinter.PhotoImage(file="../../img/0.png")
+	img_dic['5'] = tkinter.PhotoImage(file="../../img/0.png")
+	img_dic['6'] = tkinter.PhotoImage(file="../../img/0.png")
+	img_dic['7'] = tkinter.PhotoImage(file="../../img/0.png")
+	img_dic['8'] = tkinter.PhotoImage(file="../../img/0.png")
+	img_dic['b'] = tkinter.PhotoImage(file="../../img/blank.png")
+	img_dic['bm'] = tkinter.PhotoImage(file="../../img/boom.png")
+	img_dic['c'] = tkinter.PhotoImage(file="../../img/click.png")
+	img_dic['d'] = tkinter.PhotoImage(file="../../img/dead.png")
+	img_dic['e'] = tkinter.PhotoImage(file="../../img/empty.png")
+	img_dic['f'] = tkinter.PhotoImage(file="../../img/flag.png")
+	img_dic['g'] = tkinter.PhotoImage(file="../../img/glasses.png")
+	img_dic['m'] = tkinter.PhotoImage(file="../../img/mine.png")
+	img_dic['s'] = tkinter.PhotoImage(file="../../img/smile.png")
+	img_dic['w'] = tkinter.PhotoImage(file="../../img/wrong.png")
 
 def restart_game(frames, window):
 
@@ -101,7 +101,7 @@ def main():
 
 	# Make Top bar that has hint, smiley, restart, timer
 	hint = tkinter.Button(top_frame, text="Hint?")
-	smile_img = tkinter.PhotoImage(file="../icons/smile.png")
+	smile_img = tkinter.PhotoImage(file="../../img/smile.png")
 	smile = tkinter.Label(top_frame, image=smile_img)
 	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(frames, root))
 	timer = tkinter.Label(top_frame, text="0:00")
