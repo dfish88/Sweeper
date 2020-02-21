@@ -3,7 +3,7 @@ from tkinter import *
 import const
 from graphics import restart_game
 
-def start_game(size, frames, icons, smile, window):
+def start_game(size, frames, board, icons, smile, window):
 
 	difficulty = 'easy'
 	dim = const.BUTTON_DIM*const.EASY_DIM
@@ -20,7 +20,9 @@ def start_game(size, frames, icons, smile, window):
 
 		for r in range(size):
 			frames[difficulty].rowconfigure(r, weight=1)
+			board.append([])
 			for c in range(size):
+				board[r].append(const.Tile(x=c, y=r, covered=True, flag=False))
 				frames[difficulty].columnconfigure(c, weight=1)
 				temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
 				temp.bind("<Button-1>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
@@ -62,14 +64,16 @@ def load_icons(img_dic):
 
 def main():
 
+	# Dictionary to store frames, dictionry for icons, and game board
+	frames = {'easy': None, 'hard': None}
+	icons = {}
+	board = []
+
 	# Create main window
 	root = tkinter.Tk()
 	root.title("Sweeper!")
 	root.geometry("400x425+500+150")
 	root.resizable(width=False, height=False)
-
-	# Dictionary to store frames
-	frames = {'easy': None, 'hard': None}
 
 	# Top frame has hint, smiley, restart, and timer
 	top_frame = tkinter.Frame(root, width=const.BUTTON_DIM*8, height=const.BUTTON_DIM)
@@ -88,7 +92,6 @@ def main():
 	frames['difficulty'] = difficulty
 
 	# Load all icons for game
-	icons = {}
 	load_icons(icons)
 
 	# Make buttons for top frame
@@ -107,10 +110,9 @@ def main():
 	timer.grid(row=0, column=7)
 	top_frame.columnconfigure(7, weight=1)
 
-
 	# Create easy and hard buttons for starting screen
-	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(const.EASY_DIM, frames, icons, smile ,root))
-	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(const.HARD_DIM, frames, icons, smile ,root))
+	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(const.EASY_DIM, frames, board, icons, smile ,root))
+	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(const.HARD_DIM, frames, board, icons, smile ,root))
 
 	# Place easy and hard buttons in bottom frame in difficulty frame
 	difficulty.rowconfigure(0, weight=1)

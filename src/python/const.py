@@ -1,6 +1,6 @@
-# Button dimension is in pixels (size of icon)
-# Easy and hard dimensions are in number of buttons
+from collections import namedtuple
 
+Tile = namedtuple('Tile', 'x, y, covered, flag')
 BUTTON_DIM=50
 EASY_DIM = 8
 HARD_DIM = 16
