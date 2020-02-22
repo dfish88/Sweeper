@@ -2,6 +2,7 @@ import tkinter
 from tkinter import *
 import const
 from graphics import restart_game
+from logic import make_move
 
 def start_game(size, frames, board, icons, smile, window):
 
@@ -22,11 +23,11 @@ def start_game(size, frames, board, icons, smile, window):
 			frames[difficulty].rowconfigure(r, weight=1)
 			board.append([])
 			for c in range(size):
-				board[r].append(const.Tile(x=c, y=r, covered=True, flag=False))
+				board[r].append(None)
 				frames[difficulty].columnconfigure(c, weight=1)
 				temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
 				temp.bind("<Button-1>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
-				temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, btn=smile , i=icons: clicked(x, y, btn, i))
+				temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, board=board, size=size, btn=smile , i=icons: clicked(x, y, board, size, btn, i))
 				temp.grid(row=r, column=c)
 
 	window.update()
@@ -36,7 +37,9 @@ def start_game(size, frames, board, icons, smile, window):
 	frames[difficulty].grid()
 	frames[difficulty].tkraise()
 
-def clicked(x, y, smile, icons):
+def clicked(x, y, board, size, smile, icons):
+	
+	changes = make_move(x, y, board, size)
 	smile.configure(image=icons['s'])
 
 # Load all the icons used during the game
