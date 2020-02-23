@@ -7,6 +7,19 @@ DELTA_Y = [0,1,1,1,0,-1,-1,-1]
 
 first_move = True
 
+def get_symbol(tile):
+
+	symbol = ' '
+	if tile['covered'] and tile['flag']:
+		symbol = 'f'
+	elif tile['covered']:
+		symbol = 'b'
+	elif not tile['covered'] and tile['mine']:
+		symbol = 'm'
+	elif not tile['covered']:
+		symbol = str(tile['adjacent'])
+	return symbol
+
 def build_board(x, y, board, size):
 
 	# Place all the mines
@@ -23,7 +36,7 @@ def build_board(x, y, board, size):
 			mine_y = random.randint(0, size-1)
 
 		# Place a mine
-		board[mine_x][mine_y] = const.Tile(x=mine_x, y=mine_y, adjacent=0, covered=True, flag=False, mine=True, symbol='m')
+		board[mine_x][mine_y] = {'x':mine_x, 'y':mine_y, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
 
 	# Fill out rest of board
 	for r in range(size):
@@ -41,12 +54,15 @@ def build_board(x, y, board, size):
 						adj+=1
 				except:
 					pass
-			board[r][c] = const.Tile(x=r, y=c, adjacent=adj, covered=True, flag=False, mine=True, symbol='c')
+		
+			board[r][c] = {'x':r, 'y':c, 'adjacent':adj, 'covered':True, 'flag':False, 'mine':False}
 	
 
 def make_move(x, y, board, size):
 
 	global first_move
+
+	# tracks changes made as a result of move made
 	changes = []
 
 	# Build board if first move
@@ -54,4 +70,38 @@ def make_move(x, y, board, size):
 		build_board(x, y, board, size)	
 		first_move = False
 
-		
+	# Reveal tile clicked on
+	board[x][y]['covered'] = False
+	changes.append((x, y, get_symbol(board[x][y])))
+
+	# If tile clicked on is a 0 we need to reveal adjacent tiles
+	# that are not mines and repeat process if adjacent tiles are also 0
+	empty_tiles = []
+	if board[x][y]['adjacent'] == 0:
+		empty_tiles.append(board[x][y])
+
+	while len(empty_tiles) != 0:
+
+		current_x = empty_tiles[0]['x']
+		current_y = empty_tiles[0]['y']
+
+		# Check adjacent tiles in each direction
+		for i in range(DIRECTIONS):
+
+			new_x = current_x + DELTA_X[i]
+			new_y = current_y + DELTA_Y[i]
+
+			try:
+				# Reveal non-mine adjacent tiles
+				if not board[new_x][new_y]['mine']:
+
+					board[new_x][new_y]['covered'] = False
+					changes.append((new_x, new_y, get_symbol(board[new_x][new_y])))
+
+					# Add 0 tiles to empty tile list
+					if board[new_x][new_y].adjacent == 0:
+						empty_tiles.append(board[new_x][new_y])
+			except:
+				pass
+
+		del empty_tiles[0]
