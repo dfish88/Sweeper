@@ -1,11 +1,8 @@
 import random
-import const
 
 DIRECTIONS = 8
 DELTA_X = [-1,-1,0,1,1,1,0,-1]
 DELTA_Y = [0,1,1,1,0,-1,-1,-1]
-
-first_move = True
 
 def get_symbol(tile):
 
@@ -31,7 +28,7 @@ def build_board(x, y, board, size):
 		mine_y = random.randint(0, size-1)
 
 		# Pick new mine spot if occupied or where person clicked
-		while mine_x == x or mine_y ==y or board[mine_x][mine_y] != None:
+		while mine_x == x or mine_y == y or board[mine_x][mine_y] != None:
 			mine_x = random.randint(0, size-1)
 			mine_y = random.randint(0, size-1)
 
@@ -60,15 +57,15 @@ def build_board(x, y, board, size):
 
 def make_move(x, y, board, size):
 
+
 	global first_move
 
 	# tracks changes made as a result of move made
 	changes = []
 
 	# Build board if first move
-	if first_move:
+	if len(board) == 0:
 		build_board(x, y, board, size)	
-		first_move = False
 
 	# Reveal tile clicked on
 	board[x][y]['covered'] = False
@@ -87,21 +84,24 @@ def make_move(x, y, board, size):
 
 		# Check adjacent tiles in each direction
 		for i in range(DIRECTIONS):
+		
 
 			new_x = current_x + DELTA_X[i]
 			new_y = current_y + DELTA_Y[i]
+
 
 			try:
 				# Reveal non-mine adjacent tiles
 				if not board[new_x][new_y]['mine']:
 
+					# Add 0 tiles to empty tile list that haven't been revealed
+					if board[new_x][new_y]['adjacent'] == 0 and board[new_x][new_y]['covered']:
+						empty_tiles.append(board[new_x][new_y])
+
 					board[new_x][new_y]['covered'] = False
 					changes.append((new_x, new_y, get_symbol(board[new_x][new_y])))
 
-					# Add 0 tiles to empty tile list
-					if board[new_x][new_y].adjacent == 0:
-						empty_tiles.append(board[new_x][new_y])
 			except:
-				pass
+				continue
 
 		del empty_tiles[0]

@@ -21,9 +21,7 @@ def start_game(size, frames, board, icons, smile, window):
 
 		for r in range(size):
 			frames[difficulty].rowconfigure(r, weight=1)
-			board.append([])
 			for c in range(size):
-				board[r].append(None)
 				frames[difficulty].columnconfigure(c, weight=1)
 				temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
 				temp.bind("<Button-1>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
