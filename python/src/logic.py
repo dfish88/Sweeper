@@ -17,23 +17,7 @@ def get_symbol(tile):
 		symbol = str(tile['adjacent'])
 	return symbol
 
-def build_board(x, y, board, size):
-
-	# Place all the mines
-	num_mines = int((size*size) / 6)
-	for mines in range(num_mines):
-
-		# Pick mine spot randomly
-		mine_x = random.randint(0, size-1)
-		mine_y = random.randint(0, size-1)
-
-		# Pick new mine spot if occupied or where person clicked
-		while mine_x == x or mine_y == y or board[mine_x][mine_y] != None:
-			mine_x = random.randint(0, size-1)
-			mine_y = random.randint(0, size-1)
-
-		# Place a mine
-		board[mine_x][mine_y] = {'x':mine_x, 'y':mine_y, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
+def determine_adjacent(x, y, board, size):
 
 	# Fill out rest of board
 	for r in range(size):
@@ -53,7 +37,26 @@ def build_board(x, y, board, size):
 					pass
 		
 			board[r][c] = {'x':r, 'y':c, 'adjacent':adj, 'covered':True, 'flag':False, 'mine':False}
-	
+
+def build_board(x, y, board, size):
+
+	# Place all the mines
+	num_mines = int((size*size) / 6)
+	for mines in range(num_mines):
+
+		# Pick mine spot randomly
+		mine_x = random.randint(0, size-1)
+		mine_y = random.randint(0, size-1)
+
+		# Pick new mine spot if occupied or where person clicked
+		while mine_x == x or mine_y == y or board[mine_x][mine_y] != None:
+			mine_x = random.randint(0, size-1)
+			mine_y = random.randint(0, size-1)
+
+		# Place a mine
+		board[mine_x][mine_y] = {'x':mine_x, 'y':mine_y, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
+
+	determine_adjacent(x, y, board, size)	
 
 def make_move(x, y, board, size):
 
