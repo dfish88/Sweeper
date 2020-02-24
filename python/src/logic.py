@@ -17,7 +17,18 @@ def get_symbol(tile):
 		symbol = str(tile['adjacent'])
 	return symbol
 
-def determine_adjacent(x, y, board, size):
+def get_coordinate(x, y, direction):
+
+	new_x = x + DELTA_X[direction]
+	new_y = y + DELTA_Y[direction]
+
+	if new_x < 0 or new_y < 0:
+		raise IndexError("list index out of range")
+
+	return (new_x, new_y)
+	
+
+def determine_adjacent(board, size):
 
 	# Fill out rest of board
 	for r in range(size):
@@ -31,10 +42,11 @@ def determine_adjacent(x, y, board, size):
 			adj = 0
 			for i in range(DIRECTIONS):
 				try:
-					if board[x + DELTA_X[i]][y + DELTA_Y[i]].mine:
+					coords = get_coordinate(r, c, i)
+					if board[coords[0]][coords[1]]['mine']:
 						adj+=1
 				except:
-					pass
+					continue
 		
 			board[r][c] = {'x':r, 'y':c, 'adjacent':adj, 'covered':True, 'flag':False, 'mine':False}
 
@@ -56,7 +68,7 @@ def build_board(x, y, board, size):
 		# Place a mine
 		board[mine_x][mine_y] = {'x':mine_x, 'y':mine_y, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
 
-	determine_adjacent(x, y, board, size)	
+	determine_adjacent(board, size)	
 
 def make_move(x, y, board, size):
 
