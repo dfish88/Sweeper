@@ -1,8 +1,23 @@
 import random
+from const import *
 
 DIRECTIONS = 8
 DELTA_X = [-1,-1,0,1,1,1,0,-1]
 DELTA_Y = [0,1,1,1,0,-1,-1,-1]
+
+tiles_left = 0
+
+def get_state(x, y, board, size):
+
+	# Check for loss by seeing if player clicked on mine
+	if board[x][y]['mine']:
+		return LOST
+
+	# Check for win by seeing if all non-mine tiles are revealed
+	if tiles_left == 0:
+		return WON
+
+	return RUNNING
 
 def get_symbol(tile):
 
@@ -52,6 +67,13 @@ def determine_adjacent(board, size):
 
 def build_board(x, y, board, size):
 
+	global tiles_left
+	# Build the board
+	for r in range(size):
+		board.append([])
+		for c in range(size):
+			board[r].append(None)
+
 	# Place all the mines
 	num_mines = int((size*size) / 6)
 	for mines in range(num_mines):
@@ -68,10 +90,12 @@ def build_board(x, y, board, size):
 		# Place a mine
 		board[mine_x][mine_y] = {'x':mine_x, 'y':mine_y, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
 
+	tiles_left = size*size - num_mines	
 	determine_adjacent(board, size)	
 
 def make_move(x, y, board, size, flag=False):
 
+	global tiles_left
 	# tracks changes made as a result of move made
 	changes = []
 
@@ -93,6 +117,7 @@ def make_move(x, y, board, size, flag=False):
 
 	# Reveal tile clicked on
 	board[x][y]['covered'] = False
+	tiles_left-=1
 
 	# If tile clicked on is a 0 we need to reveal adjacent tiles
 	# that are not mines and repeat process if adjacent tiles are also 0
@@ -122,9 +147,12 @@ def make_move(x, y, board, size, flag=False):
 						empty_tiles.append(board[new_x][new_y])
 
 					board[new_x][new_y]['covered'] = False
+					tiles_left-=1
 					changes.append((new_x, new_y, get_symbol(board[new_x][new_y])))
 
 			except:
 				continue
 
 		del empty_tiles[0]
+
+	return (changes, get_state(x, y, board, size))
