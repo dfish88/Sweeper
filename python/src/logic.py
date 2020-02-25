@@ -70,13 +70,22 @@ def build_board(x, y, board, size):
 
 	determine_adjacent(board, size)	
 
-def make_move(x, y, board, size):
-
-
-	global first_move
+def make_move(x, y, board, size, flag=False):
 
 	# tracks changes made as a result of move made
 	changes = []
+
+	# Deal with right click (flag)
+	if flag and len(board) == 0:
+		return changes
+
+	elif flag and board[x][y]['covered']:
+		board[x][y]['flag'] = True
+		changes.append((x, y, get_symbol(board[x][y])))
+		return changes
+
+	elif flag and not board[x][y]['covered']:
+		return changes
 
 	# Build board if first move
 	if len(board) == 0:
@@ -84,7 +93,6 @@ def make_move(x, y, board, size):
 
 	# Reveal tile clicked on
 	board[x][y]['covered'] = False
-	changes.append((x, y, get_symbol(board[x][y])))
 
 	# If tile clicked on is a 0 we need to reveal adjacent tiles
 	# that are not mines and repeat process if adjacent tiles are also 0

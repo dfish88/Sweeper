@@ -14,18 +14,25 @@ def start_game(size, frames, board, icons, smile, window):
 
 	if frames[difficulty] == None:
 	
-		# Crate frame
+		# Create frame
 		game_frame = tkinter.Frame(frames['bottom'], width=dim, height=dim)
 		game_frame.grid(row=0, column=0)
 		frames[difficulty] = game_frame
 
 		for r in range(size):
+
 			frames[difficulty].rowconfigure(r, weight=1)
+
 			for c in range(size):
+
 				frames[difficulty].columnconfigure(c, weight=1)
 				temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
+
 				temp.bind("<Button-1>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
 				temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, board=board, size=size, btn=smile , i=icons: clicked(x, y, board, size, btn, i))
+				temp.bind("<Button-2>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
+				temp.bind("<ButtonRelease-2>", lambda event, x=r, y=c, board=board, size=size, btn=smile , i=icons: clicked(x, y, board, size, btn, i, flag=True))
+
 				temp.grid(row=r, column=c)
 
 	window.update()
@@ -35,9 +42,13 @@ def start_game(size, frames, board, icons, smile, window):
 	frames[difficulty].grid()
 	frames[difficulty].tkraise()
 
-def clicked(x, y, board, size, smile, icons):
-	
-	changes = make_move(x, y, board, size)
+def clicked(x, y, board, size, smile, icons, flag=False):
+
+	if flag:	
+		changes = make_move(x, y, board, size, flag=True)
+	else:
+		changes = make_move(x, y, board, size)
+		
 	smile.configure(image=icons['s'])
 
 # Load all the icons used during the game
