@@ -5,16 +5,14 @@ DIRECTIONS = 8
 DELTA_X = [-1,-1,0,1,1,1,0,-1]
 DELTA_Y = [0,1,1,1,0,-1,-1,-1]
 
-tiles_left = 0
-
-def get_state(x, y, board, size):
+def get_state(x, y, game):
 
 	# Check for loss by seeing if player clicked on mine
-	if board[x][y]['mine']:
+	if game['board'][x][y]['mine']:
 		return LOST
 
 	# Check for win by seeing if all non-mine tiles are revealed
-	if tiles_left == 0:
+	if game['tiles_left'] == 0:
 		return WON
 
 	return RUNNING
@@ -43,8 +41,10 @@ def get_coordinate(x, y, direction):
 	return (new_x, new_y)
 	
 
-def determine_adjacent(board, size):
+def determine_adjacent(game):
 
+	size = game['size']
+	board = game['board']
 	# Fill out rest of board
 	for r in range(size):
 		for c in range(size):
@@ -65,9 +65,10 @@ def determine_adjacent(board, size):
 		
 			board[r][c] = {'x':r, 'y':c, 'adjacent':adj, 'covered':True, 'flag':False, 'mine':False}
 
-def build_board(x, y, board, size):
+def build_board(x, y, game):
 
-	global tiles_left
+	board = game['board']
+	size = game['size']
 	# Build the board
 	for r in range(size):
 		board.append([])
@@ -90,12 +91,13 @@ def build_board(x, y, board, size):
 		# Place a mine
 		board[mine_x][mine_y] = {'x':mine_x, 'y':mine_y, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
 
-	tiles_left = size*size - num_mines	
-	determine_adjacent(board, size)	
+	game['tiles_left'] = size*size - num_mines	
+	determine_adjacent(game)	
 
-def make_move(x, y, board, size, flag=False):
+def make_move(x, y, game, flag=False):
 
 	global tiles_left
+	board = game['board']
 	# tracks changes made as a result of move made
 	changes = []
 
@@ -113,11 +115,11 @@ def make_move(x, y, board, size, flag=False):
 
 	# Build board if first move
 	if len(board) == 0:
-		build_board(x, y, board, size)	
+		build_board(x, y, game)	
 
 	# Reveal tile clicked on
 	board[x][y]['covered'] = False
-	tiles_left-=1
+	game['tiles_left']-=1
 
 	# If tile clicked on is a 0 we need to reveal adjacent tiles
 	# that are not mines and repeat process if adjacent tiles are also 0
@@ -147,7 +149,7 @@ def make_move(x, y, board, size, flag=False):
 						empty_tiles.append(board[new_x][new_y])
 
 					board[new_x][new_y]['covered'] = False
-					tiles_left-=1
+					game['tiles_left']-=1
 					changes.append((new_x, new_y, get_symbol(board[new_x][new_y])))
 
 			except:
@@ -155,4 +157,4 @@ def make_move(x, y, board, size, flag=False):
 
 		del empty_tiles[0]
 
-	return (changes, get_state(x, y, board, size))
+	return (changes, get_state(x, y, game))

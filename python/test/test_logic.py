@@ -38,7 +38,8 @@ class LogicTest(unittest.TestCase):
 			for c in range(size):
 				test_board[r].append({'x':r, 'y':c, 'adjacent':0, 'covered':True, 'flag':False, 'mine':False})
 
-		make_move(0, 0, test_board, size)
+		test_game = {'tiles_left':0, 'size': size, 'board':test_board}
+		make_move(0, 0, test_game)
 
 		for r in range(size):
 			for c in range(size): self.assertEqual(test_board[r][c]['covered'], False) 
@@ -56,7 +57,9 @@ class LogicTest(unittest.TestCase):
 				test_board[r].append({'x':r, 'y':c, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False})
 
 		test_board[size-1][size-1] = {'x':size-1, 'y':size-1, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
-		make_move(0, 0, test_board, size)
+		test_game = {'tiles_left':0, 'size': size, 'board':test_board}
+
+		make_move(0, 0, test_game)
 
 		self.assertEqual(test_board[0][0]['covered'], False)
 		self.assertEqual(test_board[1][0]['covered'], True)
@@ -79,8 +82,9 @@ class LogicTest(unittest.TestCase):
 		test_board[1][1] = {'x':1, 'y':1, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False}
 		test_board[1][2] = {'x':1, 'y':2, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False}
 		test_board[2][1] = {'x':2, 'y':1, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False}
+		test_game = {'tiles_left':0, 'size': size, 'board':test_board}
 
-		make_move(0, 0, test_board, size)
+		make_move(0, 0, test_game)
 
 		self.assertEqual(test_board[0][0]['covered'], False)
 		self.assertEqual(test_board[1][0]['covered'], False)
@@ -108,8 +112,9 @@ class LogicTest(unittest.TestCase):
 		test_board[1][1] = {'x':1, 'y':1, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False}
 		test_board[1][2] = {'x':1, 'y':2, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False}
 		test_board[2][1] = {'x':2, 'y':1, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False}
+		test_game = {'tiles_left':0, 'size': size, 'board':test_board}
 
-		make_move(1, 1, test_board, size)
+		make_move(1, 1, test_game)
 
 		self.assertEqual(test_board[0][0]['covered'], True)
 		self.assertEqual(test_board[1][0]['covered'], True)
@@ -133,8 +138,9 @@ class LogicTest(unittest.TestCase):
 				test_board[r].append(None)
 
 		test_board[size-1][size-1] = {'x':size-1, 'y':size-1, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
+		test_game = {'tiles_left':0, 'size': size, 'board':test_board}
 
-		determine_adjacent(test_board, size)
+		determine_adjacent(test_game)
 
 		self.assertEqual(test_board[0][0]['adjacent'], 0)
 		self.assertEqual(test_board[0][1]['adjacent'], 0)
@@ -158,8 +164,9 @@ class LogicTest(unittest.TestCase):
 
 		test_board[size-1][size-1] = {'x':size-1, 'y':size-1, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
 		test_board[size-2][size-2] = {'x':size-2, 'y':size-2, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
+		test_game = {'tiles_left':0, 'size': size, 'board':test_board}
 
-		determine_adjacent(test_board, size)
+		determine_adjacent(test_game)
 
 		self.assertEqual(test_board[0][0]['adjacent'], 1)
 		self.assertEqual(test_board[0][1]['adjacent'], 1)
@@ -180,8 +187,9 @@ class LogicTest(unittest.TestCase):
 				test_board[r].append({'x':r, 'y':c, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False})
 
 		test_board[size-1][size-1] = {'x':size-1, 'y':size-1, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
+		test_game = {'tiles_left':0, 'size': size, 'board':test_board}
 
-		make_move(1, 1, test_board, size, flag=True)
+		make_move(1, 1, test_game, flag=True)
 		self.assertEqual(test_board[1][1]['flag'], True)
 
 	def test_invalid_flag(self):
@@ -195,9 +203,10 @@ class LogicTest(unittest.TestCase):
 				test_board[r].append({'x':r, 'y':c, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False})
 
 		test_board[size-1][size-1] = {'x':size-1, 'y':size-1, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
+		test_game = {'tiles_left':0, 'size': size, 'board':test_board}
 
-		make_move(0, 0, test_board, size)
-		make_move(0, 0, test_board, size, flag=True)
+		make_move(0, 0, test_game)
+		make_move(0, 0, test_game, flag=True)
 		self.assertEqual(test_board[1][1]['flag'], False)
 
 	# Click on a mine and see if we lose game
@@ -212,8 +221,9 @@ class LogicTest(unittest.TestCase):
 				test_board[r].append({'x':r, 'y':c, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False})
 
 		test_board[size-1][size-1] = {'x':size-1, 'y':size-1, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
+		test_game = {'tiles_left':0, 'size': size, 'board':test_board}
 
-		state = make_move(1, 1, test_board, size)[1]
+		state = make_move(1, 1, test_game)[1]
 		self.assertEqual(state, LOST)
 
 	# Clear all mines and see if we win game
@@ -228,10 +238,11 @@ class LogicTest(unittest.TestCase):
 				test_board[r].append({'x':r, 'y':c, 'adjacent':1, 'covered':True, 'flag':False, 'mine':False})
 
 		test_board[size-1][size-1] = {'x':size-1, 'y':size-1, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
+		test_game = {'tiles_left':3, 'size': size, 'board':test_board}
 
-		make_move(0, 0, test_board, size)
-		make_move(0, 1, test_board, size)
-		state = make_move(1, 0, test_board, size)[1]
+		make_move(0, 0, test_game)
+		make_move(0, 1, test_game)
+		state = make_move(1, 0, test_game)[1]
 		self.assertEqual(state, WON)
 
 if __name__ == '__main__':

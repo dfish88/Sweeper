@@ -4,8 +4,9 @@ from const import *
 from graphics import restart_game
 from logic import make_move
 
-def start_game(size, frames, board, icons, smile, window):
+def start_game(size, frames, game, icons, smile, window):
 
+	game['size'] = size
 	difficulty = 'easy'
 	dim = BUTTON_DIM*EASY_DIM
 	if size == HARD_DIM:
@@ -29,9 +30,9 @@ def start_game(size, frames, board, icons, smile, window):
 				temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
 
 				temp.bind("<Button-1>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
-				temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, board=board, size=size, btn=smile , i=icons: clicked(x, y, board, size, btn, i))
+				temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, game=game, btn=smile , i=icons: clicked(x, y, game, btn, i))
 				temp.bind("<Button-2>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
-				temp.bind("<ButtonRelease-2>", lambda event, x=r, y=c, board=board, size=size, btn=smile , i=icons: clicked(x, y, board, size, btn, i, flag=True))
+				temp.bind("<ButtonRelease-2>", lambda event, x=r, y=c, game=game, btn=smile , i=icons: clicked(x, y, game, btn, i, flag=True))
 
 				temp.grid(row=r, column=c)
 
@@ -42,12 +43,12 @@ def start_game(size, frames, board, icons, smile, window):
 	frames[difficulty].grid()
 	frames[difficulty].tkraise()
 
-def clicked(x, y, board, size, smile, icons, flag=False):
+def clicked(x, y, game, smile, icons, flag=False):
 
 	if flag:	
-		changes = make_move(x, y, board, size, flag=True)
+		changes = make_move(x, y, game, flag=True)
 	else:
-		changes = make_move(x, y, board, size)
+		changes = make_move(x, y, game,)
 		
 	smile.configure(image=icons['s'])
 
@@ -80,6 +81,7 @@ def main():
 	frames = {'easy': None, 'hard': None}
 	icons = {}
 	board = []
+	game = {'tiles_left':0, 'size':0, 'board':board}
 
 	# Create main window
 	root = tkinter.Tk()
@@ -123,8 +125,8 @@ def main():
 	top_frame.columnconfigure(7, weight=1)
 
 	# Create easy and hard buttons for starting screen
-	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(EASY_DIM, frames, board, icons, smile ,root))
-	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(HARD_DIM, frames, board, icons, smile ,root))
+	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(EASY_DIM, frames, game, icons, smile ,root))
+	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(HARD_DIM, frames, game, icons, smile ,root))
 
 	# Place easy and hard buttons in bottom frame in difficulty frame
 	difficulty.rowconfigure(0, weight=1)
