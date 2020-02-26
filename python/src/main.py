@@ -49,13 +49,16 @@ def clicked(x, y, game, smile, icons, frames, flag=False):
 		results = make_move(x, y, game,)
 
 	if game['size'] == 8:
-		render_game(frames, 'easy', icons, results)
+		render_game(frames, 'easy', icons, results, smile)
 	else:
-		render_game(frames, 'hard', icons, results)
-		
-	smile.configure(image=icons['s'])
+		render_game(frames, 'hard', icons, results, smile)
 
-def restart_game(frames, window, game, icons):
+	if results[1] is RUNNING:		
+		smile.configure(image=icons['s'])
+
+def restart_game(frames, window, game, icons, smile):
+
+	smile.configure(image=icons['s'])
 
 	if game['size'] == EASY_DIM:
 		frames['easy'].grid_forget()
@@ -134,7 +137,7 @@ def main():
 	# Make buttons for top frame
 	hint = tkinter.Button(top_frame, text="Hint?")
 	smile = tkinter.Label(top_frame, image=icons['s'])
-	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(frames, root, game, icons))
+	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(frames, root, game, icons, smile))
 	timer = tkinter.Label(top_frame, text="0:00")
 
 	# Place buttons in top frame

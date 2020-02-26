@@ -2,7 +2,7 @@ import tkinter
 from tkinter import *
 from const import *
 
-def render_game(frames, diff, icons, results):
+def render_game(frames, diff, icons, results, smile):
 
 	changes = results[0]
 	state = results[1]
@@ -20,6 +20,12 @@ def render_game(frames, diff, icons, results):
 		button = board.grid_slaves(x, y)[0]
 		button.configure(image=img)
 
+	if state is LOST:
+		smile.configure(image=icons['d'])
+
+	if state is WON:
+		smile.configure(image=icons['g'])
+
 	if state is not RUNNING:
 
 		# Disable buttons
@@ -29,9 +35,4 @@ def render_game(frames, diff, icons, results):
 			btn.unbind("<Button-3>")
 			btn.unbind("<ButtonRelease-3>")
 
-	if state is LOST:
-		pass
-
-	if state is WON:
-		pass
 

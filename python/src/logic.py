@@ -12,7 +12,7 @@ def get_state(x, y, game):
 		return RUNNING
 
 	# Check for loss by seeing if player clicked on mine
-	if game['board'][x][y]['mine']:
+	if game['board'][x][y]['mine'] and not game['board'][x][y]['flag']:
 		return LOST
 
 	# Check for win by seeing if all non-mine tiles are revealed
@@ -29,7 +29,7 @@ def get_symbol(tile):
 	elif tile['covered']:
 		symbol = 'b'
 	elif not tile['covered'] and tile['mine']:
-		symbol = 'm'
+		symbol = 'bm'
 	elif not tile['covered']:
 		symbol = str(tile['adjacent'])
 	return symbol
@@ -98,12 +98,26 @@ def build_board(x, y, game):
 	game['tiles_left'] = size*size - num_mines	
 	determine_adjacent(game)	
 
+def lost_game(game, changes):
+
+	board = game['board']
+	size = game['size']
+
+	for r in range(size):
+		for c in range(size):
+
+			if board[r][c]['mine'] and board[r][c]['covered'] and not board[r][c]['flag']:
+				changes.append((r, c, 'm'))
+
+			if board[r][c]['flag'] and not board[r][c]['mine']:
+				changes.append((r, c, 'w'))
+
 def make_move(x, y, game, flag=False):
 
-	global tiles_left
-	board = game['board']
 	# tracks changes made as a result of move made
 	changes = []
+	board = game['board']
+
 
 	# Deal with right click (flag)
 	if flag and len(board) == 0:
@@ -121,15 +135,20 @@ def make_move(x, y, game, flag=False):
 	if len(board) == 0:
 		build_board(x, y, game)	
 
+	# Clicked on revealed tile
+	if not board[x][y]['covered']:
+		return (changes, get_state(x, y, game))
+
 	# Reveal tile clicked on
 	board[x][y]['covered'] = False
+	board[x][y]['flag'] = False
 	changes.append((x, y, get_symbol(board[x][y])))
 	game['tiles_left']-=1
 
 	# If tile clicked on is a 0 we need to reveal adjacent tiles
 	# that are not mines and repeat process if adjacent tiles are also 0
 	empty_tiles = []
-	if board[x][y]['adjacent'] == 0:
+	if board[x][y]['adjacent'] == 0 and not board[x][y]['mine']:
 		empty_tiles.append(board[x][y])
 
 	while len(empty_tiles) != 0:
@@ -150,13 +169,19 @@ def make_move(x, y, game, flag=False):
 					if board[new_x][new_y]['adjacent'] == 0 and board[new_x][new_y]['covered']:
 						empty_tiles.append(board[new_x][new_y])
 
-					board[new_x][new_y]['covered'] = False
-					game['tiles_left']-=1
-					changes.append((new_x, new_y, get_symbol(board[new_x][new_y])))
-
+					if board[new_x][new_y]['covered']:
+						board[new_x][new_y]['covered'] = False
+						board[x][y]['flag'] = False
+						game['tiles_left']-=1
+						changes.append((new_x, new_y, get_symbol(board[new_x][new_y])))
 			except:
 				continue
-
 		del empty_tiles[0]
 
-	return (changes, get_state(x, y, game))
+	state = get_state(x, y, game)
+
+	# Reveal mines and check flags if lost
+	if state is LOST:
+		lost_game(game, changes)
+
+	return (changes, state)
