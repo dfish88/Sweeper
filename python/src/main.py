@@ -13,28 +13,26 @@ def start_game(size, frames, game, icons, smile, window):
 		difficulty = 'hard'
 		dim = BUTTON_DIM*HARD_DIM
 
-	if frames[difficulty] == None:
-	
-		# Create frame
-		game_frame = tkinter.Frame(frames['bottom'], width=dim, height=dim)
-		game_frame.grid(row=0, column=0)
-		frames[difficulty] = game_frame
+	# Create frame
+	game_frame = tkinter.Frame(frames['bottom'], width=dim, height=dim)
+	game_frame.grid(row=0, column=0)
+	frames[difficulty] = game_frame
 
-		for r in range(size):
+	for r in range(size):
 
-			frames[difficulty].rowconfigure(r, weight=1)
+		frames[difficulty].rowconfigure(r, weight=1)
 
-			for c in range(size):
+		for c in range(size):
 
-				frames[difficulty].columnconfigure(c, weight=1)
-				temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
+			frames[difficulty].columnconfigure(c, weight=1)
+			temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
 
-				temp.bind("<Button-1>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
-				temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames))
-				temp.bind("<Button-3>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
-				temp.bind("<ButtonRelease-3>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames, flag=True))
+			temp.bind("<Button-1>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
+			temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames))
+			temp.bind("<Button-3>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
+			temp.bind("<ButtonRelease-3>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames, flag=True))
 
-				temp.grid(row=r, column=c)
+			temp.grid(row=r, column=c)
 
 	window.update()
 	w,h = frames[difficulty].winfo_width(), frames[difficulty].winfo_height() + frames['top'].winfo_height()
