@@ -10,6 +10,9 @@ def render_game(frames, diff, icons, results):
 	board = frames[diff]
 
 	for change in changes:
+
+		if change == []:
+			continue
 	
 		x = change[0]
 		y = change[1]

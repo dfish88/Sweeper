@@ -31,8 +31,8 @@ def start_game(size, frames, game, icons, smile, window):
 
 				temp.bind("<Button-1>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
 				temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames))
-				temp.bind("<Button-2>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
-				temp.bind("<ButtonRelease-2>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames, flag=True))
+				temp.bind("<Button-3>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
+				temp.bind("<ButtonRelease-3>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames, flag=True))
 
 				temp.grid(row=r, column=c)
 

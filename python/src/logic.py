@@ -7,6 +7,10 @@ DELTA_Y = [0,1,1,1,0,-1,-1,-1]
 
 def get_state(x, y, game):
 
+	# Before first click
+	if len(game['board']) == 0:
+		return RUNNING
+
 	# Check for loss by seeing if player clicked on mine
 	if game['board'][x][y]['mine']:
 		return LOST
@@ -103,15 +107,15 @@ def make_move(x, y, game, flag=False):
 
 	# Deal with right click (flag)
 	if flag and len(board) == 0:
-		return changes
+		return (changes, get_state(x, y, game))
 
 	elif flag and board[x][y]['covered']:
-		board[x][y]['flag'] = True
+		board[x][y]['flag'] = not board[x][y]['flag']
 		changes.append((x, y, get_symbol(board[x][y])))
-		return changes
+		return (changes, get_state(x, y, game))
 
 	elif flag and not board[x][y]['covered']:
-		return changes
+		return (changes, get_state(x, y, game))
 
 	# Build board if first move
 	if len(board) == 0:
