@@ -3,7 +3,7 @@ import tkinter
 from tkinter import *
 from const import *
 from graphics import render_game
-from logic import make_move
+from logic import make_move, hint
 
 def start_game(game, render, size):
 
@@ -56,6 +56,23 @@ def clicked(x, y, game, render, flag=False):
 		if game['board'] == []:
 			start_clock(render, 0)
 		results = make_move(x, y, game,)
+
+	if game['size'] == 8:
+		render_game(render, 'easy', results)
+	else:
+		render_game(render, 'hard', results)
+
+	if results[1] is RUNNING:		
+		render['smile'].configure(image=render['icons']['s'])
+	else:
+		stop_clock(render)
+
+def hint_clicked(game, render):
+
+	if game['board'] == []:
+		start_clock(render, 0)
+
+	results = hint(game)
 
 	if game['size'] == 8:
 		render_game(render, 'easy', results)
@@ -171,7 +188,7 @@ def main():
 	load_icons(icons)
 
 	# Make buttons for top frame
-	hint = tkinter.Button(top_frame, text="Hint?")
+	hint = tkinter.Button(top_frame, text="Hint?", command=lambda: hint_clicked(game, render))
 	smile = tkinter.Label(top_frame, image=icons['s'])
 	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(game, render))
 	timer = tkinter.Label(top_frame, text="00:00")

@@ -112,6 +112,22 @@ def lost_game(game, changes):
 			if board[r][c]['flag'] and not board[r][c]['mine']:
 				changes.append((r, c, 'w'))
 
+def hint(game):
+
+	x,y = 0,0
+	size = game['size']
+	board = game['board']
+
+	if board == []:
+		return make_move(x,y,game)
+
+	for r in range(size):
+		for c in range(size):
+			if board[r][c]['covered'] and not board[r][c]['mine']:
+				x,y = r,c
+				break
+	return make_move(x,y,game)
+
 def make_move(x, y, game, flag=False):
 
 	# tracks changes made as a result of move made
