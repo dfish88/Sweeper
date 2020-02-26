@@ -119,6 +119,7 @@ def make_move(x, y, game, flag=False):
 
 	# Reveal tile clicked on
 	board[x][y]['covered'] = False
+	changes.append((x, y, get_symbol(board[x][y])))
 	game['tiles_left']-=1
 
 	# If tile clicked on is a 0 we need to reveal adjacent tiles
@@ -134,13 +135,10 @@ def make_move(x, y, game, flag=False):
 
 		# Check adjacent tiles in each direction
 		for i in range(DIRECTIONS):
-		
-
-			new_x = current_x + DELTA_X[i]
-			new_y = current_y + DELTA_Y[i]
-
-
 			try:
+
+				coords = get_coordinate(current_x, current_y, i)	
+				new_x, new_y = coords[0], coords[1]
 				# Reveal non-mine adjacent tiles
 				if not board[new_x][new_y]['mine']:
 

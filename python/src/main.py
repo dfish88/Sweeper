@@ -1,7 +1,7 @@
 import tkinter
 from tkinter import *
 from const import *
-from graphics import restart_game, render_game
+from graphics import render_game
 from logic import make_move
 
 def start_game(size, frames, game, icons, smile, window):
@@ -50,22 +50,42 @@ def clicked(x, y, game, smile, icons, frames, flag=False):
 	else:
 		results = make_move(x, y, game,)
 
-	render_game(game, frames, icons, results)	
+	if game['size'] == 8:
+		render_game(frames, 'easy', icons, results)
+	else:
+		render_game(frames, 'hard', icons, results)
 		
 	smile.configure(image=icons['s'])
+
+def restart_game(frames, window, game):
+
+	try:
+		frames['easy'].grid_forget()
+		frames['hard'].grid_forget()
+	except:
+		pass
+
+	frames['difficulty'].grid()
+	frames['difficulty'].tkraise()
+	frames['difficulty'].grid_propagate(0)
+	window.geometry("400x425+500+150")
+
+	game['tiles_left'] = 0
+	game['size'] = 0
+	game['board'] = None
 
 # Load all the icons used during the game
 def load_icons(img_dic):
 
 	img_dic['0'] = tkinter.PhotoImage(file="../../img/0.png")
-	img_dic['1'] = tkinter.PhotoImage(file="../../img/0.png")
-	img_dic['2'] = tkinter.PhotoImage(file="../../img/0.png")
-	img_dic['3'] = tkinter.PhotoImage(file="../../img/0.png")
-	img_dic['4'] = tkinter.PhotoImage(file="../../img/0.png")
-	img_dic['5'] = tkinter.PhotoImage(file="../../img/0.png")
-	img_dic['6'] = tkinter.PhotoImage(file="../../img/0.png")
-	img_dic['7'] = tkinter.PhotoImage(file="../../img/0.png")
-	img_dic['8'] = tkinter.PhotoImage(file="../../img/0.png")
+	img_dic['1'] = tkinter.PhotoImage(file="../../img/1.png")
+	img_dic['2'] = tkinter.PhotoImage(file="../../img/2.png")
+	img_dic['3'] = tkinter.PhotoImage(file="../../img/3.png")
+	img_dic['4'] = tkinter.PhotoImage(file="../../img/4.png")
+	img_dic['5'] = tkinter.PhotoImage(file="../../img/5.png")
+	img_dic['6'] = tkinter.PhotoImage(file="../../img/6.png")
+	img_dic['7'] = tkinter.PhotoImage(file="../../img/7.png")
+	img_dic['8'] = tkinter.PhotoImage(file="../../img/8.png")
 	img_dic['b'] = tkinter.PhotoImage(file="../../img/blank.png")
 	img_dic['bm'] = tkinter.PhotoImage(file="../../img/boom.png")
 	img_dic['c'] = tkinter.PhotoImage(file="../../img/click.png")
@@ -113,7 +133,7 @@ def main():
 	# Make buttons for top frame
 	hint = tkinter.Button(top_frame, text="Hint?")
 	smile = tkinter.Label(top_frame, image=icons['s'])
-	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(frames, root))
+	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(frames, root, game))
 	timer = tkinter.Label(top_frame, text="0:00")
 
 	# Place buttons in top frame

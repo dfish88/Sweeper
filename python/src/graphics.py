@@ -2,18 +2,20 @@ import tkinter
 from tkinter import *
 import const
 
-def restart_game(frames, window):
+def render_game(frames, diff, icons, results):
 
-	try:
-		frames['easy'].grid_forget()
-		frames['hard'].grid_forget()
-	except:
-		pass
+	changes = results[0]
+	state = results[1]
 
-	frames['difficulty'].grid()
-	frames['difficulty'].tkraise()
-	frames['difficulty'].grid_propagate(0)
-	window.geometry("400x425+500+150")
+	board = frames[diff]
 
-def render_game(game, frames, icons, results):
-	pass
+	for change in changes:
+	
+		x = change[0]
+		y = change[1]
+		img = icons[change[2]]
+
+		button = board.grid_slaves(x, y)[0]
+		button.configure(image=img)
+
+
