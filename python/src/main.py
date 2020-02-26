@@ -57,13 +57,16 @@ def clicked(x, y, game, smile, icons, frames, flag=False):
 		
 	smile.configure(image=icons['s'])
 
-def restart_game(frames, window, game):
+def restart_game(frames, window, game, icons):
 
-	try:
+	if game['size'] == EASY_DIM:
 		frames['easy'].grid_forget()
+		for btn in frames['easy'].grid_slaves():
+			btn.configure(image=icons['b'])
+	else:
 		frames['hard'].grid_forget()
-	except:
-		pass
+		for btn in frames['hard'].grid_slaves():
+			btn.configure(image=icons['b'])
 
 	frames['difficulty'].grid()
 	frames['difficulty'].tkraise()
@@ -72,7 +75,7 @@ def restart_game(frames, window, game):
 
 	game['tiles_left'] = 0
 	game['size'] = 0
-	game['board'] = None
+	game['board'] = []
 
 # Load all the icons used during the game
 def load_icons(img_dic):
@@ -133,7 +136,7 @@ def main():
 	# Make buttons for top frame
 	hint = tkinter.Button(top_frame, text="Hint?")
 	smile = tkinter.Label(top_frame, image=icons['s'])
-	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(frames, root, game))
+	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(frames, root, game, icons))
 	timer = tkinter.Label(top_frame, text="0:00")
 
 	# Place buttons in top frame
