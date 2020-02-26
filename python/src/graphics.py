@@ -2,7 +2,6 @@ import tkinter
 from tkinter import *
 import const
 
-
 def restart_game(frames, window):
 
 	try:
@@ -15,3 +14,6 @@ def restart_game(frames, window):
 	frames['difficulty'].tkraise()
 	frames['difficulty'].grid_propagate(0)
 	window.geometry("400x425+500+150")
+
+def render_game(game, frames, icons, results):
+	pass

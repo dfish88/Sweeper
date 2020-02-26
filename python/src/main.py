@@ -1,7 +1,7 @@
 import tkinter
 from tkinter import *
 from const import *
-from graphics import restart_game
+from graphics import restart_game, render_game
 from logic import make_move
 
 def start_game(size, frames, game, icons, smile, window):
@@ -30,9 +30,9 @@ def start_game(size, frames, game, icons, smile, window):
 				temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
 
 				temp.bind("<Button-1>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
-				temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, game=game, btn=smile , i=icons: clicked(x, y, game, btn, i))
+				temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames))
 				temp.bind("<Button-2>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
-				temp.bind("<ButtonRelease-2>", lambda event, x=r, y=c, game=game, btn=smile , i=icons: clicked(x, y, game, btn, i, flag=True))
+				temp.bind("<ButtonRelease-2>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames, flag=True))
 
 				temp.grid(row=r, column=c)
 
@@ -43,12 +43,14 @@ def start_game(size, frames, game, icons, smile, window):
 	frames[difficulty].grid()
 	frames[difficulty].tkraise()
 
-def clicked(x, y, game, smile, icons, flag=False):
+def clicked(x, y, game, smile, icons, frames, flag=False):
 
 	if flag:	
-		changes = make_move(x, y, game, flag=True)
+		results = make_move(x, y, game, flag=True)
 	else:
-		changes = make_move(x, y, game,)
+		results = make_move(x, y, game,)
+
+	render_game(game, frames, icons, results)	
 		
 	smile.configure(image=icons['s'])
 
