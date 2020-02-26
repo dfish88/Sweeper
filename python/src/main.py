@@ -1,10 +1,11 @@
+import time
 import tkinter
 from tkinter import *
 from const import *
 from graphics import render_game
 from logic import make_move
 
-def start_game(size, frames, game, icons, smile, window):
+def start_game(size, frames, game, icons, smile, window, timer):
 
 	game['size'] = size
 	difficulty = 'easy'
@@ -28,9 +29,9 @@ def start_game(size, frames, game, icons, smile, window):
 			temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
 
 			temp.bind("<Button-1>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
-			temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames))
+			temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames, timer=timer: clicked(x, y, game, btn, i, frames, timer))
 			temp.bind("<Button-3>", lambda event, btn=smile , i=icons['c']: btn.configure(image=i))
-			temp.bind("<ButtonRelease-3>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames: clicked(x, y, game, btn, i, frames, flag=True))
+			temp.bind("<ButtonRelease-3>", lambda event, x=r, y=c, game=game, btn=smile , i=icons, frames=frames, timer=timer: clicked(x, y, game, btn, i, frames, timer, flag=True))
 
 			temp.grid(row=r, column=c)
 
@@ -41,11 +42,13 @@ def start_game(size, frames, game, icons, smile, window):
 	frames[difficulty].grid()
 	frames[difficulty].tkraise()
 
-def clicked(x, y, game, smile, icons, frames, flag=False):
+def clicked(x, y, game, smile, icons, frames, timer, flag=False):
 
 	if flag:	
 		results = make_move(x, y, game, flag=True)
 	else:
+		if game['board'] == []:
+			start_clock(frames['top'], timer, 0, 0)
 		results = make_move(x, y, game,)
 
 	if game['size'] == 8:
@@ -101,6 +104,18 @@ def load_icons(img_dic):
 	img_dic['s'] = tkinter.PhotoImage(file="../../img/smile.png")
 	img_dic['w'] = tkinter.PhotoImage(file="../../img/wrong.png")
 
+def start_clock(frame, timer, mins, sec):
+
+	sec+=1
+	if sec == 60:
+		sec = 0
+		mins+=1
+
+	now = f"{mins:02d}:{sec:02d}"
+		
+	timer.configure(text=now)
+	frame.after(1000, lambda frame=frame, timer=timer: start_clock(frame, timer, mins, sec))
+
 def main():
 
 	# Dictionary to store frames, dictionry for icons, and game board
@@ -138,7 +153,7 @@ def main():
 	hint = tkinter.Button(top_frame, text="Hint?")
 	smile = tkinter.Label(top_frame, image=icons['s'])
 	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(frames, root, game, icons, smile))
-	timer = tkinter.Label(top_frame, text="0:00")
+	timer = tkinter.Label(top_frame, text="00:00")
 
 	# Place buttons in top frame
 	hint.grid(row=0, column=0, columnspan=2, sticky="nsew")
@@ -151,8 +166,8 @@ def main():
 	top_frame.columnconfigure(7, weight=1)
 
 	# Create easy and hard buttons for starting screen
-	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(EASY_DIM, frames, game, icons, smile ,root))
-	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(HARD_DIM, frames, game, icons, smile ,root))
+	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(EASY_DIM, frames, game, icons, smile ,root, timer))
+	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(HARD_DIM, frames, game, icons, smile ,root, timer))
 
 	# Place easy and hard buttons in bottom frame in difficulty frame
 	difficulty.rowconfigure(0, weight=1)
