@@ -64,10 +64,14 @@ def clicked(x, y, game, render, flag=False):
 
 	if results[1] is RUNNING:		
 		render['smile'].configure(image=render['icons']['s'])
+	else:
+		stop_clock(render)
 
 def restart_game(game, render):
 
 	render['smile'].configure(image=render['icons']['s'])
+	stop_clock(render)
+	render['timer'].configure(text="00:00")
 
 	frames = render['frames']
 	icons = render['icons']
@@ -124,7 +128,13 @@ def start_clock(render, sec):
 	now = f"{minutes:02d}:{seconds:02d}"
 		
 	render['timer'].configure(text=now)
-	render['frames']['top'].after(1000, lambda : start_clock(render, sec))
+	render['timer_id'] = render['frames']['top'].after(1000, lambda : start_clock(render, sec))
+
+def stop_clock(render):
+
+	if render['timer_id'] != None:
+		render['frames']['top'].after_cancel(render['timer_id'])
+		render['timer_id'] = None
 
 def main():
 
