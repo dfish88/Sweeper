@@ -2,7 +2,11 @@ import tkinter
 from tkinter import *
 from const import *
 
-def render_game(frames, diff, icons, results, smile):
+def render_game(render, diff, results ):
+
+	icons = render['icons']
+	smile = render['smile']
+	frames = render['frames']
 
 	changes = results[0]
 	state = results[1]
