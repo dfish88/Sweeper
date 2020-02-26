@@ -69,6 +69,10 @@ def clicked(x, y, game, render, flag=False):
 
 def hint_clicked(game, render):
 
+	# Game hasn't started yet
+	if game['size'] == 0:
+		return 
+
 	if game['board'] == []:
 		start_clock(render, 0)
 
