@@ -25,10 +25,10 @@ def determine_state(x, y, game, flag=False):
 
 # Returns a string representation of a tile
 # used to load images
-def get_symbol(tile):
+def get_symbol(tile, flag=False):
 
 	symbol = ' '
-	if tile['covered'] and tile['flag']:
+	if tile['covered'] and flag:
 		symbol = 'f'
 	elif tile['covered']:
 		symbol = 'b'
@@ -159,7 +159,7 @@ def make_move(x, y, game, flag=False):
 
 		if board[x][y]['covered']:
 			board[x][y]['flag'] = not board[x][y]['flag']
-			changes.append((x, y, get_symbol(board[x][y])))
+			changes.append((x, y, get_symbol(board[x][y], flag=board[x][y]['flag'])))
 			determine_state(x, y, game, flag=True)
 			return changes
 

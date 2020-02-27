@@ -25,7 +25,7 @@ class LogicTest(unittest.TestCase):
 	def test_flag_tile(self):
 
 		test_tile = {'x':0, 'y':0, 'adjacent':0, 'covered':True, 'flag':True, 'mine':False}
-		self.assertEqual(get_symbol(test_tile), 'f')	
+		self.assertEqual(get_symbol(test_tile), 'f')
 
 	# Build and empty board and see if clicking reveals all tiles
 	def test_empty(self):
@@ -223,8 +223,8 @@ class LogicTest(unittest.TestCase):
 		test_board[size-1][size-1] = {'x':size-1, 'y':size-1, 'adjacent':0, 'covered':True, 'flag':False, 'mine':True}
 		test_game = {'tiles_left':0, 'size': size, 'board':test_board}
 
-		state = make_move(1, 1, test_game)[1]
-		self.assertEqual(state, LOST)
+		make_move(1, 1, test_game)
+		self.assertEqual(test_game['state'], LOST)
 
 	# Clear all mines and see if we win game
 	def test_win(self):
@@ -242,8 +242,8 @@ class LogicTest(unittest.TestCase):
 
 		make_move(0, 0, test_game)
 		make_move(0, 1, test_game)
-		state = make_move(1, 0, test_game)[1]
-		self.assertEqual(state, WON)
+		make_move(1, 0, test_game)
+		self.assertEqual(test_game['state'], WON)
 
 if __name__ == '__main__':
 	unittest.main()
