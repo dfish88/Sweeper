@@ -63,7 +63,7 @@ def tile_clicked(x, y, game, render, flag=False):
 	else:
 		render_game(render, 'hard', game['state'], changes)
 
-	if game['state'] is RUNNING:		
+	if game['state'] is RUNNING:
 		render['smile'].configure(image=render['icons']['s'])
 	else:
 		stop_clock(render)
@@ -85,12 +85,8 @@ def hint_clicked(game, render):
 	else:
 		render_game(render, 'hard', game['state'], changes)
 
-	'''
-	if game['state'] is RUNNING:		
-		render['smile'].configure(image=render['icons']['s'])
-	else:
+	if game['state'] is not RUNNING:
 		stop_clock(render)
-	'''
 
 # Callback method for restart button
 def restart_clicked(game, render):
