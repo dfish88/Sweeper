@@ -9,17 +9,18 @@ def set_state(x, y, game):
 
 	# Before first click
 	if len(game['board']) == 0:
-		game['state'] = START
+		game['state'] = RUNNING
 
 	# Check for loss by seeing if player clicked on mine
-	if game['board'][x][y]['mine'] and not game['board'][x][y]['flag']:
+	elif game['board'][x][y]['mine'] and not game['board'][x][y]['flag']:
 		game['state'] = LOST
 
 	# Check for win by seeing if all non-mine tiles are revealed
-	if game['tiles_left'] == 0:
+	elif game['tiles_left'] == 0:
 		game['state'] = WON
 
-	game['state'] = RUNNING
+	else:
+		game['state'] = RUNNING
 
 def get_symbol(tile):
 
@@ -198,6 +199,7 @@ def make_move(x, y, game, flag=False):
 		del empty_tiles[0]
 
 
+	set_state(x,y,game)
 	# Reveal mines and check flags if lost
 	if game['state'] is LOST:
 		lost_game(game, changes)
