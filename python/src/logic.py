@@ -5,14 +5,15 @@ DIRECTIONS = 8
 DELTA_X = [-1,-1,0,1,1,1,0,-1]
 DELTA_Y = [0,1,1,1,0,-1,-1,-1]
 
-def set_state(x, y, game):
+# Determines the state of the game
+def determine_state(x, y, game, flag=False):
 
 	# Before first click
 	if len(game['board']) == 0:
 		game['state'] = RUNNING
 
 	# Check for loss by seeing if player clicked on mine
-	elif game['board'][x][y]['mine'] and not game['board'][x][y]['flag']:
+	elif game['board'][x][y]['mine'] and not game['board'][x][y]['flag'] and not flag:
 		game['state'] = LOST
 
 	# Check for win by seeing if all non-mine tiles are revealed
@@ -22,10 +23,12 @@ def set_state(x, y, game):
 	else:
 		game['state'] = RUNNING
 
-def get_symbol(tile):
+# Returns a string representation of a tile
+# used to load images
+def get_symbol(tile, flag=False):
 
 	symbol = ' '
-	if tile['covered'] and tile['flag']:
+	if tile['covered'] and flag:
 		symbol = 'f'
 	elif tile['covered']:
 		symbol = 'b'
@@ -35,6 +38,8 @@ def get_symbol(tile):
 		symbol = str(tile['adjacent'])
 	return symbol
 
+# Determines if the direction from a given
+# location is on or off the board
 def get_coordinate(x, y, direction):
 
 	new_x = x + DELTA_X[direction]
@@ -45,7 +50,7 @@ def get_coordinate(x, y, direction):
 
 	return (new_x, new_y)
 	
-
+# Determines how many mines are adjacent to each non-mine tile
 def determine_adjacent(game):
 
 	size = game['size']
@@ -70,6 +75,7 @@ def determine_adjacent(game):
 		
 			board[r][c] = {'x':r, 'y':c, 'adjacent':adj, 'covered':True, 'flag':False, 'mine':False}
 
+# Builds the board on first click
 def build_board(x, y, game):
 
 	board = game['board']
@@ -99,6 +105,7 @@ def build_board(x, y, game):
 	game['tiles_left'] = size*size - num_mines	
 	determine_adjacent(game)	
 
+# Reveals mines and checks flags when game is lost
 def lost_game(game, changes):
 
 	board = game['board']
@@ -113,6 +120,7 @@ def lost_game(game, changes):
 			if board[r][c]['flag'] and not board[r][c]['mine']:
 				changes.append((r, c, 'w'))
 
+# Reveals first non-mine tile found
 def hint(game):
 
 	x,y = 0,0
@@ -121,6 +129,9 @@ def hint(game):
 
 	if board == []:
 		return make_move(x,y,game)
+
+	if game['state'] is not RUNNING:
+		return []
 
 	found = False
 	for r in range(size):
@@ -133,6 +144,7 @@ def hint(game):
 			break
 	return make_move(x,y,game)
 
+# Makes a move at x y position
 def make_move(x, y, game, flag=False):
 
 	# tracks changes made as a result of move made
@@ -140,16 +152,19 @@ def make_move(x, y, game, flag=False):
 	board = game['board']
 
 	# Deal with right click (flag)
-	if flag and len(board) == 0:
-		return changes
+	if flag: 
 
-	elif flag and board[x][y]['covered']:
-		board[x][y]['flag'] = not board[x][y]['flag']
-		set_state(x, y, game)
-		return changes
+		if len(board) == 0:
+			return changes
 
-	elif flag and not board[x][y]['covered']:
-		return changes
+		if board[x][y]['covered']:
+			board[x][y]['flag'] = not board[x][y]['flag']
+			changes.append((x, y, get_symbol(board[x][y], flag=board[x][y]['flag'])))
+			determine_state(x, y, game, flag=True)
+			return changes
+
+		if not board[x][y]['covered']:
+			return changes
 
 	# Build board if first move
 	if len(board) == 0:
@@ -179,9 +194,9 @@ def make_move(x, y, game, flag=False):
 		# Check adjacent tiles in each direction
 		for i in range(DIRECTIONS):
 			try:
-
 				coords = get_coordinate(current_x, current_y, i)	
 				new_x, new_y = coords[0], coords[1]
+
 				# Reveal non-mine adjacent tiles
 				if not board[new_x][new_y]['mine']:
 
@@ -189,6 +204,7 @@ def make_move(x, y, game, flag=False):
 					if board[new_x][new_y]['adjacent'] == 0 and board[new_x][new_y]['covered']:
 						empty_tiles.append(board[new_x][new_y])
 
+					# Reveals tiles 
 					if board[new_x][new_y]['covered']:
 						board[new_x][new_y]['covered'] = False
 						board[x][y]['flag'] = False
@@ -199,7 +215,7 @@ def make_move(x, y, game, flag=False):
 		del empty_tiles[0]
 
 
-	set_state(x,y,game)
+	determine_state(x,y,game)
 	# Reveal mines and check flags if lost
 	if game['state'] is LOST:
 		lost_game(game, changes)

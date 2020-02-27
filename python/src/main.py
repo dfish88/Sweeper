@@ -5,6 +5,8 @@ from const import *
 from graphics import render_game, render_restart
 from logic import make_move, hint
 
+# Starts the game when difficulty is chosen by building
+# the frame that holds the mine field
 def start_game(game, render, size):
 
 	game['size'] = size
@@ -18,7 +20,6 @@ def start_game(game, render, size):
 	icons = render['icons']
 	smile = render['smile']
 	window = render['window']
-
 
 	# Create frame
 	game_frame = tkinter.Frame(frames['bottom'], width=dim, height=dim)
@@ -34,6 +35,7 @@ def start_game(game, render, size):
 			frames[difficulty].columnconfigure(c, weight=1)
 			temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
 
+			# Set button bindings for each tile
 			temp.bind("<Button-1>", lambda event : smile.configure(image=icons['c']))
 			temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c: tile_clicked(x, y, game, render))
 			temp.bind("<Button-3>", lambda event : smile.configure(image=icons['c']))
@@ -56,7 +58,7 @@ def tile_clicked(x, y, game, render, flag=False):
 	else:
 		if game['board'] == []:
 			start_clock(render, 0)
-		changes = make_move(x, y, game,)
+		changes = make_move(x, y, game)
 
 	if game['size'] == 8:
 		render_game(render, 'easy', game['state'], changes)
@@ -101,6 +103,7 @@ def restart_clicked(game, render):
 	game['tiles_left'] = 0
 	game['size'] = 0
 	game['board'] = []
+	game['state'] = RUNNING
 
 # Load all the icons used during the game
 def load_icons(img_dic):
