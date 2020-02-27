@@ -5,21 +5,21 @@ DIRECTIONS = 8
 DELTA_X = [-1,-1,0,1,1,1,0,-1]
 DELTA_Y = [0,1,1,1,0,-1,-1,-1]
 
-def get_state(x, y, game):
+def set_state(x, y, game):
 
 	# Before first click
 	if len(game['board']) == 0:
-		return RUNNING
+		game['state'] = START
 
 	# Check for loss by seeing if player clicked on mine
 	if game['board'][x][y]['mine'] and not game['board'][x][y]['flag']:
-		return LOST
+		game['state'] = LOST
 
 	# Check for win by seeing if all non-mine tiles are revealed
 	if game['tiles_left'] == 0:
-		return WON
+		game['state'] = WON
 
-	return RUNNING
+	game['state'] = RUNNING
 
 def get_symbol(tile):
 
@@ -138,18 +138,17 @@ def make_move(x, y, game, flag=False):
 	changes = []
 	board = game['board']
 
-
 	# Deal with right click (flag)
 	if flag and len(board) == 0:
-		return (changes, get_state(x, y, game))
+		return changes
 
 	elif flag and board[x][y]['covered']:
 		board[x][y]['flag'] = not board[x][y]['flag']
-		changes.append((x, y, get_symbol(board[x][y])))
-		return (changes, get_state(x, y, game))
+		set_state(x, y, game)
+		return changes
 
 	elif flag and not board[x][y]['covered']:
-		return (changes, get_state(x, y, game))
+		return changes
 
 	# Build board if first move
 	if len(board) == 0:
@@ -157,7 +156,7 @@ def make_move(x, y, game, flag=False):
 
 	# Clicked on revealed tile
 	if not board[x][y]['covered']:
-		return (changes, get_state(x, y, game))
+		return changes
 
 	# Reveal tile clicked on
 	board[x][y]['covered'] = False
@@ -198,10 +197,9 @@ def make_move(x, y, game, flag=False):
 				continue
 		del empty_tiles[0]
 
-	state = get_state(x, y, game)
 
 	# Reveal mines and check flags if lost
-	if state is LOST:
+	if game['state'] is LOST:
 		lost_game(game, changes)
 
-	return (changes, state)
+	return changes
