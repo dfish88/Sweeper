@@ -2,53 +2,10 @@ import time
 import tkinter
 from tkinter import *
 from const import *
-from graphics import render_game
+from graphics import render_game, start_game, render_restart
 from logic import make_move, hint
 
-def start_game(game, render, size):
-
-	game['size'] = size
-	difficulty = 'easy'
-	dim = BUTTON_DIM*EASY_DIM
-
-	frames = render['frames']
-	icons = render['icons']
-	smile = render['smile']
-	window = render['window']
-
-	if size == HARD_DIM:
-		difficulty = 'hard'
-		dim = BUTTON_DIM*HARD_DIM
-
-	# Create frame
-	game_frame = tkinter.Frame(frames['bottom'], width=dim, height=dim)
-	game_frame.grid(row=0, column=0)
-	frames[difficulty] = game_frame
-
-	for r in range(size):
-
-		frames[difficulty].rowconfigure(r, weight=1)
-
-		for c in range(size):
-
-			frames[difficulty].columnconfigure(c, weight=1)
-			temp = tkinter.Button(frames[difficulty], image=icons['b'], highlightthickness=0, bd=0, relief=SUNKEN)
-
-			temp.bind("<Button-1>", lambda event : smile.configure(image=icons['c']))
-			temp.bind("<ButtonRelease-1>", lambda event, x=r, y=c: clicked(x, y, game, render))
-			temp.bind("<Button-3>", lambda event : smile.configure(image=icons['c']))
-			temp.bind("<ButtonRelease-3>", lambda event, x=r, y=c : clicked(x, y, game, render, flag=True))
-
-			temp.grid(row=r, column=c)
-
-	window.update()
-	w,h = frames[difficulty].winfo_width(), frames[difficulty].winfo_height() + frames['top'].winfo_height()
-	frames['difficulty'].grid_forget()
-	window.geometry(str(w) + "x" + str(h) + "+500+150")
-	frames[difficulty].grid()
-	frames[difficulty].tkraise()
-
-def clicked(x, y, game, render, flag=False):
+def tile_clicked(x, y, game, render, flag=False):
 
 	if flag:	
 		results = make_move(x, y, game, flag=True)
@@ -88,29 +45,15 @@ def hint_clicked(game, render):
 	else:
 		stop_clock(render)
 
-def restart_game(game, render):
+def restart_clicked(game, render):
 
-	render['smile'].configure(image=render['icons']['s'])
 	stop_clock(render)
-	render['timer'].configure(text="00:00")
 
-	frames = render['frames']
-	icons = render['icons']
-	window = render['window']
-
-	if game['size'] == EASY_DIM:
-		frames['easy'].grid_forget()
-		for btn in frames['easy'].grid_slaves():
-			btn.configure(image=icons['b'])
+	if game['size'] == 8:
+		render_restart(render, 'easy')
 	else:
-		frames['hard'].grid_forget()
-		for btn in frames['hard'].grid_slaves():
-			btn.configure(image=icons['b'])
-
-	frames['difficulty'].grid()
-	frames['difficulty'].tkraise()
-	frames['difficulty'].grid_propagate(0)
-	window.geometry("400x425+500+150")
+		render_restart(render, 'hard')
+		
 
 	game['tiles_left'] = 0
 	game['size'] = 0
@@ -194,7 +137,7 @@ def main():
 	# Make buttons for top frame
 	hint = tkinter.Button(top_frame, text="Hint?", command=lambda: hint_clicked(game, render))
 	smile = tkinter.Label(top_frame, image=icons['s'])
-	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_game(game, render))
+	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_clicked(game, render))
 	timer = tkinter.Label(top_frame, text="00:00")
 
 	# Place buttons in top frame
@@ -208,8 +151,8 @@ def main():
 	top_frame.columnconfigure(7, weight=1)
 
 	# Create easy and hard buttons for starting screen
-	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(game, render, EASY_DIM))
-	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(game, render, HARD_DIM))
+	easy = tkinter.Button(difficulty, text="8x8 (Easy)", command=lambda:start_game(game, render, EASY_DIM, tile_clicked))
+	hard = tkinter.Button(difficulty, text="16x16 (Hard)", command=lambda:start_game(game, render, HARD_DIM, tile_clicked))
 
 	# Place easy and hard buttons in bottom frame in difficulty frame
 	difficulty.rowconfigure(0, weight=1)

@@ -121,11 +121,15 @@ def hint(game):
 	if board == []:
 		return make_move(x,y,game)
 
+	found = False
 	for r in range(size):
 		for c in range(size):
 			if board[r][c]['covered'] and not board[r][c]['mine']:
 				x,y = r,c
+				found = True
 				break
+		if found:
+			break
 	return make_move(x,y,game)
 
 def make_move(x, y, game, flag=False):
