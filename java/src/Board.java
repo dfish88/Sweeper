@@ -105,8 +105,10 @@ public class Board
 	* Reveals a square, used when square is clicked on.  If the tile
 	* is adjacent to 0 mines then it also reveals all adjacent 0 tiles.
 	*/
-	public void revealTile(int x, int y)
+	public ArrayList<TileIcon> makeMove(int x, int y)
 	{
+		ArrayList<TileIcon> results = new ArrayList<>();
+
 		// Build board if first move (hint or click)
 		if (this.firstMove)
 		{
@@ -115,7 +117,7 @@ public class Board
 		}
 
 		if (this.theBoard[x][y].getRevealed())
-			return;
+			return results;
 
 		if (this.theBoard[x][y].getMine())
 			this.changes.push((int)'b');

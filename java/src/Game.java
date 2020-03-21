@@ -234,7 +234,7 @@ public class Game
 	*/
 	private void revealTiles(int x, int y)
 	{
-		this.gameBoard.revealTile(x,y);
+		this.gameBoard.makeMove(x,y);
 		this.drawBoard();
 	}
 	
