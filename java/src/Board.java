@@ -257,62 +257,6 @@ public class Board
 	}
 
 	/*
-	* Check if tile at x y is not a mine and not revealed, then check
-	* if it is adjacent to at least one non mine, revelaed tile.
-	*/
-	private boolean hintTile(int x, int y, boolean zeros)
-	{
-		if (this.theBoard[x][y].getMine() || this.theBoard[x][y].getRevealed())
-			return false;
-		else if(zeros == false && this.theBoard[x][y].getAdjacent() == 0)
-			return false;
-		else
-		{
-			if (this.checkAdjacentHint(x,y))
-				return true;
-			else
-				return false;
-		}
-	}
-
-	/*
-	* Check all adjacent tiles to x y for revealed non zero tiles.
-	*/
-	private boolean checkAdjacentHint(int x, int y)
-	{	
-		for (int i = 0; i < this.delta.length; i = i + 2)
-		{	
-			if (this.checkAdjacentTileHint(x + this.delta[i], y + this.delta[i+1]))
-				return true;
-		}
-
-		if (this.surrounded(x,y))
-			return true;
-
-		return false;
-	}
-
-	/*
-	* Return true if tile x y is a revealed tile.
-	*/
-	private boolean checkAdjacentTileHint(int x, int y)
-	{
-		try
-		{
-			if (this.theBoard[x][y].getRevealed())
-			{
-				return true;
-			}
-			else
-				return false;
-		}
-		catch (Exception e)
-		{
-			return false;
-		}
-	}
-
-	/*
 	* Returns true if tile is completely surrounded by mine.
 	* This is used by hint because hint reveals tiles adjacent to
 	* already revealed tiles but tiles surrounded by mines would
