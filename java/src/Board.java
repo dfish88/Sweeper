@@ -23,16 +23,6 @@ public class Board
 	}
 
 	/*
-	* Called when first move (hint or click) is made.
-	* We don't build board until first move to ensure that
-	* first move isn't a mine.
-	*/
-	public void first(int x, int y)
-	{
-		this.buildBoard(x,y);
-	}
-
-	/*
 	* Builds the board
 	*/
 	public void buildBoard(int x, int y)
@@ -120,7 +110,7 @@ public class Board
 		// Build board if first move (hint or click)
 		if (this.firstMove)
 		{
-			this.first(x,y);
+			this.buildBoard(x,y);
 			this.firstMove = false;
 		}
 
