@@ -1,4 +1,4 @@
-public class TileIcon extends Point
+public class Icon extends Point
 {
 	private char icon;
 

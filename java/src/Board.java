@@ -23,15 +23,6 @@ public class Board
 	}
 
 	/*
-	* Builds the board
-	*/
-	public void buildBoard(int x, int y)
-	{
-		addMines(x,y);
-		placeAdjacent();
-	}
-
-	/*
 	* Executes a hint.  Hint reveals a tile adjacent to
 	* an already adjacent tile. We start by looking for
 	* non zero adjacent tiles, if non found we then look
@@ -105,40 +96,51 @@ public class Board
 	* Reveals a square, used when square is clicked on.  If the tile
 	* is adjacent to 0 mines then it also reveals all adjacent 0 tiles.
 	*/
-	public ArrayList<TileIcon> makeMove(int x, int y)
+	public ArrayList<Icon> makeMove(int x, int y)
 	{
-		ArrayList<TileIcon> results = new ArrayList<>();
+		ArrayList<Icon> results = new ArrayList<>();
 
 		// Build board if first move (hint or click)
 		if (this.firstMove)
 		{
-			this.buildBoard(x,y);
+			this.buildBoard(x,y)
 			this.firstMove = false;
 		}
 
 		if (this.theBoard[x][y].getRevealed())
 			return results;
 
-		if (this.theBoard[x][y].getMine())
-			this.changes.push((int)'b');
-		else
-			this.changes.push(this.theBoard[x][y].getAdjacent() + '0');
-			
-		this.changes.push(y);
-		this.changes.push(x);
+		this.theBoard[x][y].setRevealed()
+		results.add(new Icon(x, y, this.theBoard[x][y].toChar()))
 
-		// Reveal adjacent 0s if 0 is clicked on
-		if (this.theBoard[x][y].getAdjacent() == 0 && !(this.theBoard[x][y].getMine())) 
+		// Reveal adjacent tiles
+		Stack<Integer> adjacent = new Stack<>();
+		adjacent.push(y);
+		adjacent.push(x);
+
+		int currentX;
+		int currentY;
+
+		// Loop until stack is empty
+		while (!adjacent.empty())
 		{
-			this.revealAdjacentTiles(x,y);
+			currentX = adjacent.pop();
+			currentY = adjacent.pop();
+
+			// Reveal top tile on stack
+			if (!(this.theBoard[currentX][currentY].getRevealed()))
+			{
+				this.theBoard[currentX][currentY].setRevealed();
+				this.tilesLeft--;
+
+				this.changes.push(this.theBoard[currentX][currentY].getAdjacent() + '0');
+				this.changes.push(currentY);
+				this.changes.push(currentX);
+			}
+
+			// Add adjacent 0 tiles to stack
+			this.findAdjacentZero(currentX, currentY, adjacent);
 		}
-		// Reveals tile if non 0 clicked on
-		else
-		{
-			this.tilesLeft--;
-			this.theBoard[x][y].setRevealed();
-		}
-			
 			
 	}
 
@@ -160,11 +162,11 @@ public class Board
 	* If there is overlap we simply skip that mine which is
 	* how we can get less than dimension mines.
 	*/
-	private void addMines(int x, int y)
+	private void buildBoard(int x, int y)
 	{
 		Random rand = new Random();
 
-		// Loop dimension times to place mines
+		// Place mines on the board
 		int limit = (int)((this.dimension * this.dimension) / 6);
 		for(int i = 0; i < limit; i++)
 		{
@@ -179,13 +181,8 @@ public class Board
 				this.theBoard[randX][randY] = new Tile(0, true);
 			}
 		}
-	}
 
-	/*
-	* Places the non mine tiles on the board
-	*/
-	private void placeAdjacent()
-	{
+		// Determine all non-mine tiles 
 		for (int i = 0; i < this.dimension; i++)
                 {
                         for (int j = 0; j < this.dimension; j++)
@@ -296,42 +293,6 @@ public class Board
 		catch (Exception e)
 		{
 			return true;
-		}
-	}
-	
-	/*
-	* Reveals 0 tiles adjacent to tile at x,y.
-	*/
-	private void revealAdjacentTiles(int x, int y)
-	{
-		// Use a stack to store adjacent values, starting with origin tile
-		Stack<Integer> adjacent = new Stack<>();
-		adjacent.push(y);
-		adjacent.push(x);
-
-		int currentX;
-		int currentY;
-
-		// Loop until stack is empty
-		while (!adjacent.empty())
-		{
-			currentX = adjacent.pop();
-			currentY = adjacent.pop();
-
-			// Reveal top tile on stack
-			if (!(this.theBoard[currentX][currentY].getRevealed()))
-			{
-				this.theBoard[currentX][currentY].setRevealed();
-				this.tilesLeft--;
-			
-
-				this.changes.push(this.theBoard[currentX][currentY].getAdjacent() + '0');
-				this.changes.push(currentY);
-				this.changes.push(currentX);
-			}
-
-			// Add adjacent 0 tiles to stack
-			this.findAdjacentZero(currentX, currentY, adjacent);
 		}
 	}
 
