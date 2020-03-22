@@ -301,10 +301,9 @@ public class Board
 	/*
 	* Returns changes made to board.
 	*/
-	public Stack<Integer> getChanges()
+	public ArrayList<Icon> getChanges()
 	{
-		Stack<Integer> ret = new Stack<>();
-		ret.addAll(this.changes); 
+		ArrayList<Icon> ret = this.changes.clone();
 		this.changes.clear();
 		return ret;
 	}
