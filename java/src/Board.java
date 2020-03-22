@@ -6,7 +6,7 @@ public class Board
 { 
 	private Tile[][] theBoard; 	// Stores all the tiles 
 	private int dimension;		
-	private Stack<Integer> changes;	// Stores all changes made
+	private ArrayList<Icon> changes;	// Stores all changes made
 	private boolean firstMove;	// If this is first move
 	private int tilesLeft;
 
@@ -17,7 +17,7 @@ public class Board
 	{
 		this.dimension = dimension;
 		theBoard = new Tile[this.dimension][this.dimension];		
-		this.changes = new Stack<>();
+		this.changes = new ArrayList<>();
 		this.firstMove = true;
 		this.tilesLeft = 0;
 	}
@@ -96,52 +96,46 @@ public class Board
 	* Reveals a square, used when square is clicked on.  If the tile
 	* is adjacent to 0 mines then it also reveals all adjacent 0 tiles.
 	*/
-	public ArrayList<Icon> makeMove(int x, int y)
+	public void makeMove(int x, int y)
 	{
-		ArrayList<Icon> results = new ArrayList<>();
-
 		// Build board if first move (hint or click)
 		if (this.firstMove)
 		{
-			this.buildBoard(x,y)
+			this.buildBoard(x,y);
 			this.firstMove = false;
 		}
 
 		if (this.theBoard[x][y].getRevealed())
-			return results;
+			return;
 
-		this.theBoard[x][y].setRevealed()
-		results.add(new Icon(x, y, this.theBoard[x][y].toChar()))
+		this.theBoard[x][y].setRevealed();
+		this.changes.add(new Icon(x, y, this.theBoard[x][y].toChar()));
 
-		// Reveal adjacent tiles
-		Stack<Integer> adjacent = new Stack<>();
-		adjacent.push(y);
-		adjacent.push(x);
+		ArrayList<Point> adjacent = new ArrayList<>();
+		if (!this.theBoard[x][y].getMine() && this.theBoard[x][y].getAdjacent() == 0)
+			adjacent.add(new Point(x,y));
 
 		int currentX;
 		int currentY;
 
 		// Loop until stack is empty
-		while (!adjacent.empty())
+		while (!adjacent.isEmpty())
 		{
-			currentX = adjacent.pop();
-			currentY = adjacent.pop();
+			Point current = adjacent.remove(0);
+			currentX = current.getX();
+			currentY = current.getY();
 
 			// Reveal top tile on stack
 			if (!(this.theBoard[currentX][currentY].getRevealed()))
 			{
 				this.theBoard[currentX][currentY].setRevealed();
 				this.tilesLeft--;
-
-				this.changes.push(this.theBoard[currentX][currentY].getAdjacent() + '0');
-				this.changes.push(currentY);
-				this.changes.push(currentX);
+				this.changes.add(new Icon(currentX, currentY, this.theBoard[currentX][currentY].toChar()))
 			}
 
 			// Add adjacent 0 tiles to stack
 			this.findAdjacentZero(currentX, currentY, adjacent);
 		}
-			
 	}
 
 	/*
