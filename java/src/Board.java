@@ -28,8 +28,9 @@ public class Board
 	* non zero adjacent tiles, if non found we then look
 	* for adjacent zeros.
 	*/
-	public Stack<Integer> hint()
+	public void hint()
 	{
+		/*
 		if (this.firstMove)
 		{
 			Random rand = new Random();
@@ -90,6 +91,7 @@ public class Board
 			}
 		}
 		return stack;
+		*/
 	}
 
 	/*
@@ -108,24 +110,26 @@ public class Board
 		if (this.theBoard[x][y].getRevealed())
 			return;
 
+		// Reveal current tile
 		this.theBoard[x][y].setRevealed();
+		this.tilesLeft--;
 		this.changes.add(new Icon(x, y, this.theBoard[x][y].toChar()));
 
+		// Create list of all adjacent tiles if tile clicked on is 0
 		ArrayList<Point> adjacent = new ArrayList<>();
 		if (!this.theBoard[x][y].getMine() && this.theBoard[x][y].getAdjacent() == 0)
 			adjacent.add(new Point(x,y));
 
+		// Find all adjacent 0 tiles if tile is 0 and reveal them
 		int currentX;
 		int currentY;
-
-		// Loop until stack is empty
 		while (!adjacent.isEmpty())
 		{
 			Point current = adjacent.remove(0);
 			currentX = current.getX();
 			currentY = current.getY();
 
-			// Reveal top tile on stack
+			// Reveal tile
 			if (!(this.theBoard[currentX][currentY].getRevealed()))
 			{
 				this.theBoard[currentX][currentY].setRevealed();
@@ -133,10 +137,11 @@ public class Board
 				this.changes.add(new Icon(currentX, currentY, this.theBoard[currentX][currentY].toChar()))
 			}
 
-			// Add adjacent 0 tiles to stack
+			// Add adjacent 0 tiles to list
 			this.findAdjacentZero(currentX, currentY, adjacent);
 		}
 	}
+
 
 	/*
 	* Checks if all non mine tiles have been revealed.
@@ -150,6 +155,49 @@ public class Board
 	}
 
 	/* PRIVATE HELPERS */
+
+	/*
+	* Pushes adjacent 0 tiles on to stack so we can check tiles adjacent to those tiles too.
+	* When we get to non zero, non mine, adjacent tiles we reveal them and don't push them on stack.
+	*/
+	private void findAdjacentZero(int x, int y, ArrayList<Point> a)
+	{
+		// Check all 8 adjacent tiles 0 tiles
+		for (int i = 0; i < this.delta.length; i = i + 2)
+		{
+
+			int currentX = x + this.delta[i];
+			int currentY = y + this.delta[i+1];
+
+			try
+			{
+				// add 0 tiles to the list
+				if (this.theBoard[currentX][currentY].getAdjacent() == 0 && !this.theBoard[currentX][currentY].getRevealed())
+					a.add(new Point(currentX, currentY));
+
+				// Reveal non-zero tiles
+				else
+				{
+					if(!(this.theBoard[currentX][currentY].getRevealed()))
+					{
+						this.theBoard[currentX][currentY].setRevealed();
+						this.changes.add(new Icon(currentX, currentY, this.theBoard[currentX][currentY].toChar()));
+						this.tilesLeft--;
+					}
+				}
+			}
+			catch(ArrayIndexOutOfBoundsException e)
+			{
+				continue;
+			}
+			/*
+			catch(NullPointerException e)
+			{
+				return 0;
+			}
+			*/
+		}
+	}
 
 	/*
 	* Randomly places at most dimension mines on the board.
@@ -176,162 +224,35 @@ public class Board
 			}
 		}
 
-		// Determine all non-mine tiles 
+		// Determine all non-mine tiles
+		int mineCount = 0;
 		for (int i = 0; i < this.dimension; i++)
                 {
                         for (int j = 0; j < this.dimension; j++)
                         {       
 				if (this.theBoard[i][j] == null)
 				{
-					this.theBoard[i][j] = new Tile(calculateAdjacent(i,j), false);
+					// Check all 8 adjacent tiles for mines
+					mineCount = 0;
+					for (int i = 0; i < this.delta.length; i = i + 2)
+					{
+						try
+						{
+							if (this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getMine())
+								mineCount+=1;
+						}
+						catch(ArrayIndexOutOfBoundsException e)
+						{}
+						/*
+						catch(NullPointerException e)
+						{}
+						*/
+					}
+					this.theBoard[i][j] = new Tile(mineCount, false);
 					this.tilesLeft++;
 				}
                         }
                 }
-	}
-
-	/*
-	* Checks for mines adjacent to the tile at (x,y)
-	*/
-	private int calculateAdjacent(int x, int y)
-	{
-		int mineCount = 0;
-
-		// Check all 8 adjacent tiles for mines
-		for (int i = 0; i < this.delta.length; i = i + 2)
-		{
-			mineCount += checkForMine(x + this.delta[i], y + this.delta[i+1]);
-		}
-		return mineCount;
-	}
-
-	/*
-	* Returns 1 if tile at x y is 0, 0 otherwise.
-	*/
-	private int checkForZero(int x, int y)
-	{
-		try
-		{
-			if (this.theBoard[x][y].getAdjacent() == 0 && this.theBoard[x][y].getRevealed() == false)
-				return 1;
-			else
-				return 0;
-		}
-		catch(ArrayIndexOutOfBoundsException e)
-		{
-			return 0;
-		}
-		catch(NullPointerException e)
-		{
-			return 0;
-		}
-	}
-
-	/*
-	* Returns 1 if tile at x y is a mine, 0 otherwise.
-	*/
-	private int checkForMine(int x, int y)
-	{
-		try
-		{
-			if (this.theBoard[x][y].getMine())
-				return 1;
-			else
-				return 0;
-		}
-		catch(ArrayIndexOutOfBoundsException e)
-		{
-			return 0;
-		}
-		catch(NullPointerException e)
-		{
-			return 0;
-		}
-	}
-
-	/*
-	* Returns true if tile is completely surrounded by mine.
-	* This is used by hint because hint reveals tiles adjacent to
-	* already revealed tiles but tiles surrounded by mines would
-	* never be revealed.
-	*/
-	private boolean surrounded(int x, int y)
-	{
-		if (this.theBoard[x][y].getAdjacent() < 3)
-			return false;
-	
-		// Check all adjacent directions, return true if surrounded by mines
-		boolean sur = true;
-		for (int i = 0; i < this.delta.length; i = i + 2)
-		{	
-			if (!(this.checkAdjacentTileMine(x + this.delta[i], y + this.delta[i+1])))
-				return false;
-		}
-		return sur;
-	}
-
-	/*
-	* Returns true if x y is mine.
-	*/
-	private boolean checkAdjacentTileMine(int x, int y)
-	{
-		try
-		{
-			if (this.theBoard[x][y].getMine())
-			{
-				return true;
-			}
-			else
-				return false;
-		}
-		catch (Exception e)
-		{
-			return true;
-		}
-	}
-
-	/*
-	* Pushes adjacent 0 tiles on to stack so we can check tiles adjacent to those tiles too.
-	* When we get to non zero, non mine, adjacent tiles we reveal them and don't push them on stack.
-	*/
-	private void findAdjacentZero(int x, int y, Stack<Integer> s)
-	{
-		// Check all 8 adjacent tiles for mines
-		for (int i = 0; i < this.delta.length; i = i + 2)
-		{
-			if (this.checkForZero(x + this.delta[i], y + this.delta[i+1]) == 1)
-			{
-				s.push(y + this.delta[i+1]);
-				s.push(x + this.delta[i]);
-			}
-			// The non 0 edges of the 0 area are covered in this case
-			else
-			{
-				this.revealEdges(x + this.delta[i], y + this.delta[i+1]);
-			}
-		}
-	}
-
-	/*
-	* When a field of 0s is being revealed this method deals with the non 0 edges where the field ends.
-	*/
-	private void revealEdges(int x, int y)
-	{
-		// Try catch incase coordinates are off board
-		try
-		{
-			if(!(this.theBoard[x][y].getRevealed()))
-			{
-				this.theBoard[x][y].setRevealed();
-				this.changes.push(this.theBoard[x][y].getAdjacent() + '0');
-				this.changes.push(y);
-				this.changes.push(x);
-				this.tilesLeft--;
-			}
-		}
-		catch(ArrayIndexOutOfBoundsException e)
-		{
-		}
 	}
 
 	/* GETTERS */
