@@ -23,6 +23,19 @@ public class Board
 	}
 
 	/*
+	* Create a board that has already been populated and mines
+	* wont be placed randomly. Used for testing.
+	*/
+	public Board(int dimension, Tile[][] board, int tilesLeft)
+	{
+		this.dimension = dimension;
+		this.theBoard = board;
+		this.changes = new ArrayList<>();
+		this.firstMove = false;
+		this.tilesLeft = tilesLeft;
+	}
+
+	/*
 	* Executes a hint.  Hint reveals a tile adjacent to
 	* an already adjacent tile. We start by looking for
 	* non zero adjacent tiles, if non found we then look
@@ -232,24 +245,7 @@ public class Board
                         {       
 				if (this.theBoard[i][j] == null)
 				{
-					// Check all 8 adjacent tiles for mines
-					mineCount = 0;
-					for (int i = 0; i < this.delta.length; i = i + 2)
-					{
-						try
-						{
-							if (this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getMine())
-								mineCount+=1;
-						}
-						catch(ArrayIndexOutOfBoundsException e)
-						{
-							continue;
-						}
-						catch(NullPointerException e)
-						{
-							continue;
-						}
-					}
+					mineCount = this.countMines(i,j);
 					this.theBoard[i][j] = new Tile(mineCount, false);
 					this.tilesLeft++;
 				}
@@ -257,10 +253,39 @@ public class Board
                 }
 	}
 
+	/*
+	* Counts the mines adjacent to the tile located at x, y and
+	* returns as an integer.
+	*/
+	private int countMines(int x, int y)
+	{
+		// Check all 8 adjacent tiles for mines
+		int mineCount = 0;
+		for (int i = 0; i < this.delta.length; i = i + 2)
+		{
+			try
+			{
+				if (this.theBoard[x + this.delta[i]][y + this.delta[i+1]].getMine())
+					mineCount+=1;
+			}
+			catch(ArrayIndexOutOfBoundsException e)
+			{
+				continue;
+			}
+			catch(NullPointerException e)
+			{
+				continue;
+			}
+		}
+		return mineCount;
+	}
+
 	/* GETTERS */
 
 	/*
-	* Returns a stack of x,y coordinates of flags on board.
+	* Returns a list of flags on the board. This will be used to reveal which
+	* flags are correct at the end of the game so we only return flags that
+	* incorrect.
 	*/
 	public ArrayList<Icon> getFlags()
 	{
@@ -280,7 +305,9 @@ public class Board
 	}
 
 	/*
-	* Returns a stack of x,y coordinates of mined on board.
+	* Returns a list of mines on the board. This will be used to reveal mines at
+	* end of the game so we only need to return the mines that haven't been clicked on
+	* and haven't been flagged.
 	*/
 	public ArrayList<Icon> getMines()
 	{
