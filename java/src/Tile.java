@@ -25,7 +25,10 @@ public class Tile
 	{
 		if (this.revealed)
 		{
-			return Character.forDigit(this.adjacentTo, 10);
+			if (this.mine)
+				return 'b';
+			else
+				return Character.forDigit(this.adjacentTo, 10);
 		}
 		else
 		{

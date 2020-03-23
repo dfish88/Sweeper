@@ -41,13 +41,13 @@ public class Board
 			this.revealTile(randX, randY);
 			this.tilesLeft--;
 			
-			Stack<Integer> s = new Stack<>();
+			ArrayList<Icon> s = new ArrayList<>();
 			s.addAll(this.changes);
 			this.changes.clear();
 			return s;
 		}
 
-		Stack<Integer> stack = new Stack<>();
+		ArrayList<Icon> stack = new ArrayList<>();
 
 		// Only checks for adjacent non zero tiles.
 		for (int x = 0; x < this.dimension; x++)
@@ -225,7 +225,7 @@ public class Board
 		}
 
 		// Determine all non-mine tiles
-		int mineCount = 0;
+		int mineCount;
 		for (int i = 0; i < this.dimension; i++)
                 {
                         for (int j = 0; j < this.dimension; j++)
@@ -242,11 +242,13 @@ public class Board
 								mineCount+=1;
 						}
 						catch(ArrayIndexOutOfBoundsException e)
-						{}
-						/*
+						{
+							continue;
+						}
 						catch(NullPointerException e)
-						{}
-						*/
+						{
+							continue;
+						}
 					}
 					this.theBoard[i][j] = new Tile(mineCount, false);
 					this.tilesLeft++;
@@ -260,42 +262,40 @@ public class Board
 	/*
 	* Returns a stack of x,y coordinates of flags on board.
 	*/
-	public Stack<Integer> getFlags()
+	public ArrayList<Icon> getFlags()
 	{
-		Stack<Integer> stack = new Stack<>();
+		ArrayList<Icon> flags = new ArrayList<>();
 		for (int x = 0; x < this.dimension; x++)
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
 				if (!(this.theBoard[x][y].getRevealed()) && !(this.theBoard[x][y].getMine()) && this.theBoard[x][y].getFlag())
 				{
-					stack.push(y);
-					stack.push(x);
+					flags.add(new Icon(x, y, 'f'));
 				}	
 				
 			}
 		}
-		return stack;
+		return flags;
 	}
 
 	/*
 	* Returns a stack of x,y coordinates of mined on board.
 	*/
-	public Stack<Integer> getMines()
+	public ArrayList<Icon> getMines()
 	{
-		Stack<Integer> stack = new Stack<>();
+		ArrayList<Icon> mines = new ArrayList<>();
 		for (int x = 0; x < this.dimension; x++)
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
 				if (!(this.theBoard[x][y].getRevealed()) && this.theBoard[x][y].getMine() && !(this.theBoard[x][y].getFlag()))
 				{
-					stack.push(y);
-					stack.push(x);
+					mines.add(new Icon(x, y, 'm'));
 				}	
 			}
 		}
-		return stack;
+		return mines;
 	}
 	
 	/*
