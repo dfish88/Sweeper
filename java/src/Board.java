@@ -139,15 +139,15 @@ public class Board
 		while (!adjacent.isEmpty())
 		{
 			Point current = adjacent.remove(0);
-			currentX = current.getX();
-			currentY = current.getY();
+			currentX = (int)current.getX();
+			currentY = (int)current.getY();
 
 			// Reveal tile
 			if (!(this.theBoard[currentX][currentY].getRevealed()))
 			{
 				this.theBoard[currentX][currentY].setRevealed();
 				this.tilesLeft--;
-				this.changes.add(new Icon(currentX, currentY, this.theBoard[currentX][currentY].toChar()))
+				this.changes.add(new Icon(currentX, currentY, this.theBoard[currentX][currentY].toChar()));
 			}
 
 			// Add adjacent 0 tiles to list
@@ -156,16 +156,6 @@ public class Board
 	}
 
 
-	/*
-	* Checks if all non mine tiles have been revealed.
-	*/
-	public boolean checkForWin()
-	{
-		if (this.tilesLeft <=0)
-			return true;
-		else
-			return false;
-	}
 
 	/* PRIVATE HELPERS */
 
@@ -330,7 +320,8 @@ public class Board
 	*/
 	public ArrayList<Icon> getChanges()
 	{
-		ArrayList<Icon> ret = this.changes.clone();
+		ArrayList<Icon> ret = new ArrayList<>();
+		ret.addAll(this.changes);
 		this.changes.clear();
 		return ret;
 	}
@@ -356,6 +347,17 @@ public class Board
 	public boolean getRevealed(int x, int y)
 	{
 		return this.theBoard[x][y].getRevealed();
+	}
+
+	/*
+	* Checks if all non mine tiles have been revealed.
+	*/
+	public boolean checkForWin()
+	{
+		if (this.tilesLeft <=0)
+			return true;
+		else
+			return false;
 	}
 
 	/* SETTERS */

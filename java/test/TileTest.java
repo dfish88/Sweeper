@@ -1,21 +1,36 @@
 import org.junit.Test;
+import org.junit.Before;
+import org.junit.After;
 import static org.junit.Assert.*;
 
 public class TileTest
 {
+
+	private int adjacent;
+	private Tile test;
+
+	@Before
+	public void setUp()
+	{
+		adjacent = 2;
+		test = new Tile(adjacent, false);
+	}
+
+	@After
+	public void tearDown()
+	{
+		test = null;
+	}
+
 	@Test
 	public void testAdjacent()
 	{
-		int adjacent = 2;
-		Tile test = new Tile(adjacent, false);
 		assertEquals(adjacent, test.getAdjacent());
 	}
 
 	@Test
 	public void testFlag()
 	{
-		int adjacent = 2;
-		Tile test = new Tile(adjacent, false);
 		assertFalse(test.getFlag());
 		test.setFlag();	
 		assertTrue(test.getFlag());
@@ -24,8 +39,6 @@ public class TileTest
 	@Test
 	public void testRevealed()
 	{
-		int adjacent = 2;
-		Tile test = new Tile(adjacent, false);
 		assertFalse(test.getRevealed());
 		test.setRevealed();	
 		assertTrue(test.getRevealed());
@@ -34,8 +47,6 @@ public class TileTest
 	@Test
 	public void testMine()
 	{
-		int adjacent = 2;
-		Tile test = new Tile(adjacent, false);
 		assertFalse(test.getMine());
 		test.setMine();	
 		assertTrue(test.getMine());
@@ -45,16 +56,12 @@ public class TileTest
 	@Test
 	public void testToCharCovered()
 	{
-		int adjacent = 2;
-		Tile test = new Tile(adjacent, false);
 		assertEquals(test.toChar(), ' ');
 	}
 
 	@Test
 	public void testToCharFlag()
 	{
-		int adjacent = 2;
-		Tile test = new Tile(adjacent, false);
 		test.setFlag();
 		assertEquals(test.toChar(), 'f');
 	}
@@ -62,8 +69,6 @@ public class TileTest
 	@Test
 	public void testToCharMine()
 	{
-		int adjacent = 2;
-		Tile test = new Tile(adjacent, false);
 		test.setMine();
 		test.setRevealed();
 		assertEquals(test.toChar(), 'b');
@@ -72,8 +77,6 @@ public class TileTest
 	@Test
 	public void testToCharAdjacent()
 	{
-		int adjacent = 2;
-		Tile test = new Tile(adjacent, false);
 		test.setRevealed();
 		assertEquals(test.toChar(), '2');
 	}
