@@ -7,15 +7,15 @@ public class Icon extends Point
 	public Icon(int x, int y, char c)
 	{
 		super(x,y);
-		this.setIcon(c);
+		this.setChar(c);
 	}
 
-	public void setIcon(char c)
+	public void setChar(char c)
 	{
 		this.icon = c;
 	}
 
-	public char getIcon()
+	public char getChar()
 	{
 		return this.icon;
 	}

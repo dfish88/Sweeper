@@ -4,11 +4,19 @@ import java.io.*;
 
 public class Board 
 { 
+	public enum State
+	{
+		WON,
+		LOSS,
+		RUNNING
+	}
+
 	private Tile[][] theBoard; 	// Stores all the tiles 
 	private int dimension;		
 	private ArrayList<Icon> changes;	// Stores all changes made
 	private boolean firstMove;	// If this is first move
 	private int tilesLeft;
+	private State state;
 
 	// Used to calculate coordinates of all 8 adjacent tiles
 	private int[] delta = {-1,-1,-1,0,-1,1,0,-1,0,1,1,-1,1,0,1,1};
@@ -20,6 +28,7 @@ public class Board
 		this.changes = new ArrayList<>();
 		this.firstMove = true;
 		this.tilesLeft = 0;
+		this.state = State.RUNNING;
 	}
 
 	/*
@@ -33,6 +42,7 @@ public class Board
 		this.changes = new ArrayList<>();
 		this.firstMove = false;
 		this.tilesLeft = tilesLeft;
+		this.state = State.RUNNING;
 	}
 
 	/*
@@ -128,6 +138,9 @@ public class Board
 		this.tilesLeft--;
 		this.changes.add(new Icon(x, y, this.theBoard[x][y].toChar()));
 
+		if (this.theBoard[x][y].getMine())
+			this.state = State.LOSS;
+
 		// Create list of all adjacent tiles if tile clicked on is 0
 		ArrayList<Point> adjacent = new ArrayList<>();
 		if (!this.theBoard[x][y].getMine() && this.theBoard[x][y].getAdjacent() == 0)
@@ -153,6 +166,9 @@ public class Board
 			// Add adjacent 0 tiles to list
 			this.findAdjacentZero(currentX, currentY, adjacent);
 		}
+
+		if (this.state == State.RUNNING && this.tilesLeft <= 0)
+			this.state = State.WON;
 	}
 
 
@@ -274,7 +290,7 @@ public class Board
 
 	/*
 	* Returns a list of flags on the board. This will be used to reveal which
-	* flags are correct at the end of the game so we only return flags that
+	* flags are correct at the end of the game so we only return flags that are
 	* incorrect.
 	*/
 	public ArrayList<Icon> getFlags()
@@ -286,7 +302,7 @@ public class Board
 			{
 				if (!(this.theBoard[x][y].getRevealed()) && !(this.theBoard[x][y].getMine()) && this.theBoard[x][y].getFlag())
 				{
-					flags.add(new Icon(x, y, 'f'));
+					flags.add(new Icon(x, y, 'w'));
 				}	
 				
 			}
@@ -352,12 +368,9 @@ public class Board
 	/*
 	* Checks if all non mine tiles have been revealed.
 	*/
-	public boolean checkForWin()
+	public State getState()
 	{
-		if (this.tilesLeft <=0)
-			return true;
-		else
-			return false;
+		return this.state;
 	}
 
 	/* SETTERS */
