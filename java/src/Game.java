@@ -266,21 +266,6 @@ public class Game
 		}
 	}
 
-	/*
-	* Changes icon on tile x y to a flag or to a blank square if already flag.
-	*/
-	private void placeFlag(int x, int y)
-	{
-		// Place flag on square if it isn't revealed or is a mine
-		if (!(this.gameBoard.getRevealed(x, y)))
-		{
-			this.gameBoard.setFlag(x,y);
-			if (this.gameBoard.getFlag(x,y))
-				this.buttonGrid[x][y].setIcon(this.icons.get('f'));
-			else
-				this.buttonGrid[x][y].setIcon(this.icons.get(' '));
-		}
-	}
 
 	/*
 	* Mouse listener registerd on all game buttons.
@@ -363,7 +348,7 @@ public class Game
 			{
 				try
 				{
-					Game.this.placeFlag(coordinates[0], coordinates[1]);
+					this.placeFlag(coordinates[0], coordinates[1]);
 				}
 				// Catches exception where players right clicks before making first move
 				catch (Exception exc)
@@ -382,6 +367,14 @@ public class Game
 
 			Game.this.gameBoard.hint();
 			Game.this.drawBoard(0,0);
+			Board.State state = Game.this.gameBoard.getState();
+
+			if (state == Board.State.WON)
+			{
+				this.enabled = false;
+				Game.this.face.setIcon(Game.this.icons.get('g'));
+				Game.this.time.stop();
+			}
 		}
 
 		private void restartClicked()
@@ -421,6 +414,22 @@ public class Game
 				Game.this.time.stop();
 			}
 
+		}
+
+		/*
+		* Changes icon on tile x y to a flag or to a blank square if already flag.
+		*/
+		private void placeFlag(int x, int y)
+		{
+			// Place flag on square if it isn't revealed or is a mine
+			if (!(Game.this.gameBoard.getRevealed(x, y)))
+			{
+				Game.this.gameBoard.setFlag(x,y);
+				if (Game.this.gameBoard.getFlag(x,y))
+					Game.this.buttonGrid[x][y].setIcon(Game.this.icons.get('f'));
+				else
+					Game.this.buttonGrid[x][y].setIcon(Game.this.icons.get(' '));
+			}
 		}
 
 		public void mouseEntered(MouseEvent e)

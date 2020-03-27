@@ -54,10 +54,13 @@ public class Board
 	*/
 	public void hint()
 	{
+		if (this.state != State.RUNNING)
+			return;
+
 		int randX = rand.nextInt(dimension);
 		int randY = rand.nextInt(dimension);
 
-		while (this.theBoard[randX][randY].getRevealed() || this.theBoard[randX][randY].getMine())
+		while (!this.firstMove && (this.theBoard[randX][randY].getRevealed() || this.theBoard[randX][randY].getMine()))
 		{
 			randX = rand.nextInt(dimension);
 			randY = rand.nextInt(dimension);
