@@ -17,12 +17,14 @@ public class Board
 	private boolean firstMove;	// If this is first move
 	private int tilesLeft;
 	private State state;
+	private Random rand;
 
 	// Used to calculate coordinates of all 8 adjacent tiles
 	private int[] delta = {-1,-1,-1,0,-1,1,0,-1,0,1,1,-1,1,0,1,1};
 
 	public Board(int dimension)
 	{
+		this.rand = new Random();
 		this.dimension = dimension;
 		theBoard = new Tile[this.dimension][this.dimension];		
 		this.changes = new ArrayList<>();
@@ -37,6 +39,7 @@ public class Board
 	*/
 	public Board(int dimension, Tile[][] board, int tilesLeft)
 	{
+		this.rand = new Random();
 		this.dimension = dimension;
 		this.theBoard = board;
 		this.changes = new ArrayList<>();
@@ -46,75 +49,21 @@ public class Board
 	}
 
 	/*
-	* Executes a hint.  Hint reveals a tile adjacent to
-	* an already adjacent tile. We start by looking for
-	* non zero adjacent tiles, if non found we then look
-	* for adjacent zeros.
+	* Picks a random non-mine, non-revealed tile
+	* and makes a move.
 	*/
 	public void hint()
 	{
-		/*
-		if (this.firstMove)
+		int randX = rand.nextInt(dimension);
+		int randY = rand.nextInt(dimension);
+
+		while (this.theBoard[randX][randY].getRevealed() || this.theBoard[randX][randY].getMine())
 		{
-			Random rand = new Random();
-
-			int randX = rand.nextInt(dimension);
-			int randY = rand.nextInt(dimension);
-
-			this.revealTile(randX, randY);
-			this.tilesLeft--;
-			
-			ArrayList<Icon> s = new ArrayList<>();
-			s.addAll(this.changes);
-			this.changes.clear();
-			return s;
+			randX = rand.nextInt(dimension);
+			randY = rand.nextInt(dimension);
 		}
 
-		ArrayList<Icon> stack = new ArrayList<>();
-
-		// Only checks for adjacent non zero tiles.
-		for (int x = 0; x < this.dimension; x++)
-		{
-			for (int y = 0; y < this.dimension; y++)
-			{
-				// We want to find a non mine, non revealed tile that is adjacent
-				// to at least one other non mine, revealed tile
-				if (this.hintTile(x,y, false))
-				{
-					stack.push(this.theBoard[x][y].getAdjacent() + '0');
-					stack.push(y);
-					stack.push(x);
-					this.theBoard[x][y].setRevealed();
-					this.tilesLeft--;
-					return stack;
-				}
-			}
-		}
-
-		if (!(stack.empty()))
-			return stack;
-
-		// Second pass can reveal 0 tiles too.
-		for (int x = 0; x < this.dimension; x++)
-		{
-			for (int y = 0; y < this.dimension; y++)
-			{
-				// We want to find a non mine, non revealed tile that is adjacent
-				// to at least one other non mine, revealed tile
-				if (this.hintTile(x,y, true))
-				{
-					stack.push(this.theBoard[x][y].getAdjacent() + '0');
-					stack.push(y);
-					stack.push(x);
-					this.revealTile(x,y);
-					stack.addAll(this.changes);
-					this.changes.clear();
-					return stack;
-				}
-			}
-		}
-		return stack;
-		*/
+		this.makeMove(randX, randY);
 	}
 
 	/*

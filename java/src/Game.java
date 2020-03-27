@@ -34,43 +34,62 @@ public class Game
 		this.setUpFrame();
 	}
 
+
 	/*
-	* Adds panels to frame, sets close actions, draws frame.
+	* Builds start screen where player chooses board size.
 	*/
-	private void setUpFrame()
+	private void setUpStartScreen()
 	{
-		this.frame.add(this.top, BorderLayout.PAGE_START);
-		this.frame.add(this.panel, BorderLayout.CENTER);
-		this.frame.pack();
-		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.frame.setResizable(false);
-		this.frame.setVisible(true);
+		// Start window with 2 options
+		this.frame = new JFrame("Mine Sweeper!");
+		this.panel = new JPanel();
+		this.panel.setLayout(new GridLayout(1,2));
+		this.listener = new GameListener();
+		this.eight = new JButton();
+		this.eight.setText("8x8 (Easy)");
+		this.eight.setBackground(Color.LIGHT_GRAY);
+		this.eight.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		this.eight.addMouseListener(this.listener);
+		this.sixteen = new JButton();
+		this.sixteen.setText("16x16 (Hard)");
+		this.sixteen.setBackground(Color.LIGHT_GRAY);
+		this.sixteen.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+		this.sixteen.addMouseListener(this.listener);
+		this.panel.add(this.eight);
+		this.panel.add(this.sixteen);
+		this.panel.setPreferredSize(new Dimension(400,400));
 	}
 
 	/*
-	* Puts buttons on top panel
+	* Load all icon images into hash map.  The keys match the characters returned
+	* by tiles toChar() method so changing icons can be done in one line.
 	*/
-	private void setUpTopPanel()
+	private void loadImages()
 	{
-		this.top = new JPanel();
-		this.top.setLayout(new GridLayout(1,4));
-		this.top.setBackground(Color.LIGHT_GRAY);
-		this.restart = new JButton("Restart?");
-		this.restart.setBackground(Color.LIGHT_GRAY);
-		this.restart.setBorder(BorderFactory.createRaisedBevelBorder());
-		this.face = new JButton();
-		this.face.setIcon(this.icons.get('s'));
-		this.face.setBorder(null);
-		this.face.setBackground(Color.LIGHT_GRAY);
-		this.hint = new JButton("Hint?");
-		this.hint.setBackground(Color.LIGHT_GRAY);
-		this.hint.setBorder(BorderFactory.createRaisedBevelBorder());
-		this.top.setBorder(BorderFactory.createLoweredBevelBorder());
-		this.panel.setBorder(BorderFactory.createLoweredBevelBorder());
-		this.top.add(this.hint, 0);
-		this.top.add(this.face,1);
-		this.top.add(this.restart,2);
-		this.top.add(this.theTimer,3);
+		try
+		{
+			icons.put(' ', new ImageIcon("../../img/blank.png"));
+			icons.put('0', new ImageIcon("../../img/0.png"));
+			icons.put('1', new ImageIcon("../../img/1.png"));
+			icons.put('2', new ImageIcon("../../img/2.png"));
+			icons.put('3', new ImageIcon("../../img/3.png"));
+			icons.put('4', new ImageIcon("../../img/4.png"));
+			icons.put('5', new ImageIcon("../../img/5.png"));
+			icons.put('6', new ImageIcon("../../img/6.png"));
+			icons.put('7', new ImageIcon("../../img/7.png"));
+			icons.put('8', new ImageIcon("../../img/8.png"));
+			icons.put('m', new ImageIcon("../../img/mine.png"));
+			icons.put('f', new ImageIcon("../../img/flag.png"));
+			icons.put('b', new ImageIcon("../../img/boom.png"));
+			icons.put('w', new ImageIcon("../../img/wrong.png"));
+			icons.put('s', new ImageIcon("../../img/smile.png"));
+			icons.put('c', new ImageIcon("../../img/click.png"));
+			icons.put('d', new ImageIcon("../../img/dead.png"));
+			icons.put('g', new ImageIcon("../../img/glasses.png"));
+		}
+		catch (Exception e)
+		{
+		}
 	}
 
 	/*
@@ -104,28 +123,42 @@ public class Game
 	}
 
 	/*
-	* Builds start screen where player chooses board size.
+	* Puts buttons on top panel
 	*/
-	private void setUpStartScreen()
+	private void setUpTopPanel()
 	{
-		// Start window with 2 options
-		this.frame = new JFrame("Mine Sweeper!");
-		this.panel = new JPanel();
-		this.panel.setLayout(new GridLayout(1,2));
-		this.listener = new GameListener();
-		this.eight = new JButton();
-		this.eight.setText("8x8 (Easy)");
-		this.eight.setBackground(Color.LIGHT_GRAY);
-		this.eight.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		this.eight.addMouseListener(this.listener);
-		this.sixteen = new JButton();
-		this.sixteen.setText("16x16 (Hard)");
-		this.sixteen.setBackground(Color.LIGHT_GRAY);
-		this.sixteen.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-		this.sixteen.addMouseListener(this.listener);
-		this.panel.add(this.eight);
-		this.panel.add(this.sixteen);
-		this.panel.setPreferredSize(new Dimension(400,400));
+		this.top = new JPanel();
+		this.top.setLayout(new GridLayout(1,4));
+		this.top.setBackground(Color.LIGHT_GRAY);
+		this.restart = new JButton("Restart?");
+		this.restart.setBackground(Color.LIGHT_GRAY);
+		this.restart.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.face = new JButton();
+		this.face.setIcon(this.icons.get('s'));
+		this.face.setBorder(null);
+		this.face.setBackground(Color.LIGHT_GRAY);
+		this.hint = new JButton("Hint?");
+		this.hint.setBackground(Color.LIGHT_GRAY);
+		this.hint.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.top.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.panel.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.top.add(this.hint, 0);
+		this.top.add(this.face,1);
+		this.top.add(this.restart,2);
+		this.top.add(this.theTimer,3);
+	}
+
+	/*
+	* Adds panels to frame, sets close actions, draws frame.
+	*/
+	private void setUpFrame()
+	{
+		this.frame.add(this.top, BorderLayout.PAGE_START);
+		this.frame.add(this.panel, BorderLayout.CENTER);
+		this.frame.pack();
+		this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.frame.setResizable(false);
+		this.frame.setVisible(true);
 	}
 
 	/*
@@ -169,38 +202,6 @@ public class Game
 	}
 
 	/*
-	* Load all icon images into hash map.  The keys match the characters returned
-	* by tiles toChar() method so changing icons can be done in one line.
-	*/
-	private void loadImages()
-	{
-		try
-		{
-			icons.put(' ', new ImageIcon("../../img/blank.png"));
-			icons.put('0', new ImageIcon("../../img/0.png"));
-			icons.put('1', new ImageIcon("../../img/1.png"));
-			icons.put('2', new ImageIcon("../../img/2.png"));
-			icons.put('3', new ImageIcon("../../img/3.png"));
-			icons.put('4', new ImageIcon("../../img/4.png"));
-			icons.put('5', new ImageIcon("../../img/5.png"));
-			icons.put('6', new ImageIcon("../../img/6.png"));
-			icons.put('7', new ImageIcon("../../img/7.png"));
-			icons.put('8', new ImageIcon("../../img/8.png"));
-			icons.put('m', new ImageIcon("../../img/mine.png"));
-			icons.put('f', new ImageIcon("../../img/flag.png"));
-			icons.put('b', new ImageIcon("../../img/boom.png"));
-			icons.put('w', new ImageIcon("../../img/wrong.png"));
-			icons.put('s', new ImageIcon("../../img/smile.png"));
-			icons.put('c', new ImageIcon("../../img/click.png"));
-			icons.put('d', new ImageIcon("../../img/dead.png"));
-			icons.put('g', new ImageIcon("../../img/glasses.png"));
-		}
-		catch (Exception e)
-		{
-		}
-	}
-
-	/*
 	* Adds and enables button for each tile.  Use a button property to track
 	* coordinates instead of doing math.
 	*/
@@ -227,34 +228,25 @@ public class Game
                         }
                 }
 	}
-
-	/*
-	* Reveals tile at x y and adjacent tiles if 0 then redraws board.
-	*/
-	private void revealTiles(int x, int y)
-	{
-		this.gameBoard.makeMove(x,y);
-		this.drawBoard();
-	}
 	
 	/*
 	* Draws the board
 	*/
-	private void drawBoard()
+	private void drawBoard(int x, int y)
 	{
-		Stack<Integer> changes = this.gameBoard.getChanges();
-		
-		int x;
-		int y;
-		int c;
-
-		while(!(changes.empty()))
+		// Display changes
+		ArrayList<Icon> changes = this.gameBoard.getChanges();
+		while(!(changes.isEmpty()))
 		{
-			x = changes.pop();
-			y = changes.pop();
-			c = changes.pop();
-			this.buttonGrid[x][y].setIcon(this.icons.get((char)c));
-		}	
+			Icon i = changes.remove(0);
+			this.buttonGrid[(int)i.getX()][(int)i.getY()].setIcon(i.getChar());
+		}
+
+		// Reveal mines and check flags on loss
+		if (this.gameBoard.getState() == Board.State.LOSS)
+		{
+
+		}
 	}
 
 	/*
@@ -271,64 +263,6 @@ public class Game
 			else
 				this.buttonGrid[x][y].setIcon(this.icons.get(' '));
 		}
-	}
-
-	/*
-	* Called when player clicks on mine.
-	*/
-	private void gameOver(int x, int y)
-	{
-		this.gameBoard.revealTile(x,y);
-		this.buttonGrid[x][y].setIcon(this.icons.get('b'));
-		this.face.setIcon(this.icons.get('d'));
-		this.revealMines();
-		this.revealFlags();
-		this.time.stop();
-	}
-
-	/*
-	* Reveals all mines on the board, called when players dies.
-	*/
-	private void revealMines()
-	{
-		Stack<Integer> mines = this.gameBoard.getMines();
-		int x;
-		int y;
-
-		while(!(mines.isEmpty()))
-		{
-			x = mines.pop();
-			y = mines.pop();
-		
-			this.buttonGrid[x][y].setIcon(this.icons.get('m'));
-		}
-	}
-
-	/*
-	* Reveals all flags on the board, called when player dies.
-	*/
-	private void revealFlags()
-	{
-		Stack<Integer> wrongs = this.gameBoard.getFlags();
-		int x;
-		int y;
-	
-		while(!(wrongs.isEmpty()))
-		{
-			x = wrongs.pop();
-			y = wrongs.pop();
-			
-			this.buttonGrid[x][y].setIcon(this.icons.get('w'));
-		}
-	}
-
-	/*
-	* Called when player hits restart. Creates a new game.
-	*/
-	private void restart()
-	{
-		this.startScreen();
-		this.face.setIcon(this.icons.get('s'));
 	}
 
 	/*
@@ -460,7 +394,8 @@ public class Game
 		private void restartClicked()
 		{
 			this.enabled = true;
-			Game.this.restart();
+			Game.this.startScreen();
+			Game.this.face.setIcon(this.icons.get('s'));
 			this.first = true;
 			Game.this.seconds = 0;
 			Game.this.time.stop();
@@ -476,22 +411,22 @@ public class Game
 				this.first = false;
 			}
 
-			Game.this.revealTiles(x,y);
-
-			// Check if mine was clicked on
-			if (Game.this.gameBoard.getMine(x,y))
-			{
-				Game.this.gameOver(x,y);
-				this.enabled = false;
-			}
-
-			// Check if player has won the game
-			else if(Game.this.gameBoard.checkForWin())
+			Game.this.gameBoard.makeMove(x,y);
+			State state = Game.this.gameBoard.getState();
+	
+			if (state == Board.State.WON)
 			{
 				this.enabled = false;
 				Game.this.face.setIcon(Game.this.icons.get('g'));
 				Game.this.time.stop();
 			}
+			else if (state == Board.State.LOSS)
+			{
+				Game.this.gameOver(x,y);
+				this.enabled = false;
+			}
+
+			Game.this.drawBoard(x, y);
 		}
 
 		public void mouseEntered(MouseEvent e)
