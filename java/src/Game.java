@@ -1,8 +1,9 @@
 import javax.swing.*;
 import javax.swing.border.*;
-import java.awt.*; import java.awt.event.*;
+import java.awt.*; 
+import java.awt.event.*;
 import javax.imageio.ImageIO;
-import java.util.Stack;
+import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.BorderFactory; 
 import javax.swing.border.*;
@@ -239,13 +240,29 @@ public class Game
 		while(!(changes.isEmpty()))
 		{
 			Icon i = changes.remove(0);
-			this.buttonGrid[(int)i.getX()][(int)i.getY()].setIcon(i.getChar());
+			this.buttonGrid[(int)i.getX()][(int)i.getY()].setIcon(Game.this.icons.get(i.getChar()));
 		}
 
 		// Reveal mines and check flags on loss
 		if (this.gameBoard.getState() == Board.State.LOSS)
 		{
+			ArrayList<Icon> flags = this.gameBoard.getFlags();
+			ArrayList<Icon> mines = this.gameBoard.getMines();
 
+			while (!(flags.isEmpty()))
+			{
+				Icon i = flags.remove(0);
+				this.buttonGrid[(int)i.getX()][(int)i.getY()].setIcon(Game.this.icons.get(i.getChar()));
+			}
+
+			while (!(mines.isEmpty()))
+			{
+				Icon i = mines.remove(0);
+				this.buttonGrid[(int)i.getX()][(int)i.getY()].setIcon(Game.this.icons.get(i.getChar()));
+			}
+
+			// Put boom on mine that was clicked
+			this.buttonGrid[x][y].setIcon(Game.this.icons.get('b'));
 		}
 	}
 
@@ -255,31 +272,13 @@ public class Game
 	private void placeFlag(int x, int y)
 	{
 		// Place flag on square if it isn't revealed or is a mine
-		if (!(this.gameBoard.getRevealed(x, y)) || this.gameBoard.getMine(x,y))
+		if (!(this.gameBoard.getRevealed(x, y)))
 		{
 			this.gameBoard.setFlag(x,y);
 			if (this.gameBoard.getFlag(x,y))
 				this.buttonGrid[x][y].setIcon(this.icons.get('f'));
 			else
 				this.buttonGrid[x][y].setIcon(this.icons.get(' '));
-		}
-	}
-
-	/*
-	* Called when players clicks hint. Reveals tile(s)(depending on if a 0 tile was revealed) 
-	* to help player.
-	*/
-	private void doHint()
-	{
-		Stack<Integer> stack = this.gameBoard.hint();
-		
-		while (!(stack.empty()))
-		{
-			int x = stack.pop();
-			int y = stack.pop();
-			int c = stack.pop();
-
-			this.buttonGrid[x][y].setIcon(this.icons.get((char)c));
 		}
 	}
 
@@ -374,8 +373,6 @@ public class Game
 
 		private void hintClicked()
 		{
-			Game.this.doHint();
-			
 			if (this.first)
 			{
 				Game.this.time.start();
@@ -383,19 +380,15 @@ public class Game
 				this.first = false;
 			}
 
-			if (Game.this.gameBoard.checkForWin())
-			{
-				this.enabled = false;
-				Game.this.face.setIcon(Game.this.icons.get('g'));
-				Game.this.time.stop();
-			}
+			Game.this.gameBoard.hint();
+			Game.this.drawBoard(0,0);
 		}
 
 		private void restartClicked()
 		{
 			this.enabled = true;
 			Game.this.startScreen();
-			Game.this.face.setIcon(this.icons.get('s'));
+			Game.this.face.setIcon(Game.this.icons.get('s'));
 			this.first = true;
 			Game.this.seconds = 0;
 			Game.this.time.stop();
@@ -412,7 +405,8 @@ public class Game
 			}
 
 			Game.this.gameBoard.makeMove(x,y);
-			State state = Game.this.gameBoard.getState();
+			Board.State state = Game.this.gameBoard.getState();
+			Game.this.drawBoard(x, y);
 	
 			if (state == Board.State.WON)
 			{
@@ -422,11 +416,11 @@ public class Game
 			}
 			else if (state == Board.State.LOSS)
 			{
-				Game.this.gameOver(x,y);
 				this.enabled = false;
+				Game.this.face.setIcon(Game.this.icons.get('d'));
+				Game.this.time.stop();
 			}
 
-			Game.this.drawBoard(x, y);
 		}
 
 		public void mouseEntered(MouseEvent e)
