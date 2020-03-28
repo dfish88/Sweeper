@@ -133,15 +133,9 @@ def hint(game):
 	if game['state'] is not RUNNING:
 		return []
 
-	found = False
-	for r in range(size):
-		for c in range(size):
-			if board[r][c]['covered'] and not board[r][c]['mine']:
-				x,y = r,c
-				found = True
-				break
-		if found:
-			break
+	while not board[x][y]['covered'] or board[x][y]['mine']:
+		x,y = random.randint(0, size-1), random.randint(0, size-1)
+
 	return make_move(x,y,game)
 
 # Makes a move at x y position
