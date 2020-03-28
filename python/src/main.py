@@ -87,7 +87,9 @@ def hint_clicked(game, render):
 	else:
 		render_game(render, 'hard', game['state'], changes)
 
-	if game['state'] is not RUNNING:
+	if game['state'] is RUNNING:
+		render['smile'].configure(image=render['icons']['s'])
+	else:
 		stop_clock(render)
 
 # Callback method for restart button
@@ -186,10 +188,12 @@ def main():
 	load_icons(icons)
 
 	# Make buttons for top frame
-	hint = tkinter.Button(top_frame, text="Hint?", command=lambda: hint_clicked(game, render))
 	smile = tkinter.Label(top_frame, image=icons['s'])
 	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_clicked(game, render))
 	timer = tkinter.Label(top_frame, text="00:00")
+	hint = tkinter.Button(top_frame, text="Hint?", command=lambda: hint_clicked(game, render))
+	hint.bind("<Button-1>", lambda event : smile.configure(image=icons['c']))
+	hint.bind("<Button-3>", lambda event : smile.configure(image=icons['c']))
 
 	# Place buttons in top frame
 	hint.grid(row=0, column=0, columnspan=2, sticky="nsew")
