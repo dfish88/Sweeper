@@ -293,8 +293,8 @@ public class Game
 
 			JButton button = (JButton) e.getSource();
 			
-			// Only change face once games starts and not on initial screen
-			if (button.equals(Game.this.eight) || button.equals(Game.this.sixteen))
+			// Only change face once games starts and only on tiles
+			if (button.equals(Game.this.eight) || button.equals(Game.this.sixteen) || button.equals((Game.this.hint)))
 				return;
 			Game.this.face.setIcon(Game.this.icons.get('c'));
 		}
@@ -327,7 +327,6 @@ public class Game
 			if (this.enabled == false)
 				return;
 
-			Game.this.face.setIcon(Game.this.icons.get('s'));
 
 			// Hint button clicked
 			if (button.equals(Game.this.hint))
@@ -336,6 +335,7 @@ public class Game
 				return;
 			}
 
+			Game.this.face.setIcon(Game.this.icons.get('s'));
 			Integer[] coordinates = (Integer []) button.getClientProperty("coordinates");
 
 			// Left click reveals tiles, there is a chance a mine has been clicked on.
