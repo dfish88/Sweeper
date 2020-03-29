@@ -192,8 +192,6 @@ def main():
 	restart = tkinter.Button(top_frame, text="Restart?", command=lambda: restart_clicked(game, render))
 	timer = tkinter.Label(top_frame, text="00:00")
 	hint = tkinter.Button(top_frame, text="Hint?", command=lambda: hint_clicked(game, render))
-	hint.bind("<Button-1>", lambda event : smile.configure(image=icons['c']))
-	hint.bind("<Button-3>", lambda event : smile.configure(image=icons['c']))
 
 	# Place buttons in top frame
 	hint.grid(row=0, column=0, columnspan=2, sticky="nsew")
