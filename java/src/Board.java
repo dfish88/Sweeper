@@ -4,19 +4,10 @@ import java.io.*;
 
 public class Board 
 { 
-	public enum State
-	{
-		WON,
-		LOSS,
-		RUNNING
-	}
-
 	private Tile[][] theBoard; 	// Stores all the tiles 
 	private int dimension;		
 	private ArrayList<Icon> changes;	// Stores all changes made
-	private boolean firstMove;	// If this is first move
 	private int tilesLeft;
-	private State state;
 	private Random rand;
 
 	// Used to calculate coordinates of all 8 adjacent tiles
@@ -28,9 +19,7 @@ public class Board
 		this.dimension = dimension;
 		theBoard = new Tile[this.dimension][this.dimension];		
 		this.changes = new ArrayList<>();
-		this.firstMove = true;
 		this.tilesLeft = 0;
-		this.state = State.RUNNING;
 	}
 
 	/*
@@ -43,30 +32,7 @@ public class Board
 		this.dimension = dimension;
 		this.theBoard = board;
 		this.changes = new ArrayList<>();
-		this.firstMove = false;
 		this.tilesLeft = tilesLeft;
-		this.state = State.RUNNING;
-	}
-
-	/*
-	* Picks a random non-mine, non-revealed tile
-	* and makes a move.
-	*/
-	public void hint()
-	{
-		if (this.state != State.RUNNING)
-			return;
-
-		int randX = rand.nextInt(dimension);
-		int randY = rand.nextInt(dimension);
-
-		while (!this.firstMove && (this.theBoard[randX][randY].getRevealed() || this.theBoard[randX][randY].getMine()))
-		{
-			randX = rand.nextInt(dimension);
-			randY = rand.nextInt(dimension);
-		}
-
-		this.makeMove(randX, randY);
 	}
 
 	/*
@@ -75,13 +41,6 @@ public class Board
 	*/
 	public void makeMove(int x, int y)
 	{
-		// Build board if first move (hint or click)
-		if (this.firstMove)
-		{
-			this.buildBoard(x,y);
-			this.firstMove = false;
-		}
-
 		if (this.theBoard[x][y].getRevealed())
 			return;
 
@@ -123,6 +82,46 @@ public class Board
 			this.state = State.WON;
 	}
 
+	/*
+	* Randomly places at most dimension mines on the board.
+	* If there is overlap we simply skip that mine which is
+	* how we can get less than dimension mines.
+	*/
+	public void buildBoard(int x, int y)
+	{
+		Random rand = new Random();
+
+		// Place mines on the board
+		int limit = (int)((this.dimension * this.dimension) / 6);
+		for(int i = 0; i < limit; i++)
+		{
+			int randX = rand.nextInt(dimension);
+			int randY = rand.nextInt(dimension);
+	
+			if(randX == x && randY == y)
+				continue;
+			
+			if (this.theBoard[randX][randY] == null)
+			{
+				this.theBoard[randX][randY] = new Tile(0, true);
+			}
+		}
+
+		// Determine all non-mine tiles
+		int mineCount;
+		for (int i = 0; i < this.dimension; i++)
+                {
+                        for (int j = 0; j < this.dimension; j++)
+                        {       
+				if (this.theBoard[i][j] == null)
+				{
+					mineCount = this.countMines(i,j);
+					this.theBoard[i][j] = new Tile(mineCount, false);
+					this.tilesLeft++;
+				}
+                        }
+                }
+	}
 
 
 	/* PRIVATE HELPERS */
@@ -168,47 +167,6 @@ public class Board
 			}
 			*/
 		}
-	}
-
-	/*
-	* Randomly places at most dimension mines on the board.
-	* If there is overlap we simply skip that mine which is
-	* how we can get less than dimension mines.
-	*/
-	private void buildBoard(int x, int y)
-	{
-		Random rand = new Random();
-
-		// Place mines on the board
-		int limit = (int)((this.dimension * this.dimension) / 6);
-		for(int i = 0; i < limit; i++)
-		{
-			int randX = rand.nextInt(dimension);
-			int randY = rand.nextInt(dimension);
-	
-			if(randX == x && randY == y)
-				continue;
-			
-			if (this.theBoard[randX][randY] == null)
-			{
-				this.theBoard[randX][randY] = new Tile(0, true);
-			}
-		}
-
-		// Determine all non-mine tiles
-		int mineCount;
-		for (int i = 0; i < this.dimension; i++)
-                {
-                        for (int j = 0; j < this.dimension; j++)
-                        {       
-				if (this.theBoard[i][j] == null)
-				{
-					mineCount = this.countMines(i,j);
-					this.theBoard[i][j] = new Tile(mineCount, false);
-					this.tilesLeft++;
-				}
-                        }
-                }
 	}
 
 	/*
