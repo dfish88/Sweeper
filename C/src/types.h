@@ -15,5 +15,4 @@ typedef struct point
 	char c;
 	struct point * next;
 } point;
-
 #endif

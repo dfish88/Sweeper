@@ -1,6 +1,6 @@
 CC = gcc
 FILES = logic.c graphics.c main.c
-CFLAGS = -Wall -g
+CFLAGS = -Wall
 LFLAGS = -lSDL2 -lSDL2_image -lSDL2_ttf -pthread
 OUT = mine
 
