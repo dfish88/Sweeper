@@ -22,7 +22,7 @@ public class GameTimer
 
 	public void startTimer()
 	{
-		this.timer.schedule(task, 1000L);
+		this.timer.scheduleAtFixedRate(task, 0, 1000);
 	}
 
 	public void stopTimer()
