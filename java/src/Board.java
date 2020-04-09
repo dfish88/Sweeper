@@ -39,10 +39,11 @@ public class Board
 	* Reveals a square, used when square is clicked on.  If the tile
 	* is adjacent to 0 mines then it also reveals all adjacent 0 tiles.
 	*/
-	public void makeMove(int x, int y)
+	public State makeMove(int x, int y)
 	{
+		State ret = State.RUNNING;
 		if (this.theBoard[x][y].getRevealed())
-			return;
+			return ret;
 
 		// Reveal current tile
 		this.theBoard[x][y].setRevealed();
@@ -50,7 +51,10 @@ public class Board
 		this.changes.add(new Icon(x, y, this.theBoard[x][y].toChar()));
 
 		if (this.theBoard[x][y].getMine())
-			this.state = State.LOSS;
+		{
+			this.revealMines();
+			ret = State.LOSS;
+		}
 
 		// Create list of all adjacent tiles if tile clicked on is 0
 		ArrayList<Point> adjacent = new ArrayList<>();
@@ -78,8 +82,13 @@ public class Board
 			this.findAdjacentZero(currentX, currentY, adjacent);
 		}
 
-		if (this.state == State.RUNNING && this.tilesLeft <= 0)
-			this.state = State.WON;
+		if (this.tilesLeft <= 0)
+		{
+			ret = State.WON;
+			this.checkFlags();
+		}
+
+		return ret;
 	}
 
 	/*
@@ -196,28 +205,24 @@ public class Board
 		return mineCount;
 	}
 
-	/* GETTERS */
-
 	/*
 	* Returns a list of flags on the board. This will be used to reveal which
 	* flags are correct at the end of the game so we only return flags that are
 	* incorrect.
 	*/
-	public ArrayList<Icon> getFlags()
+	private void checkFlags()
 	{
-		ArrayList<Icon> flags = new ArrayList<>();
 		for (int x = 0; x < this.dimension; x++)
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
 				if (!(this.theBoard[x][y].getRevealed()) && !(this.theBoard[x][y].getMine()) && this.theBoard[x][y].getFlag())
 				{
-					flags.add(new Icon(x, y, 'w'));
+					changes.add(new Icon(x, y, 'w'));
 				}	
 				
 			}
 		}
-		return flags;
 	}
 
 	/*
@@ -225,22 +230,22 @@ public class Board
 	* end of the game so we only need to return the mines that haven't been clicked on
 	* and haven't been flagged.
 	*/
-	public ArrayList<Icon> getMines()
+	private void revealMines()
 	{
-		ArrayList<Icon> mines = new ArrayList<>();
 		for (int x = 0; x < this.dimension; x++)
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
 				if (!(this.theBoard[x][y].getRevealed()) && this.theBoard[x][y].getMine() && !(this.theBoard[x][y].getFlag()))
 				{
-					mines.add(new Icon(x, y, 'm'));
+					changes.add(new Icon(x, y, 'm'));
 				}	
 			}
 		}
-		return mines;
 	}
 	
+	/* GETTERS */
+
 	/*
 	* Returns changes made to board.
 	*/
@@ -260,11 +265,6 @@ public class Board
 		return this.theBoard[x][y].getFlag();
 	}
 
-	public int getDimension()
-	{
-		return this.dimension;
-	}	
-
 	public boolean getMine(int x, int y)
 	{
 		return this.theBoard[x][y].getMine();
@@ -273,14 +273,6 @@ public class Board
 	public boolean getRevealed(int x, int y)
 	{
 		return this.theBoard[x][y].getRevealed();
-	}
-
-	/*
-	* Checks if all non mine tiles have been revealed.
-	*/
-	public State getState()
-	{
-		return this.state;
 	}
 
 	/* SETTERS */
