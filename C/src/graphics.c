@@ -82,28 +82,28 @@ SDL_Texture* load_texture(graphics* g, char* path)
 
 void load_images(graphics* g)
 {
-	g->adjacent[0] = load_texture(g, "../icons/0.png");
-	g->adjacent[1] = load_texture(g, "../icons/1.png");
-	g->adjacent[2] = load_texture(g, "../icons/2.png");
-	g->adjacent[3] = load_texture(g, "../icons/3.png");
-	g->adjacent[4] = load_texture(g, "../icons/4.png");
-	g->adjacent[5] = load_texture(g, "../icons/5.png");
-	g->adjacent[6] = load_texture(g, "../icons/6.png");
-	g->adjacent[7] = load_texture(g, "../icons/7.png");
-	g->adjacent[8] = load_texture(g, "../icons/8.png");
+	g->adjacent[0] = load_texture(g, "../../img/0.png");
+	g->adjacent[1] = load_texture(g, "../../img/1.png");
+	g->adjacent[2] = load_texture(g, "../../img/2.png");
+	g->adjacent[3] = load_texture(g, "../../img/3.png");
+	g->adjacent[4] = load_texture(g, "../../img/4.png");
+	g->adjacent[5] = load_texture(g, "../../img/5.png");
+	g->adjacent[6] = load_texture(g, "../../img/6.png");
+	g->adjacent[7] = load_texture(g, "../../img/7.png");
+	g->adjacent[8] = load_texture(g, "../../img/8.png");
 
-	g->covered = load_texture(g, "../icons/blank.png");
-	g->flag = load_texture(g, "../icons/flag.png");
-	g->mine = load_texture(g, "../icons/mine.png");
-	g->boom = load_texture(g, "../icons/boom.png");
-	g->wrong = load_texture(g, "../icons/wrong.png");
-	g->dead = load_texture(g, "../icons/dead.png");
-	g->glasses = load_texture(g, "../icons/glasses.png");
-	g->happy = load_texture(g, "../icons/smile.png");
-	g->surprise = load_texture(g, "../icons/click.png");
-	g->empty = load_texture(g, "../icons/empty.png");
-	g->hint = load_texture(g, "../icons/hint.png");
-	g->restart = load_texture(g, "../icons/restart.png");
+	g->covered = load_texture(g, "../../img/blank.png");
+	g->flag = load_texture(g, "../../img/flag.png");
+	g->mine = load_texture(g, "../../img/mine.png");
+	g->boom = load_texture(g, "../../img/boom.png");
+	g->wrong = load_texture(g, "../../img/wrong.png");
+	g->dead = load_texture(g, "../../img/dead.png");
+	g->glasses = load_texture(g, "../../img/glasses.png");
+	g->happy = load_texture(g, "../../img/smile.png");
+	g->surprise = load_texture(g, "../../img/click.png");
+	g->empty = load_texture(g, "../../img/empty.png");
+	g->hint = load_texture(g, "../../img/hint.png");
+	g->restart = load_texture(g, "../../img/restart.png");
 }
 
 /******************************
