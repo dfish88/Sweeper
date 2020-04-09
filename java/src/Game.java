@@ -2,7 +2,6 @@ public class Game
 {
 	private Board gameBoard;
 	private Timer gameTimer;
-	private Player player;
 	private int dimension;
 	private boolean firstMove;
 	private State state;
