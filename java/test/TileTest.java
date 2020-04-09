@@ -29,11 +29,22 @@ public class TileTest
 	}
 
 	@Test
-	public void testFlag()
+	public void testFlagValid()
 	{
 		assertFalse(test.getFlag());
 		test.setFlag();	
 		assertTrue(test.getFlag());
+	}
+
+	@Test
+	public void testFlagInvalid()
+	{
+		test.setFlag();	
+		assertTrue(test.getFlag());
+		test.setRevealed();
+		assertFalse(test.getFlag());
+		test.setFlag();
+		assertFalse(test.getFlag());
 	}
 
 	@Test

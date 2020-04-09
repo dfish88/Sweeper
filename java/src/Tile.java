@@ -61,9 +61,14 @@ public class Tile
 
 	/* SETTERS */
 
+	/*
+	* Only covered tiles can be flags so we
+	* set flag to false when tile is revealed
+	*/
 	public void setRevealed()
 	{
 		this.revealed = true;
+		this.flag = false;
 	}
 
 	public void setAdjacent(int adjacentTo)
@@ -76,8 +81,15 @@ public class Tile
 		this.mine = true;
 	}
 
+	/*
+	* Only covered tiles can be flags so
+	* we do nothing if flags are revealed
+	*/
 	public void setFlag()
 	{
+		if (this.revealed)
+			return;
+
 		this.flag = !(this.flag);
 	}
 }
