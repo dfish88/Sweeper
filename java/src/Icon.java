@@ -2,21 +2,21 @@ import java.awt.*;
 
 public class Icon extends Point
 {
-	private char icon;
+	private IconRepresentation rep;
 
-	public Icon(int x, int y, char c)
+	public Icon(int x, int y, IconRepresentation r)
 	{
 		super(x,y);
-		this.setChar(c);
+		this.setRep(r);
 	}
 
-	public void setChar(char c)
+	public void setRep(IconRepresentation r)
 	{
-		this.icon = c;
+		this.rep = r;
 	}
 
-	public char getChar()
+	public String getRep()
 	{
-		return this.icon;
+		return this.rep.getRepresentation();
 	}
 }
