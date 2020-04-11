@@ -16,27 +16,48 @@ public class Tile
 	/* GETTERS */
 
 	/*
-	* Character representation of a tile, used to load icons in the Game class
-	* ' ' if not revealed
-	* 'f' if not revealed and flag placed
-	* # of mines adjacent to if revealed
+	* Returns the Icon Rep of this tile.
 	*/
-	public char toChar()
+	public IconRepresentation getRep()
 	{
 		if (this.revealed)
 		{
 			if (this.mine)
-				return 'b';
+				return IconRepresentation.BOOM;
 			else
-				return Character.forDigit(this.adjacentTo, 10);
+			{
+				switch(this.adjacentTo)
+				{
+					case 0:
+						return IconRepresentation.ZERO;
+					case 1:
+						return IconRepresentation.ONE;
+					case 2:
+						return IconRepresentation.TWO;
+					case 3:
+						return IconRepresentation.THREE;
+					case 4:
+						return IconRepresentation.FOUR;
+					case 5:
+						return IconRepresentation.FIVE;
+					case 6:
+						return IconRepresentation.SIX;
+					case 7:
+						return IconRepresentation.SEVEN;
+					case 8:
+						return IconRepresentation.EIGHT;
+				}
+			}
 		}
 		else
 		{
 			if (this.flag)
-				return 'f';
+				return IconRepresentation.FLAG;
 			else
-				return ' ';
+				return IconRepresentation.COVERED;
 		}
+		// Should never get here
+		return IconRepresentation.EMPTY;
 	}
 	
 	public int getAdjacent()

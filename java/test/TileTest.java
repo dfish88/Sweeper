@@ -65,30 +65,30 @@ public class TileTest
 
 
 	@Test
-	public void testToCharCovered()
+	public void testGetRepCovered()
 	{
-		assertEquals(test.toChar(), ' ');
+		assertEquals(test.getRep(), IconRepresentation.COVERED);
 	}
 
 	@Test
-	public void testToCharFlag()
+	public void testGetRepFlag()
 	{
 		test.setFlag();
-		assertEquals(test.toChar(), 'f');
+		assertEquals(test.getRep(), IconRepresentation.FLAG);
 	}
 
 	@Test
-	public void testToCharMine()
+	public void testGetRepMine()
 	{
 		test.setMine();
 		test.setRevealed();
-		assertEquals(test.toChar(), 'b');
+		assertEquals(test.getRep(), IconRepresentation.BOOM);
 	}
 
 	@Test
-	public void testToCharAdjacent()
+	public void testGetRepAdjacent()
 	{
 		test.setRevealed();
-		assertEquals(test.toChar(), '2');
+		assertEquals(test.getRep(), IconRepresentation.TWO);
 	}
 }
