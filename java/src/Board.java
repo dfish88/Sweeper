@@ -48,11 +48,12 @@ public class Board
 		// Reveal current tile
 		this.theBoard[x][y].setRevealed();
 		this.tilesLeft--;
-		this.changes.add(new Icon(x, y, this.theBoard[x][y].toChar()));
+		this.changes.add(new Icon(x, y, this.theBoard[x][y].getRep()));
 
 		if (this.theBoard[x][y].getMine())
 		{
 			this.revealMines();
+			this.checkFlags();
 			ret = State.LOSS;
 		}
 
@@ -75,7 +76,7 @@ public class Board
 			{
 				this.theBoard[currentX][currentY].setRevealed();
 				this.tilesLeft--;
-				this.changes.add(new Icon(currentX, currentY, this.theBoard[currentX][currentY].toChar()));
+				this.changes.add(new Icon(currentX, currentY, this.theBoard[currentX][currentY].getRep()));
 			}
 
 			// Add adjacent 0 tiles to list
@@ -160,7 +161,7 @@ public class Board
 					if(!(this.theBoard[currentX][currentY].getRevealed()))
 					{
 						this.theBoard[currentX][currentY].setRevealed();
-						this.changes.add(new Icon(currentX, currentY, this.theBoard[currentX][currentY].toChar()));
+						this.changes.add(new Icon(currentX, currentY, this.theBoard[currentX][currentY].getRep()));
 						this.tilesLeft--;
 					}
 				}
@@ -208,7 +209,7 @@ public class Board
 	/*
 	* Returns a list of flags on the board. This will be used to reveal which
 	* flags are correct at the end of the game so we only return flags that are
-	* incorrect.
+	* incorrect and leave correct ones as they are.
 	*/
 	private void checkFlags()
 	{
@@ -216,9 +217,9 @@ public class Board
 		{
 			for (int y = 0; y < this.dimension; y++)
 			{
-				if (!(this.theBoard[x][y].getRevealed()) && !(this.theBoard[x][y].getMine()) && this.theBoard[x][y].getFlag())
+				if (!(this.theBoard[x][y].getMine()) && this.theBoard[x][y].getFlag())
 				{
-					changes.add(new Icon(x, y, 'w'));
+					changes.add(new Icon(x, y, IconRepresentation.FLAG_WRONG));
 				}	
 				
 			}
@@ -238,7 +239,7 @@ public class Board
 			{
 				if (!(this.theBoard[x][y].getRevealed()) && this.theBoard[x][y].getMine() && !(this.theBoard[x][y].getFlag()))
 				{
-					changes.add(new Icon(x, y, 'm'));
+					changes.add(new Icon(x, y, IconRepresentation.MINE));
 				}	
 			}
 		}

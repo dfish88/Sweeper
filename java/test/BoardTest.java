@@ -115,35 +115,40 @@ public class BoardTest
 
 		assertEquals((int)change.getX(), 1);
 		assertEquals((int)change.getY(), 1);
-		assertEquals(change.getChar(), '1');
+		assertEquals(change.getRep(), IconRepresentation.ONE);
 		assertTrue(changes.isEmpty());
+	}
+
+	@Test
+	public void testRunning()
+	{
+		this.setUpTwoMines();
+		State s = this.test.makeMove(0,2);
+		assertEquals(s, State.RUNNING);
 	}
 
 	@Test
 	public void testWinEightMines()
 	{
 		this.setUpEightMines();
-		assertEquals(this.test.getState(), Board.State.RUNNING);
-		this.test.makeMove(1,1);
-		assertEquals(this.test.getState(), Board.State.WON);
+		State s = this.test.makeMove(1,1);
+		assertEquals(s, State.WON);
 	}
 
 	@Test
 	public void testWinOneMine()
 	{
 		this.setUpOneMine();
-		assertEquals(this.test.getState(), Board.State.RUNNING);
-		this.test.makeMove(0,0);
-		assertEquals(this.test.getState(), Board.State.WON);
+		State s = this.test.makeMove(0,0);
+		assertEquals(s, State.WON);
 	}
 
 	@Test
 	public void testLoss()
 	{
 		this.setUpOneMine();
-		assertEquals(this.test.getState(), Board.State.RUNNING);
-		this.test.makeMove(2,2);
-		assertEquals(this.test.getState(), Board.State.LOSS);
+		State s = this.test.makeMove(2,2);
+		assertEquals(s, State.LOSS);
 	}
 
 	@Test
@@ -162,66 +167,39 @@ public class BoardTest
 	}
 
 	@Test
-	public void testGetFlagsIncorrect()
+	public void testFlagIncorrect()
 	{
 		this.setUpOneMine();
 		this.test.setFlag(0,0);
-		this.test.setFlag(1,1);
+		this.test.makeMove(2,2);
 
-		ArrayList<Icon> flags = this.test.getFlags();
-		
-		assertEquals(flags.size(), 2);
+		ArrayList<Icon> changes = this.test.getChanges();
+		assertEquals(2, changes.size());
 
-		int x;
-		int y;
-		while (!flags.isEmpty())
+		while (!changes.isEmpty())
 		{
-			Icon flag = flags.remove(0);
-		
-			x = (int)flag.getX();
-			y = (int)flag.getY();
-	
-			assertTrue((x == 1 && y == 1) || (x == 0 && y == 0));
-			assertEquals(flag.getChar(), 'w');
+			Icon change = changes.remove(0);
+			int x = change.getX();
+			int y = change.getY();
+			IconRepresentation r = change.getRep();
+			assertTrue((x == 0 && y == 0 && r == IconRepresentation.FLAG_WRONG) || (x == 2 && y == 2 && r == IconRepresentation.BOOM));
 		}
 	}
 
 	@Test
-	public void testGetFlagCorrect()
-	{
-		this.setUpOneMine();
-		this.test.setFlag(2,2);
-
-		ArrayList<Icon> flags = this.test.getFlags();
-		assertTrue(flags.isEmpty());
-	}
-
-	@Test
-	public void testGetMinesNoFlags()
-	{
-		this.setUpOneMine();
-
-		ArrayList<Icon> mines = this.test.getMines();
-		assertEquals(mines.size(), 1);
-
-		Icon mine = mines.get(0);
-
-		assertEquals((int)mine.getX(), 2);
-		assertEquals((int)mine.getY(), 2);
-	}
-
-	@Test
-	public void testGetMinesFlags()
+	public void testFlagCorrect()
 	{
 		this.setUpTwoMines();
-		this.test.setFlag(0,0);
+		this.test.setFlag(2,2);
+		this.test.makeMove(0,0);
 
-		ArrayList<Icon> mines = this.test.getMines();
-		assertEquals(mines.size(), 1);
+		ArrayList<Icon> changes = this.test.getChanges();
+		assertEquals(1, changes.size());
 
-		Icon mine = mines.get(0);
-
-		assertEquals((int)mine.getX(), 2);
-		assertEquals((int)mine.getY(), 2);
+		Icon change = changes.get(0);
+		assertEquals(0, change.getX());
+		assertEquals(0, change.getY());
+		assertEquals(IconRepresentation.BOOM, change.getRep());
+		
 	}
 }
