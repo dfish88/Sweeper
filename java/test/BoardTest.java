@@ -8,109 +8,44 @@ import java.util.*;
 
 public class BoardTest
 {
-	private Board test;
-	private Tile[][] testBoard;	
+	private Board testBoard;
 	private int dimension;
-
-	@Before
-	public void setUp()
-	{
-		// Create a 3x3 board with all 0 tiles (no mines)
-		this.dimension = 3;
-		this.testBoard = new Tile[this.dimension][this.dimension];
-		for (int i = 0; i < this.dimension; i++)
-		{
-			for (int j = 0; j < this.dimension; j++)
-			{
-				this.testBoard[i][j] = new Tile(0, false);
-			}
-		}
-	}
-
-	public void setUpOneMine()
-	{
-		/*
-		 * |0|0|0|
-		 * |0|1|1|
-		 * |0|1|m|
-		 */
-		this.testBoard[2][2].setMine();
-		this.testBoard[1][1].setAdjacent(1);
-		this.testBoard[2][1].setAdjacent(1);
-		this.testBoard[1][2].setAdjacent(1);
-		this.test = new Board(this.dimension, this.testBoard, (this.dimension*this.dimension)-1);
-	}
-
-	public void setUpTwoMines()
-	{
-		/*
-		 * |m|1|0|
-		 * |1|2|1|
-		 * |0|1|m|
-		 */
-		this.testBoard[2][2].setMine();
-		this.testBoard[0][0].setMine();
-		this.testBoard[1][1].setAdjacent(2);
-		this.testBoard[2][1].setAdjacent(1);
-		this.testBoard[1][2].setAdjacent(1);
-		this.testBoard[1][0].setAdjacent(1);
-		this.testBoard[0][1].setAdjacent(1);
-		this.test = new Board(this.dimension, this.testBoard, (this.dimension*this.dimension)-2);
-	}
-
-	public void setUpEightMines()
-	{
-		/*
-		 * |m|m|m|
-		 * |m|8|m|
-		 * |m|m|m|
-		 */
-		this.testBoard[0][0].setMine();
-		this.testBoard[0][1].setMine();
-		this.testBoard[0][2].setMine();
-		this.testBoard[1][0].setMine();
-		this.testBoard[1][2].setMine();
-		this.testBoard[2][0].setMine();
-		this.testBoard[2][1].setMine();
-		this.testBoard[2][2].setMine();
-		this.testBoard[1][1].setAdjacent(8);
-		this.test = new Board(this.dimension, this.testBoard, 1);
-	}
 
 	@After
 	public void tearDown()
 	{
 		this.testBoard = null;
-		this.test = null;
 	}
 
 	@Test
-	public void testFlag()
+	public void testBoardValidFlag()
 	{
 		this.setUpOneMine();
-		assertFalse(this.test.getFlag(0,0));
-		test.setFlag(0,0);
-		assertTrue(this.test.getFlag(0,0));
-		test.setFlag(0,0);
-		assertFalse(this.test.getFlag(0,0));
+		assertFalse(this.testBoard.getFlag(0,0));
+		this.testBoard.setFlag(0,0);
+		assertTrue(this.testBoard.getFlag(0,0));
+		this.testBoard.setFlag(0,0);
+		assertFalse(this.testBoard.getFlag(0,0));
 	}
 
 	@Test
-	public void testMine()
+	public void testBoardInvalidFlag()
 	{
 		this.setUpOneMine();
-		assertFalse(this.test.getMine(0,0));
-		assertTrue(this.test.getMine(2,2));
+		this.testBoard.makeMove(1,1);
+		assertFalse(this.testBoard.getFlag(1,1));
+		this.testBoard.setFlag(1,1);
+		assertFalse(this.testBoard.getFlag(1,1));
 	}
 
 	@Test
-	public void testRevealOneTile()
+	public void testBoardRevealOneTile()
 	{
 		this.setUpOneMine();
-		assertFalse(this.test.getRevealed(1,1));
-		this.test.makeMove(1,1);
+		assertFalse(this.testBoard.getRevealed(1,1));
+		this.testBoard.makeMove(1,1);
 
-		ArrayList<Icon> changes = this.test.getChanges();
+		ArrayList<Icon> changes = this.testBoard.getChanges();
 		Icon change = changes.remove(0);
 
 		assertEquals((int)change.getX(), 1);
@@ -120,60 +55,60 @@ public class BoardTest
 	}
 
 	@Test
-	public void testRunning()
+	public void testBoardRunning()
 	{
 		this.setUpTwoMines();
-		State s = this.test.makeMove(0,2);
+		State s = this.testBoard.makeMove(0,2);
 		assertEquals(s, State.RUNNING);
 	}
 
 	@Test
-	public void testWinEightMines()
+	public void testBoardWinEightMines()
 	{
 		this.setUpEightMines();
-		State s = this.test.makeMove(1,1);
+		State s = this.testBoard.makeMove(1,1);
 		assertEquals(s, State.WON);
 	}
 
 	@Test
-	public void testWinOneMine()
+	public void testBoardWinOneMine()
 	{
 		this.setUpOneMine();
-		State s = this.test.makeMove(0,0);
+		State s = this.testBoard.makeMove(0,0);
 		assertEquals(s, State.WON);
 	}
 
 	@Test
-	public void testLoss()
+	public void testBoardLoss()
 	{
 		this.setUpOneMine();
-		State s = this.test.makeMove(2,2);
+		State s = this.testBoard.makeMove(2,2);
 		assertEquals(s, State.LOSS);
 	}
 
 	@Test
-	public void testMoveTwoMines()
+	public void testRevealTwoMines()
 	{
 		this.setUpTwoMines();
-		this.test.makeMove(0,2);
+		this.testBoard.makeMove(0,2);
 
-		assertTrue(this.test.getRevealed(0,2));
-		assertTrue(this.test.getRevealed(0,1));
-		assertTrue(this.test.getRevealed(1,1));
-		assertTrue(this.test.getRevealed(1,2));
-		assertFalse(this.test.getRevealed(1,0));
-		assertFalse(this.test.getRevealed(2,0));
-		assertFalse(this.test.getRevealed(2,1));
+		assertTrue(this.testBoard.getRevealed(0,2));
+		assertTrue(this.testBoard.getRevealed(0,1));
+		assertTrue(this.testBoard.getRevealed(1,1));
+		assertTrue(this.testBoard.getRevealed(1,2));
+		assertFalse(this.testBoard.getRevealed(1,0));
+		assertFalse(this.testBoard.getRevealed(2,0));
+		assertFalse(this.testBoard.getRevealed(2,1));
 	}
 
 	@Test
-	public void testFlagIncorrect()
+	public void testBoardFlagIncorrect()
 	{
 		this.setUpOneMine();
-		this.test.setFlag(0,0);
-		this.test.makeMove(2,2);
+		this.testBoard.setFlag(0,0);
+		this.testBoard.makeMove(2,2);
 
-		ArrayList<Icon> changes = this.test.getChanges();
+		ArrayList<Icon> changes = this.testBoard.getChanges();
 		assertEquals(2, changes.size());
 
 		while (!changes.isEmpty())
@@ -187,13 +122,13 @@ public class BoardTest
 	}
 
 	@Test
-	public void testFlagCorrect()
+	public void testBoardFlagCorrect()
 	{
 		this.setUpTwoMines();
-		this.test.setFlag(2,2);
-		this.test.makeMove(0,0);
+		this.testBoard.setFlag(2,2);
+		this.testBoard.makeMove(0,0);
 
-		ArrayList<Icon> changes = this.test.getChanges();
+		ArrayList<Icon> changes = this.testBoard.getChanges();
 		assertEquals(1, changes.size());
 
 		Icon change = changes.get(0);
@@ -201,5 +136,127 @@ public class BoardTest
 		assertEquals(0, change.getY());
 		assertEquals(IconRepresentation.BOOM, change.getRep());
 		
+	}
+
+	public void setUpOneMine()
+	{
+		this.dimension = 3;
+		AbstractMineField field = new OneMineField(this.dimension);
+		this.testBoard = new Board(this.dimension, field);
+	}
+
+	public void setUpTwoMines()
+	{
+		this.dimension = 3;
+		AbstractMineField field = new TwoMineField(this.dimension);
+		this.testBoard = new Board(this.dimension, field);
+	}
+
+	public void setUpEightMines()
+	{
+		this.dimension = 3;
+		AbstractMineField field = new EightMineField(this.dimension);
+		this.testBoard = new Board(this.dimension, field);
+	}
+
+	public class OneMineField extends AbstractMineField
+	{
+		public OneMineField(int dimension)
+		{
+			this.tilesLeft = 8;
+			this.buildField(dimension);
+		}
+
+		private void buildField(int dimension)
+		{
+			this.field = new Tile[dimension][dimension];
+			for (int i = 0; i < dimension; i++)
+			{
+				for (int j = 0; j < dimension; j++)
+				{       
+					this.field[i][j] = new Tile(0, false);
+				}
+			}
+
+			/*
+			 * |0|0|0|
+			 * |0|1|1|
+			 * |0|1|m|
+			 */
+			this.field[2][2].setMine();
+			this.field[1][1].setAdjacent(1);
+			this.field[2][1].setAdjacent(1);
+			this.field[1][2].setAdjacent(1);
+		}
+	}
+
+	public class TwoMineField extends AbstractMineField
+	{
+		public TwoMineField(int dimension)
+		{
+			this.tilesLeft = 7;
+			this.buildField(dimension);
+		}
+
+		private void buildField(int dimension)
+		{
+			this.field = new Tile[dimension][dimension];
+			for (int i = 0; i < dimension; i++)
+			{
+				for (int j = 0; j < dimension; j++)
+				{       
+					this.field[i][j] = new Tile(0, false);
+				}
+			}
+
+			/*
+			 * |m|1|0|
+			 * |1|2|1|
+			 * |0|1|m|
+			 */
+			this.field[2][2].setMine();
+			this.field[0][0].setMine();
+			this.field[1][1].setAdjacent(2);
+			this.field[2][1].setAdjacent(1);
+			this.field[1][2].setAdjacent(1);
+			this.field[1][0].setAdjacent(1);
+			this.field[0][1].setAdjacent(1);
+		}
+	}
+
+	public class EightMineField extends AbstractMineField
+	{
+		public EightMineField(int dimension)
+		{
+			this.tilesLeft = 1;
+			this.buildField(dimension);
+		}
+
+		private void buildField(int dimension)
+		{
+			this.field = new Tile[dimension][dimension];
+			for (int i = 0; i < dimension; i++)
+			{
+				for (int j = 0; j < dimension; j++)
+				{       
+					this.field[i][j] = new Tile(0, false);
+				}
+			}
+
+			/*
+			 * |m|m|m|
+			 * |m|8|m|
+			 * |m|m|m|
+			 */
+			this.field[0][0].setMine();
+			this.field[0][1].setMine();
+			this.field[0][2].setMine();
+			this.field[1][0].setMine();
+			this.field[1][2].setMine();
+			this.field[2][0].setMine();
+			this.field[2][1].setMine();
+			this.field[2][2].setMine();
+			this.field[1][1].setAdjacent(8);
+		}
 	}
 }
