@@ -1,3 +1,5 @@
+import java.util.*;
+
 public class Game
 {
 	private Board gameBoard;
@@ -8,23 +10,10 @@ public class Game
 
 	public Game(int dimension)
 	{
-		this.gameBoard = new Board(dimenstion);
-		this.dimension = dimension;
-		this.gameTimer = new Timer();
-		this.player = new Player();
-		this.firstMove = false;
-		this.state = State.RUNNING;
 	}
 
 	public void makeMove(int x, int y)
 	{
-		if (this.firstMove)
-		{
-			this.gameBoard.buildBoard(x, y);
-			this.firstMove = false;
-		}
-
-		this.gameBoard.makeMove(x, y);
 	}
 
 	/*
