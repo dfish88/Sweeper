@@ -18,8 +18,6 @@ public class Board
 		this.changes = new ArrayList<>();
 	}
 
-	/* GETTERS */
-
 	/*
 	* Returns changes made to board.
 	*/
@@ -31,25 +29,15 @@ public class Board
 		return ret;
 	}
 
-	/*
-	* Does this tile have a flag?
-	*/
-	public boolean getFlag(int x, int y)
+	public boolean getRevealed(int x, int y)
 	{
-		return this.field.getFlag(x, y);
+		return this.field.getRevealed(x, y);
 	}
 
 	public boolean getMine(int x, int y)
 	{
 		return this.field.getMine(x, y);
 	}
-
-	public boolean getRevealed(int x, int y)
-	{
-		return this.field.getRevealed(x, y);
-	}
-
-	/* SETTERS */
 
 	public void setFlag(int x, int y)
 	{

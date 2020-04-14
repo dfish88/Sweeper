@@ -20,12 +20,12 @@ public class GameTimer
 		};
 	}
 
-	public void startTimer()
+	public void start()
 	{
 		this.timer.scheduleAtFixedRate(task, 0, 1000);
 	}
 
-	public void stopTimer()
+	public void stop()
 	{
 		this.timer.cancel();
 	}

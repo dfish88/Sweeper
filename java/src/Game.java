@@ -3,27 +3,46 @@ import java.util.*;
 public class Game
 {
 	private Board gameBoard;
-	private Timer gameTimer;
+	private GameTimer gameTimer;
 	private int dimension;
 	private boolean firstMove;
 	private State state;
 
 	public Game(int dimension)
 	{
+		this.firstMove = true;
+		this.dimension = dimension;
+		this.state = State.RUNNING;
+		this.gameTimer = new GameTimer();
 	}
 
-	public void makeMove(int x, int y)
+	public State makeMove(int x, int y)
 	{
+		if (this.firstMove)
+		{
+			this.firstMove = false;
+			AbstractMineField field = new MineField(x, y, this.dimension);
+			this.gameBoard = new Board(this.dimension, field);
+			this.gameTimer.start();
+		}
+
+		this.state = this.gameBoard.makeMove(x, y);
+		if (this.state != State.RUNNING)
+			this.gameTimer.stop();
+
+		return this.state;
 	}
 
 	/*
 	* Picks a random non-mine, non-revealed tile
 	* and makes a move.
 	*/
-	public void hint()
+	public State hint()
 	{
 		if (this.state != State.RUNNING)
-			return;
+			return this.state;
+
+		Random rand = new Random();
 
 		int randX = rand.nextInt(this.dimension);
 		int randY = rand.nextInt(this.dimension);
@@ -34,12 +53,21 @@ public class Game
 			randY = rand.nextInt(this.dimension);
 		}
 
-		this.gameBoard.makeMove(randX, randY);
+		return this.makeMove(randX, randY);
 	}
 
-	public void placeFlag()
-	{}
+	public void placeFlag(int x, int y)
+	{
+		this.gameBoard.setFlag(x, y);
+	}
 
-	public void restart()
-	{}
+	public ArrayList<Icon> getChanges()
+	{
+		return this.gameBoard.getChanges();
+	}
+
+	public String getGameTime()
+	{
+		return this.gameTimer.getTime();
+	}
 }
