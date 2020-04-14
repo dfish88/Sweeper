@@ -67,14 +67,14 @@ public class TileTest
 	@Test
 	public void testGetRepCovered()
 	{
-		assertEquals(test.getRep(), IconRepresentation.COVERED);
+		assertEquals(IconRepresentation.COVERED, test.getRep());
 	}
 
 	@Test
 	public void testGetRepFlag()
 	{
 		test.setFlag();
-		assertEquals(test.getRep(), IconRepresentation.FLAG);
+		assertEquals(IconRepresentation.FLAG, test.getRep());
 	}
 
 	@Test
@@ -82,13 +82,13 @@ public class TileTest
 	{
 		test.setMine();
 		test.setRevealed();
-		assertEquals(test.getRep(), IconRepresentation.BOOM);
+		assertEquals(IconRepresentation.BOOM, test.getRep());
 	}
 
 	@Test
 	public void testGetRepAdjacent()
 	{
 		test.setRevealed();
-		assertEquals(test.getRep(), IconRepresentation.TWO);
+		assertEquals(IconRepresentation.TWO, test.getRep());
 	}
 }

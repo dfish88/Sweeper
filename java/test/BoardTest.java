@@ -48,9 +48,9 @@ public class BoardTest
 		ArrayList<Icon> changes = this.testBoard.getChanges();
 		Icon change = changes.remove(0);
 
-		assertEquals((int)change.getX(), 1);
-		assertEquals((int)change.getY(), 1);
-		assertEquals(change.getRep(), IconRepresentation.ONE);
+		assertEquals(1, (int)change.getX());
+		assertEquals(1, (int)change.getY());
+		assertEquals(IconRepresentation.ONE, change.getRep());
 		assertTrue(changes.isEmpty());
 	}
 
@@ -59,7 +59,7 @@ public class BoardTest
 	{
 		this.setUpTwoMines();
 		State s = this.testBoard.makeMove(0,2);
-		assertEquals(s, State.RUNNING);
+		assertEquals(State.RUNNING, s);
 	}
 
 	@Test
@@ -67,7 +67,7 @@ public class BoardTest
 	{
 		this.setUpEightMines();
 		State s = this.testBoard.makeMove(1,1);
-		assertEquals(s, State.WON);
+		assertEquals(State.WON, s);
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class BoardTest
 	{
 		this.setUpOneMine();
 		State s = this.testBoard.makeMove(0,0);
-		assertEquals(s, State.WON);
+		assertEquals(State.WON, s);
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class BoardTest
 	{
 		this.setUpOneMine();
 		State s = this.testBoard.makeMove(2,2);
-		assertEquals(s, State.LOSS);
+		assertEquals(State.LOSS, s);
 	}
 
 	@Test
@@ -132,8 +132,8 @@ public class BoardTest
 		assertEquals(1, changes.size());
 
 		Icon change = changes.get(0);
-		assertEquals(0, change.getX());
-		assertEquals(0, change.getY());
+		assertEquals(change.getX(), 0);
+		assertEquals(change.getY(), 0);
 		assertEquals(IconRepresentation.BOOM, change.getRep());
 		
 	}

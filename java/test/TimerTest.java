@@ -29,7 +29,8 @@ public class TimerTest
 	public void getTimeBeforeStart()
 	{
 		String t = test.getTime();
-		assertEquals("00 : 00", t);
+		String expectedTime = "00 : 00";
+		assertEquals(expectedTime, t);
 	}
 
 	@Test 
@@ -48,6 +49,7 @@ public class TimerTest
 
 		test.stopTimer();
 		String t = test.getTime();
-		assertEquals("00 : 02", t);
+		String expectedTime = "00 : 02";
+		assertEquals(expectedTime, t);
 	}
 }
