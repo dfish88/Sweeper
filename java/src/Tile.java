@@ -16,48 +16,48 @@ public class Tile
 	/* GETTERS */
 
 	/*
-	* Returns the Icon Rep of this tile.
+	* Returns the representation of this tile.
 	*/
-	public IconRepresentation getRep()
+	public TileRepresentation getRep()
 	{
 		if (this.revealed)
 		{
 			if (this.mine)
-				return IconRepresentation.BOOM;
+				return TileRepresentation.BOOM;
 			else
 			{
 				switch(this.adjacentTo)
 				{
 					case 0:
-						return IconRepresentation.ZERO;
+						return TileRepresentation.ZERO;
 					case 1:
-						return IconRepresentation.ONE;
+						return TileRepresentation.ONE;
 					case 2:
-						return IconRepresentation.TWO;
+						return TileRepresentation.TWO;
 					case 3:
-						return IconRepresentation.THREE;
+						return TileRepresentation.THREE;
 					case 4:
-						return IconRepresentation.FOUR;
+						return TileRepresentation.FOUR;
 					case 5:
-						return IconRepresentation.FIVE;
+						return TileRepresentation.FIVE;
 					case 6:
-						return IconRepresentation.SIX;
+						return TileRepresentation.SIX;
 					case 7:
-						return IconRepresentation.SEVEN;
+						return TileRepresentation.SEVEN;
 					case 8:
-						return IconRepresentation.EIGHT;
+						return TileRepresentation.EIGHT;
 				}
 			}
 		}
 		else
 		{
 			if (this.flag)
-				return IconRepresentation.FLAG;
+				return TileRepresentation.FLAG;
 			else
-				return IconRepresentation.COVERED;
+				return TileRepresentation.COVERED;
 		}
 		// Should never get here
-		return IconRepresentation.EMPTY;
+		return TileRepresentation.EMPTY;
 	}
 	
 	public int getAdjacent()

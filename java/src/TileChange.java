@@ -1,12 +1,12 @@
 import java.awt.*;
 
-public class Icon
+public class TileChange
 {
-	private IconRepresentation rep;
+	private TileRepresentation rep;
 	private int x;
 	private int y;
 
-	public Icon(int x, int y, IconRepresentation r)
+	public TileChange(int x, int y, TileRepresentation r)
 	{
 		this.x = x;
 		this.y = y;
@@ -23,12 +23,12 @@ public class Icon
 		return this.y;
 	}
 
-	public void setRep(IconRepresentation r)
+	public void setRep(TileRepresentation r)
 	{
 		this.rep = r;
 	}
 
-	public IconRepresentation getRep()
+	public TileRepresentation getRep()
 	{
 		return this.rep;
 	}

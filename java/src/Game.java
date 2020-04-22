@@ -61,7 +61,7 @@ public class Game
 		this.gameBoard.setFlag(x, y);
 	}
 
-	public ArrayList<Icon> getChanges()
+	public ArrayList<TileChange> getChanges()
 	{
 		return this.gameBoard.getChanges();
 	}

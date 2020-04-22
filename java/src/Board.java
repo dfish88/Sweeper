@@ -6,7 +6,7 @@ public class Board
 { 
 	private AbstractMineField field; 	// Stores all the tiles
 	private int dimension;		
-	private ArrayList<Icon> changes;	// Stores all changes made
+	private ArrayList<TileChange> changes;	// Stores all changes made
 
 	/*
 	* Creates a Board object with a MineField being injected.
@@ -21,9 +21,9 @@ public class Board
 	/*
 	* Returns changes made to board.
 	*/
-	public ArrayList<Icon> getChanges()
+	public ArrayList<TileChange> getChanges()
 	{
-		ArrayList<Icon> ret = new ArrayList<>();
+		ArrayList<TileChange> ret = new ArrayList<>();
 		ret.addAll(this.changes);
 		this.changes.clear();
 		return ret;
@@ -56,7 +56,7 @@ public class Board
 
 		// Reveal current tile
 		this.field.setRevealed(x,y);
-		this.changes.add(new Icon(x, y, this.field.getRep(x,y)));
+		this.changes.add(new TileChange(x, y, this.field.getRep(x,y)));
 
 		if (this.field.getMine(x,y))
 		{
@@ -83,7 +83,7 @@ public class Board
 			if (!(this.field.getRevealed(currentX, currentY)))
 			{
 				this.field.setRevealed(currentX, currentY);
-				this.changes.add(new Icon(currentX, currentY, this.field.getRep(currentX, currentY)));
+				this.changes.add(new TileChange(currentX, currentY, this.field.getRep(currentX, currentY)));
 			}
 
 			// Add adjacent 0 tiles to list
@@ -129,7 +129,7 @@ public class Board
 					if(!(this.field.getRevealed(currentX, currentY)))
 					{
 						this.field.setRevealed(currentX, currentY);
-						this.changes.add(new Icon(currentX, currentY, this.field.getRep(currentX, currentY)));
+						this.changes.add(new TileChange(currentX, currentY, this.field.getRep(currentX, currentY)));
 					}
 				}
 			}
@@ -154,7 +154,7 @@ public class Board
 			{
 				if (!(this.field.getMine(x, y)) && this.field.getFlag(x, y))
 				{
-					changes.add(new Icon(x, y, IconRepresentation.FLAG_WRONG));
+					changes.add(new TileChange(x, y, TileRepresentation.FLAG_WRONG));
 				}	
 				
 			}
@@ -174,7 +174,7 @@ public class Board
 			{
 				if (!(this.field.getRevealed(x, y)) && this.field.getMine(x, y) && !(this.field.getFlag(x, y)))
 				{
-					changes.add(new Icon(x, y, IconRepresentation.MINE));
+					changes.add(new TileChange(x, y, TileRepresentation.MINE));
 				}	
 			}
 		}

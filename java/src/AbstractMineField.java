@@ -36,7 +36,7 @@ public abstract class AbstractMineField
 		return this.field[x][y].getAdjacent();
 	}
 
-	public IconRepresentation getRep(int x, int y)
+	public TileRepresentation getRep(int x, int y)
 	{
 		return this.field[x][y].getRep();
 	}
