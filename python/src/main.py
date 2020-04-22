@@ -119,7 +119,7 @@ def load_icons(img_dic):
 	img_dic['6'] = tkinter.PhotoImage(file="../../img/6.png")
 	img_dic['7'] = tkinter.PhotoImage(file="../../img/7.png")
 	img_dic['8'] = tkinter.PhotoImage(file="../../img/8.png")
-	img_dic['b'] = tkinter.PhotoImage(file="../../img/blank.png")
+	img_dic['b'] = tkinter.PhotoImage(file="../../img/covered.png")
 	img_dic['bm'] = tkinter.PhotoImage(file="../../img/boom.png")
 	img_dic['c'] = tkinter.PhotoImage(file="../../img/click.png")
 	img_dic['d'] = tkinter.PhotoImage(file="../../img/dead.png")
