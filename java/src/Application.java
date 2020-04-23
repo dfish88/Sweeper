@@ -1,19 +1,24 @@
 import java.util.ArrayList;
+import java.util.Timer; 
+import java.util.TimerTask;
 
 public class Application implements ApplicationInterface
 {
 	private UIInterface ui;
 	private Game game;
+	private Timer timer;
 
 	public Application(UIInterface ui)
 	{
 		this.ui = ui;
+		this.timer = new Timer();
 	}
 
 	public void startGame(int dimension)
 	{
 		this.game = new Game(dimension);
 		this.ui.startGame(dimension);
+		this.startTimer();
 	}
 
 	public void hintClicked()
@@ -39,11 +44,6 @@ public class Application implements ApplicationInterface
 		this.displayChanges();
 	}
 
-	public void updateTime()
-	{
-		this.ui.displayTime(this.game.getGameTime());
-	}
-
 	public void mousePressed()
 	{
 		this.ui.displayFace(FaceRepresentation.SURPRISED);
@@ -52,6 +52,23 @@ public class Application implements ApplicationInterface
 	public void mouseReleased()
 	{
 		this.ui.displayFace(FaceRepresentation.SMILE);
+	}
+
+	private void updateTime()
+	{
+		this.ui.displayTime(this.game.getGameTime());
+	}
+
+	private void startTimer()
+	{
+		TimerTask task = new TimerTask()
+		{
+			public void run()
+			{
+				Application.this.updateTime();
+			}
+		};
+		this.timer.scheduleAtFixedRate(task, 0, 1000);
 	}
 
 	private void displayFace(State state)

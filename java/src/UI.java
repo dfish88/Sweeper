@@ -8,7 +8,6 @@ public class UI implements UIInterface
 	private UITopPanel top;
 	private UIBoard board;
 	private JFrame window;
-	private Timer timer;
 	private ApplicationInterface app;
 
 	public static void main(String[] args)
@@ -30,8 +29,6 @@ public class UI implements UIInterface
 		this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.window.setResizable(false); 
 		this.window.setVisible(true);
-
-		this.setUpTimer();
 	}
 
 	public void startGame(int dimension)
@@ -41,7 +38,6 @@ public class UI implements UIInterface
 		this.window.add(this.board, BorderLayout.CENTER);
 		this.window.pack();
 		this.top.startGame();
-		this.timer.start();
 	}
 
 	public void displayTile(int x, int y, TileRepresentation rep)
@@ -57,16 +53,5 @@ public class UI implements UIInterface
 	public void displayTime(String time)
 	{
 		this.top.displayTime(time);
-	}
-
-	private void setUpTimer()
-	{
-		this.timer = new Timer(1000, new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				UI.this.app.updateTime();
-			}
-		});
 	}
 }
