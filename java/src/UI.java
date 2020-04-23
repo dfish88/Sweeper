@@ -8,7 +8,6 @@ public class UI implements UIInterface
 	private UITopPanel top;
 	private UIBoard board;
 	private JFrame window;
-	private JPanel panel;
 	private Timer timer;
 	private ApplicationInterface app;
 
@@ -39,6 +38,7 @@ public class UI implements UIInterface
 				UI.this.app.displayTime();
 			}
 		});
+		this.timer.setInitialDelay(0);
 	}
 
 	public void startGame(int dimension)

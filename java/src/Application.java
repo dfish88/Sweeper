@@ -4,12 +4,10 @@ public class Application implements ApplicationInterface
 {
 	private UIInterface ui;
 	private Game game;
-	private boolean firstMove;
 
 	public Application(UIInterface ui)
 	{
 		this.ui = ui;
-		this.firstMove = true;
 	}
 
 	public void startGame(int dimension)
