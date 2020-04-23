@@ -8,13 +8,25 @@ public class UITopPanel extends JPanel
 	private JButton restart;
 	private JButton hint;
 	private JLabel theTimer;
+	private ApplicationInterface app;
 
-	public UITopPanel()
+	public UITopPanel(ApplicationInterface a)
 	{
 		super();
+		this.app = a;
 		this.setLayout(new GridLayout(1,4));
 		this.setBackground(Color.LIGHT_GRAY);
 		this.setUpTopPanel(new TopPanelListener());
+	}
+
+	public void displayFace(FaceRepresentation rep)
+	{
+		this.face.setIcon(ImageUtilities.getFaceImage(rep));
+	}
+
+	public void displayTime(String time)
+	{
+		this.theTimer.setText(time);
 	}
 
 	/*

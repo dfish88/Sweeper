@@ -6,15 +6,15 @@ import javax.swing.border.*;
 public class UIStartScreen extends JPanel
 {
 	private JButton easy;
-	private JButton hard; 
+	private JButton hard;
+	private ApplicationInterface app;
 
-	private final int EASY_DIM = 8;
-	private final int HARD_DIM = 16;
 	private final int SCREEN_DIM = 400;
 
-	public UIStartScreen()
+	public UIStartScreen(ApplicationInterface a)
 	{
 		super();
+		this.app = a;
 		this.setLayout(new GridLayout(1,2));
 		this.setUpStartScreen(new StartScreenListener());
 	}
@@ -40,11 +40,19 @@ public class UIStartScreen extends JPanel
 		this.setPreferredSize(new Dimension(this.SCREEN_DIM, this.SCREEN_DIM));
 	}
 
+	private void startGame(int dimension)
+	{
+		this.app.startGame(dimension);
+	}
+
 	/*
 	* Mouse listener registerd on all game buttons.
 	*/
 	private class StartScreenListener implements ActionListener
 	{
+		private final int EASY_DIM = 8;
+		private final int HARD_DIM = 16;
+
 		public StartScreenListener()
 		{
 		}
@@ -56,12 +64,13 @@ public class UIStartScreen extends JPanel
 			// Call start game from UI class
 			if (btn.equals(UIStartScreen.this.easy))
 			{
-				//startGame(EASY_DIM);
+				UIStartScreen.this.startGame(EASY_DIM);
 			}
 			else if (btn.equals(UIStartScreen.this.hard))
 			{
-				//startGame(HARD_DIM);
+				UIStartScreen.this.startGame(HARD_DIM);
 			}
 		}
 	}
+
 }
