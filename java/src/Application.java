@@ -27,12 +27,41 @@ public class Application implements ApplicationInterface
 	{
 		State state = this.game.makeMove(x,y);
 		this.displayChanges();
+		this.displayFace(state);
 	}
 
 	public void placeFlag(int x, int y)
 	{
 		this.game.placeFlag(x,y);
 		this.displayChanges();
+	}
+
+	public void mousePressed()
+	{
+		this.ui.displayFace(FaceRepresentation.SURPRISED);
+	}
+
+	public void mouseReleased()
+	{
+		this.ui.displayFace(FaceRepresentation.SMILE);
+	}
+
+	private void displayFace(State state)
+	{
+		switch (state)
+		{
+			case RUNNING:
+				this.ui.displayFace(FaceRepresentation.SMILE);
+				break;
+
+			case WON:
+				this.ui.displayFace(FaceRepresentation.GLASSES);
+				break;
+
+			case LOSS:
+				this.ui.displayFace(FaceRepresentation.DEAD);
+				break;
+		}
 	}
 
 	private void displayChanges()

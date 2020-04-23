@@ -45,7 +45,9 @@ public class UI implements UIInterface
 	}
 
 	public void displayFace(FaceRepresentation rep)
-	{}
+	{
+		this.top.displayFace(rep);
+	}
 
 	public void displayTime(String time)
 	{}

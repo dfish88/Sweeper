@@ -111,7 +111,7 @@ public final class ImageUtilities
 				break;
 
 			case SURPRISED:
-				faceImgs.put(FaceRepresentation.SURPRISED, new ImageIcon("../../img/clicked.png"));
+				faceImgs.put(FaceRepresentation.SURPRISED, new ImageIcon("../../img/click.png"));
 				break;
 				
 			case GLASSES:

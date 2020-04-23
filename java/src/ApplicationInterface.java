@@ -5,4 +5,6 @@ public interface ApplicationInterface
 	public void restartClicked();
 	public void tileClicked(int x, int y);
 	public void placeFlag(int x, int y);
+	public void mousePressed();
+	public void mouseReleased();
 }

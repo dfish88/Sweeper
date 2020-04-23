@@ -32,6 +32,16 @@ public class UIBoard extends JPanel
 		this.app.placeFlag(x,y);
 	}
 
+	private void mousePressed()
+	{
+		this.app.mousePressed();
+	}
+
+	private void mouseReleased()
+	{
+		this.app.mouseReleased();
+	}
+
 	private void buildBoard(int dimension, MouseListener listener)
 	{
 		this.board = new UITile[dimension][dimension];
@@ -65,6 +75,10 @@ public class UIBoard extends JPanel
 		public void mousePressed(MouseEvent e) 
 		{
 			// Change face to surprised
+			if (SwingUtilities.isLeftMouseButton(e))
+			{
+				UIBoard.this.mousePressed();
+			}
 		}
 
 		public void mouseReleased(MouseEvent e)
@@ -77,6 +91,7 @@ public class UIBoard extends JPanel
 			// Left click reveals tiles, there is a chance a mine has been clicked on.
 			if (SwingUtilities.isLeftMouseButton(e))
 			{				
+				UIBoard.this.mouseReleased();
 				UIBoard.this.leftClick(x, y);
 			}
 			// Right click places flag
