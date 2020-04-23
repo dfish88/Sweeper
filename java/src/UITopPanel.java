@@ -61,7 +61,7 @@ public class UITopPanel extends JPanel
 		this.hint = new JButton("Hint?");
 		this.hint.setBackground(Color.LIGHT_GRAY);
 		this.hint.setBorder(BorderFactory.createRaisedBevelBorder());
-		this.theTimer = new JLabel("0:00");
+		this.theTimer = new JLabel("00 : 00");
 		this.theTimer.setHorizontalAlignment(JLabel.CENTER);
 		this.theTimer.setVerticalAlignment(JLabel.CENTER);
 		this.setBorder(BorderFactory.createLoweredBevelBorder());

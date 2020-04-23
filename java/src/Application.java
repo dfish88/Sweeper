@@ -1,18 +1,19 @@
-import java.util.*;
+import java.util.ArrayList;
 
 public class Application implements ApplicationInterface
 {
 	private UIInterface ui;
 	private Game game;
+	private boolean firstMove;
 
 	public Application(UIInterface ui)
 	{
 		this.ui = ui;
+		this.firstMove = true;
 	}
 
 	public void startGame(int dimension)
 	{
-		// Create Game object
 		this.game = new Game(dimension);
 		this.ui.startGame(dimension);
 	}
@@ -38,6 +39,11 @@ public class Application implements ApplicationInterface
 	{
 		this.game.placeFlag(x,y);
 		this.displayChanges();
+	}
+
+	public void displayTime()
+	{
+		this.ui.displayTime(this.game.getGameTime());
 	}
 
 	public void mousePressed()

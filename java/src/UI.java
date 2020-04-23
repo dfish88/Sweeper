@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 
 public class UI implements UIInterface
 {
@@ -8,11 +9,12 @@ public class UI implements UIInterface
 	private UIBoard board;
 	private JFrame window;
 	private JPanel panel;
+	private Timer timer;
 	private ApplicationInterface app;
 
 	public static void main(String[] args)
 	{
-		UI ui = new UI();
+		UI ui = new UI();	
 	}
 
 	public UI()
@@ -29,6 +31,14 @@ public class UI implements UIInterface
 		this.window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.window.setResizable(false); 
 		this.window.setVisible(true);
+
+		this.timer = new Timer(1000, new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				UI.this.app.displayTime();
+			}
+		});
 	}
 
 	public void startGame(int dimension)
@@ -38,6 +48,7 @@ public class UI implements UIInterface
 		this.window.add(this.board, BorderLayout.CENTER);
 		this.window.pack();
 		this.top.startGame();
+		this.timer.start();
 	}
 
 	public void displayTile(int x, int y, TileRepresentation rep)
@@ -51,5 +62,7 @@ public class UI implements UIInterface
 	}
 
 	public void displayTime(String time)
-	{}
+	{
+		this.top.displayTime(time);
+	}
 }
