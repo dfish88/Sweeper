@@ -39,7 +39,7 @@ public class Application implements ApplicationInterface
 		this.displayChanges();
 	}
 
-	public void displayTime()
+	public void updateTime()
 	{
 		this.ui.displayTime(this.game.getGameTime());
 	}

@@ -31,14 +31,7 @@ public class UI implements UIInterface
 		this.window.setResizable(false); 
 		this.window.setVisible(true);
 
-		this.timer = new Timer(1000, new ActionListener()
-		{
-			public void actionPerformed(ActionEvent e)
-			{
-				UI.this.app.displayTime();
-			}
-		});
-		this.timer.setInitialDelay(0);
+		this.setUpTimer();
 	}
 
 	public void startGame(int dimension)
@@ -64,5 +57,16 @@ public class UI implements UIInterface
 	public void displayTime(String time)
 	{
 		this.top.displayTime(time);
+	}
+
+	private void setUpTimer()
+	{
+		this.timer = new Timer(1000, new ActionListener()
+		{
+			public void actionPerformed(ActionEvent e)
+			{
+				UI.this.app.updateTime();
+			}
+		});
 	}
 }
