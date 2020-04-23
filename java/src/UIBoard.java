@@ -27,6 +27,11 @@ public class UIBoard extends JPanel
 		this.app.tileClicked(x,y);
 	}
 
+	private void rightClick(int x, int y)
+	{
+		this.app.placeFlag(x,y);
+	}
+
 	private void buildBoard(int dimension, MouseListener listener)
 	{
 		this.board = new UITile[dimension][dimension];
@@ -79,7 +84,7 @@ public class UIBoard extends JPanel
 			{
 				try
 				{
-					//this.placeFlag(x, y);
+					UIBoard.this.rightClick(x, y);
 				}
 				// Catches exception where players right clicks before making first move
 				catch (Exception exc)

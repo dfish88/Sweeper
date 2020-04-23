@@ -4,4 +4,5 @@ public interface ApplicationInterface
 	public void hintClicked();
 	public void restartClicked();
 	public void tileClicked(int x, int y);
+	public void placeFlag(int x, int y);
 }

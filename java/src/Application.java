@@ -26,6 +26,17 @@ public class Application implements ApplicationInterface
 	public void tileClicked(int x, int y)
 	{
 		State state = this.game.makeMove(x,y);
+		this.displayChanges();
+	}
+
+	public void placeFlag(int x, int y)
+	{
+		this.game.placeFlag(x,y);
+		this.displayChanges();
+	}
+
+	private void displayChanges()
+	{
 		ArrayList<TileChange> changes = this.game.getChanges();
 		while (!changes.isEmpty())
 		{
