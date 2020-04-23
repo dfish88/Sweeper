@@ -29,6 +29,16 @@ public class UITopPanel extends JPanel
 		this.theTimer.setText(time);
 	}
 
+	private void hintClicked()
+	{
+		this.app.hintClicked();
+	}
+
+	private void restartClicked()
+	{
+		this.app.restartClicked();
+	}
+
 	/*
 	* Puts buttons on top panel
 	*/
@@ -37,6 +47,7 @@ public class UITopPanel extends JPanel
 		this.restart = new JButton("Restart?");
 		this.restart.setBackground(Color.LIGHT_GRAY);
 		this.restart.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.restart.addActionListener(listener);
 		this.face = new JButton();
 		this.face.setIcon(ImageUtilities.getFaceImage(FaceRepresentation.SMILE));
 		this.face.setBorder(null);
@@ -44,6 +55,7 @@ public class UITopPanel extends JPanel
 		this.hint = new JButton("Hint?");
 		this.hint.setBackground(Color.LIGHT_GRAY);
 		this.hint.setBorder(BorderFactory.createRaisedBevelBorder());
+		this.hint.addActionListener(listener);
 		this.theTimer = new JLabel("0:00");
 		this.theTimer.setHorizontalAlignment(JLabel.CENTER);
 		this.theTimer.setVerticalAlignment(JLabel.CENTER);
@@ -69,9 +81,11 @@ public class UITopPanel extends JPanel
 
 			if (btn.equals(UITopPanel.this.hint))
 			{
+				UITopPanel.this.hintClicked();
 			}
 			else if (btn.equals(UITopPanel.this.restart))
 			{
+				UITopPanel.this.restartClicked();
 			}
 		}
 	}

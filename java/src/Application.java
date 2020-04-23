@@ -18,7 +18,11 @@ public class Application implements ApplicationInterface
 	}
 
 	public void hintClicked()
-	{}
+	{
+		State state = this.game.hint();
+		this.displayChanges();
+		this.displayFace(state);
+	}
 
 	public void restartClicked()
 	{}
