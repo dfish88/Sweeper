@@ -22,6 +22,11 @@ public class UIBoard extends JPanel
 		this.board[x][y].setIcon(ImageUtilities.getTileImage(rep));
 	}
 
+	private void leftClick(int x, int y)
+	{
+		this.app.tileClicked(x,y);
+	}
+
 	private void buildBoard(int dimension, MouseListener listener)
 	{
 		this.board = new UITile[dimension][dimension];
@@ -67,7 +72,7 @@ public class UIBoard extends JPanel
 			// Left click reveals tiles, there is a chance a mine has been clicked on.
 			if (SwingUtilities.isLeftMouseButton(e))
 			{				
-				//this.leftClick(x, y);
+				UIBoard.this.leftClick(x, y);
 			}
 			// Right click places flag
 			else if (SwingUtilities.isRightMouseButton(e))

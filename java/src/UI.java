@@ -40,12 +40,13 @@ public class UI implements UIInterface
 	}
 
 	public void displayTile(int x, int y, TileRepresentation rep)
-	{}
+	{
+		this.board.updateTileIcon(x, y, rep);		
+	}
 
 	public void displayFace(FaceRepresentation rep)
 	{}
 
 	public void displayTime(String time)
 	{}
-
 }
