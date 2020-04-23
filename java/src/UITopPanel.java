@@ -16,7 +16,7 @@ public class UITopPanel extends JPanel
 		this.app = a;
 		this.setLayout(new GridLayout(1,4));
 		this.setBackground(Color.LIGHT_GRAY);
-		this.setUpTopPanel(new TopPanelListener());
+		this.setUpTopPanel();
 	}
 
 	public void displayFace(FaceRepresentation rep)
@@ -27,6 +27,13 @@ public class UITopPanel extends JPanel
 	public void displayTime(String time)
 	{
 		this.theTimer.setText(time);
+	}
+
+	public void startGame()
+	{
+		ActionListener listener = new TopPanelListener();
+		this.restart.addActionListener(listener);
+		this.hint.addActionListener(listener);
 	}
 
 	private void hintClicked()
@@ -42,12 +49,11 @@ public class UITopPanel extends JPanel
 	/*
 	* Puts buttons on top panel
 	*/
-	private void setUpTopPanel(ActionListener listener)
+	private void setUpTopPanel()
 	{
 		this.restart = new JButton("Restart?");
 		this.restart.setBackground(Color.LIGHT_GRAY);
 		this.restart.setBorder(BorderFactory.createRaisedBevelBorder());
-		this.restart.addActionListener(listener);
 		this.face = new JButton();
 		this.face.setIcon(ImageUtilities.getFaceImage(FaceRepresentation.SMILE));
 		this.face.setBorder(null);
@@ -55,7 +61,6 @@ public class UITopPanel extends JPanel
 		this.hint = new JButton("Hint?");
 		this.hint.setBackground(Color.LIGHT_GRAY);
 		this.hint.setBorder(BorderFactory.createRaisedBevelBorder());
-		this.hint.addActionListener(listener);
 		this.theTimer = new JLabel("0:00");
 		this.theTimer.setHorizontalAlignment(JLabel.CENTER);
 		this.theTimer.setVerticalAlignment(JLabel.CENTER);
