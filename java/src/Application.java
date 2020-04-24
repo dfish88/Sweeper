@@ -7,11 +7,13 @@ public class Application implements ApplicationInterface
 	private UIInterface ui;
 	private Game game;
 	private Timer timer;
+	private boolean enabled;
 
 	public Application(UIInterface ui)
 	{
 		this.ui = ui;
 		this.timer = new Timer();
+		this.enabled = true;
 	}
 
 	public void startGame(int dimension)
@@ -23,9 +25,12 @@ public class Application implements ApplicationInterface
 
 	public void hintClicked()
 	{
+		if (!this.enabled)
+			return;
+		
 		State state = this.game.hint();
-		this.displayChanges();
-		this.displayFace(state);
+		this.displayResults(state);
+		this.checkForEndConditions(state);
 	}
 
 	public void restartClicked()
@@ -33,25 +38,58 @@ public class Application implements ApplicationInterface
 
 	public void tileClicked(int x, int y)
 	{
+		if (!this.enabled)
+			return;
+
 		State state = this.game.makeMove(x,y);
-		this.displayChanges();
-		this.displayFace(state);
+		this.displayResults(state);
+		this.checkForEndConditions(state);
 	}
 
 	public void placeFlag(int x, int y)
 	{
+		if (!this.enabled)
+			return;
+
 		this.game.placeFlag(x,y);
 		this.displayChanges();
 	}
 
 	public void mousePressed()
 	{
+		if (!this.enabled)
+			return;
+
 		this.ui.displayFace(FaceRepresentation.SURPRISED);
 	}
 
 	public void mouseReleased()
 	{
+		if (!this.enabled)
+			return;
+
 		this.ui.displayFace(FaceRepresentation.SMILE);
+	}
+
+	private void displayResults(State state)
+	{
+		this.displayChanges();
+		this.displayFace(state);
+
+	}
+
+	private void checkForEndConditions(State state)
+	{
+		if (state == State.WON || state == State.LOSS)
+		{
+			this.disable();
+		}
+	}
+
+	private void disable()
+	{
+		this.enabled = false;
+		this.timer.cancel();
 	}
 
 	private void updateTime()
