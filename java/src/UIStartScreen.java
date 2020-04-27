@@ -19,6 +19,11 @@ public class UIStartScreen extends JPanel
 		this.setUpStartScreen(new StartScreenListener());
 	}
 
+	public void setApp(ApplicationInterface a)
+	{
+		this.app = a;
+	}
+
 	/*
 	* Builds start screen where player chooses board size.
 	*/

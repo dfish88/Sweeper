@@ -34,7 +34,10 @@ public class Application implements ApplicationInterface
 	}
 
 	public void restartClicked()
-	{}
+	{
+		this.ui.restart();
+		this.restart();
+	}
 
 	public void tileClicked(int x, int y)
 	{
@@ -69,6 +72,13 @@ public class Application implements ApplicationInterface
 			return;
 
 		this.ui.displayFace(FaceRepresentation.SMILE);
+	}
+
+	private void restart()
+	{
+		this.game = null;
+		this.timer.cancel();
+		this.enabled = true;
 	}
 
 	private void displayResults(State state)

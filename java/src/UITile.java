@@ -2,30 +2,23 @@ import javax.swing.*;
 
 public class UITile extends JButton
 {
-	private int x;
-	private int y;
-
-	public UITile(String text, int x, int y)
-	{
-		super(text);
-		this.x = x;
-		this.y = y;
-	}
+	private int grid_x;
+	private int grid_y;
 
 	public UITile(int x, int y)
 	{
 		super();
-		this.x = x;
-		this.y = y;
+		this.grid_x = x;
+		this.grid_y = y;
 	}
 
 	public int getGridX()
 	{
-		return this.x;
+		return this.grid_x;
 	}
 
 	public int getGridY()
 	{
-		return this.y;
+		return this.grid_y;
 	}	
 }

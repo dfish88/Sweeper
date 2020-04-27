@@ -19,6 +19,20 @@ public class UITopPanel extends JPanel
 		this.setUpTopPanel();
 	}
 
+	public void restart()
+	{
+		for (ActionListener al : this.restart.getActionListeners())
+		{
+			this.restart.removeActionListener(al);
+		}
+
+		for (ActionListener al : this.hint.getActionListeners())
+		{
+			this.hint.removeActionListener(al);
+		}
+
+	}
+
 	public void displayFace(FaceRepresentation rep)
 	{
 		this.face.setIcon(ImageUtilities.getFaceImage(rep));
@@ -34,6 +48,11 @@ public class UITopPanel extends JPanel
 		ActionListener listener = new TopPanelListener();
 		this.restart.addActionListener(listener);
 		this.hint.addActionListener(listener);
+	}
+
+	public void setApp(ApplicationInterface a)
+	{
+		this.app = a;
 	}
 
 	private void hintClicked()

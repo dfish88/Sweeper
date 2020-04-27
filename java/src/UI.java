@@ -39,6 +39,16 @@ public class UI implements UIInterface
 		this.window.pack();
 		this.top.startGame();
 	}
+	
+	public void restart()
+	{
+		this.window.remove(this.board);
+		this.window.add(this.start, BorderLayout.CENTER);
+		this.top.restart();
+		this.start.revalidate();
+		this.start.repaint();
+		this.window.pack();
+	}
 
 	public void displayTile(int x, int y, TileRepresentation rep)
 	{
