@@ -22,6 +22,25 @@ public class UIBoard extends JPanel
 		this.board[x][y].setIcon(ImageUtilities.getTileImage(rep));
 	}
 
+	public void shutOff()
+	{
+		for(int i = 0; i < this.dimension; i++)
+		{
+			for(int j = 0; j < this.dimension; j++)
+			{
+				this.removeAllMouseListeners(this.board[i][j]);
+			}
+		}
+	}
+
+	private void removeAllMouseListeners(JButton btn)
+	{
+		for (MouseListener ml : btn.getMouseListeners())
+		{
+			btn.removeMouseListener(ml);
+		}
+	}
+
 	private void leftClick(int x, int y)
 	{
 		this.app.tileClicked(x,y);

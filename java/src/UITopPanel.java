@@ -7,7 +7,7 @@ public class UITopPanel extends JPanel
 	private JButton face; // Face icon
 	private JButton restart;
 	private JButton hint;
-	private JLabel theTimer;
+	private JLabel timer;
 	private ApplicationInterface app;
 
 	public UITopPanel(ApplicationInterface a)
@@ -19,18 +19,21 @@ public class UITopPanel extends JPanel
 		this.setUpTopPanel();
 	}
 
+	public void shutOff()
+	{
+		this.removeAllActionListeners(this.hint);
+	}
+
 	public void restart()
 	{
-		for (ActionListener al : this.restart.getActionListeners())
-		{
-			this.restart.removeActionListener(al);
-		}
+		// Remove action listeners from restart and hint buttons
+		this.removeAllActionListeners(this.hint);
+		this.removeAllActionListeners(this.restart);
 
-		for (ActionListener al : this.hint.getActionListeners())
-		{
-			this.hint.removeActionListener(al);
-		}
+		// Set Timer back to 0
+		this.timer.setText("00 : 00");
 
+		this.displayFace(FaceRepresentation.SMILE);
 	}
 
 	public void displayFace(FaceRepresentation rep)
@@ -40,7 +43,7 @@ public class UITopPanel extends JPanel
 
 	public void displayTime(String time)
 	{
-		this.theTimer.setText(time);
+		this.timer.setText(time);
 	}
 
 	public void startGame()
@@ -53,6 +56,14 @@ public class UITopPanel extends JPanel
 	public void setApp(ApplicationInterface a)
 	{
 		this.app = a;
+	}
+
+	private void removeAllActionListeners(JButton btn)
+	{
+		for (ActionListener al : btn.getActionListeners())
+		{
+			btn.removeActionListener(al);
+		}
 	}
 
 	private void hintClicked()
@@ -80,14 +91,14 @@ public class UITopPanel extends JPanel
 		this.hint = new JButton("Hint?");
 		this.hint.setBackground(Color.LIGHT_GRAY);
 		this.hint.setBorder(BorderFactory.createRaisedBevelBorder());
-		this.theTimer = new JLabel("00 : 00");
-		this.theTimer.setHorizontalAlignment(JLabel.CENTER);
-		this.theTimer.setVerticalAlignment(JLabel.CENTER);
+		this.timer = new JLabel("00 : 00");
+		this.timer.setHorizontalAlignment(JLabel.CENTER);
+		this.timer.setVerticalAlignment(JLabel.CENTER);
 		this.setBorder(BorderFactory.createLoweredBevelBorder());
 		this.add(this.hint, 0);
 		this.add(this.face,1);
 		this.add(this.restart,2);
-		this.add(this.theTimer,3);
+		this.add(this.timer,3);
 	}
 
 	/*

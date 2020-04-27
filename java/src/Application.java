@@ -12,7 +12,6 @@ public class Application implements ApplicationInterface
 	public Application(UIInterface ui)
 	{
 		this.ui = ui;
-		this.timer = new Timer();
 		this.enabled = true;
 	}
 
@@ -25,98 +24,68 @@ public class Application implements ApplicationInterface
 
 	public void hintClicked()
 	{
-		if (!this.enabled)
-			return;
-		
 		State state = this.game.hint();
-		this.displayResults(state);
-		this.checkForEndConditions(state);
+		this.processResults(state);
 	}
 
 	public void restartClicked()
 	{
 		this.ui.restart();
-		this.restart();
+
+		this.game = null;
+		this.enabled = true;
+		this.timer.cancel();
+		this.timer = null;
 	}
 
 	public void tileClicked(int x, int y)
 	{
-		if (!this.enabled)
-			return;
-
 		State state = this.game.makeMove(x,y);
-		this.displayResults(state);
-		this.checkForEndConditions(state);
+		this.processResults(state);
 	}
 
 	public void placeFlag(int x, int y)
 	{
-		if (!this.enabled)
-			return;
-
 		this.game.placeFlag(x,y);
-		this.displayChanges();
+		this.displayResults();
 	}
 
 	public void mousePressed()
 	{
-		if (!this.enabled)
-			return;
-
 		this.ui.displayFace(FaceRepresentation.SURPRISED);
 	}
 
 	public void mouseReleased()
 	{
-		if (!this.enabled)
-			return;
-
 		this.ui.displayFace(FaceRepresentation.SMILE);
 	}
 
-	private void restart()
+	private void processResults(State state)
 	{
-		this.game = null;
-		this.timer.cancel();
-		this.enabled = true;
-	}
-
-	private void displayResults(State state)
-	{
-		this.displayChanges();
+		this.displayResults();
 		this.displayFace(state);
 
-	}
-
-	private void checkForEndConditions(State state)
-	{
 		if (state == State.WON || state == State.LOSS)
 		{
-			this.disable();
+			this.ui.disable();
+			this.timer.cancel();
 		}
 	}
 
-	private void disable()
+	private void displayResults()
 	{
-		this.enabled = false;
-		this.timer.cancel();
-	}
+		ArrayList<TileChange> changes = this.game.getChanges();
 
-	private void updateTime()
-	{
-		this.ui.displayTime(this.game.getGameTime());
-	}
-
-	private void startTimer()
-	{
-		TimerTask task = new TimerTask()
+		while (!changes.isEmpty())
 		{
-			public void run()
-			{
-				Application.this.updateTime();
-			}
-		};
-		this.timer.scheduleAtFixedRate(task, 0, 1000);
+			TileChange change = changes.remove(0);
+
+			int x = change.getX();
+			int y = change.getY();
+			TileRepresentation rep = change.getRep();		
+
+			this.ui.displayTile(x, y, rep);
+		}
 	}
 
 	private void displayFace(State state)
@@ -137,13 +106,16 @@ public class Application implements ApplicationInterface
 		}
 	}
 
-	private void displayChanges()
+	private void startTimer()
 	{
-		ArrayList<TileChange> changes = this.game.getChanges();
-		while (!changes.isEmpty())
+		this.timer = new Timer();
+		TimerTask task = new TimerTask()
 		{
-			TileChange change = changes.remove(0);
-			this.ui.displayTile(change.getX(), change.getY(), change.getRep());
-		}
+			public void run()
+			{
+				Application.this.ui.displayTime(Application.this.game.getGameTime());
+			}
+		};
+		this.timer.scheduleAtFixedRate(task, 0, 1000);
 	}
 }

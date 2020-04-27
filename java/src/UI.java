@@ -31,6 +31,12 @@ public class UI implements UIInterface
 		this.window.setVisible(true);
 	}
 
+	public void disable()
+	{
+		this.top.shutOff();
+		this.board.shutOff();
+	}
+
 	public void startGame(int dimension)
 	{
 		this.board = new UIBoard(dimension, this.app);
