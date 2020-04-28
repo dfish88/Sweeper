@@ -1,3 +1,7 @@
+package Model;
+
+import Presenter.TileRepresentation;
+
 public abstract class AbstractMineField
 {
 	protected Tile[][] field;

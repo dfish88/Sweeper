@@ -1,3 +1,7 @@
+package Model;
+
+import Presenter.TileRepresentation;
+
 public class Tile
 {
 	private boolean revealed;	// Is this tile revealed or hidden

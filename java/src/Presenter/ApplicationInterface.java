@@ -1,3 +1,5 @@
+package Presenter;
+
 public interface ApplicationInterface
 {
 	public void startGame(int dimension);

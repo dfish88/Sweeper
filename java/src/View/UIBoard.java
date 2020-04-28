@@ -1,3 +1,8 @@
+package View;
+
+import Presenter.ApplicationInterface;
+import Presenter.TileRepresentation;
+
 import javax.swing.*;
 import java.awt.*; 
 import java.awt.event.*;

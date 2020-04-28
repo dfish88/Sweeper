@@ -1,3 +1,8 @@
+package View;
+
+import Presenter.TileRepresentation;
+import Presenter.FaceRepresentation;
+
 import java.util.EnumMap;
 import javax.imageio.ImageIO;
 import javax.swing.*;

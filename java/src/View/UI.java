@@ -1,3 +1,10 @@
+package View;
+
+import Presenter.ApplicationInterface;
+import Presenter.Application;
+import Presenter.TileRepresentation;
+import Presenter.FaceRepresentation;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -9,11 +16,6 @@ public class UI implements UIInterface
 	private UIBoard board;
 	private JFrame window;
 	private ApplicationInterface app;
-
-	public static void main(String[] args)
-	{
-		UI ui = new UI();	
-	}
 
 	public UI()
 	{

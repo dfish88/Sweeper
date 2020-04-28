@@ -1,3 +1,5 @@
+package Presenter;
+
 public enum FaceRepresentation
 {
 	SMILE,

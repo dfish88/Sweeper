@@ -1,3 +1,5 @@
+package Presenter;
+
 public enum TileRepresentation
 {
 	ZERO, ONE, TWO, THREE,

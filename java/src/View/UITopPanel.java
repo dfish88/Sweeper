@@ -1,3 +1,8 @@
+package View;
+
+import Presenter.ApplicationInterface;
+import Presenter.FaceRepresentation;
+
 import javax.swing.*;
 import java.awt.*; 
 import java.awt.event.*;

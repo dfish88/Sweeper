@@ -3,6 +3,9 @@ import org.junit.Before;
 import org.junit.After;
 import static org.junit.Assert.*;
 
+import Model.Tile;
+import Model.TileRepresentation;
+
 public class TileTest
 {
 
@@ -67,14 +70,14 @@ public class TileTest
 	@Test
 	public void testGetRepCovered()
 	{
-		assertEquals(IconRepresentation.COVERED, test.getRep());
+		assertEquals(TileRepresentation.COVERED, test.getRep());
 	}
 
 	@Test
 	public void testGetRepFlag()
 	{
 		test.setFlag();
-		assertEquals(IconRepresentation.FLAG, test.getRep());
+		assertEquals(TileRepresentation.FLAG, test.getRep());
 	}
 
 	@Test
@@ -82,13 +85,13 @@ public class TileTest
 	{
 		test.setMine();
 		test.setRevealed();
-		assertEquals(IconRepresentation.BOOM, test.getRep());
+		assertEquals(TileRepresentation.BOOM, test.getRep());
 	}
 
 	@Test
 	public void testGetRepAdjacent()
 	{
 		test.setRevealed();
-		assertEquals(IconRepresentation.TWO, test.getRep());
+		assertEquals(TileRepresentation.TWO, test.getRep());
 	}
 }

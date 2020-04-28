@@ -1,3 +1,7 @@
+package Model;
+
+import Presenter.TileRepresentation;
+
 import java.awt.*;
 
 public class TileChange

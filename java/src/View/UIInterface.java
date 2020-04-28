@@ -1,3 +1,8 @@
+package View;
+
+import Presenter.TileRepresentation;
+import Presenter.FaceRepresentation;
+
 public interface UIInterface
 {
 	public void startGame(int dimension);
