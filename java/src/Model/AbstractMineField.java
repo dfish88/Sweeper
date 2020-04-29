@@ -4,8 +4,8 @@ import Presenter.TileRepresentation;
 
 public abstract class AbstractMineField
 {
-	protected Tile[][] field;
-	protected int tilesLeft;
+	private Tile[][] field;
+	private int tilesLeft;
 
 	public void setFlag(int x, int y)
 	{
@@ -48,5 +48,25 @@ public abstract class AbstractMineField
 	public int getTilesLeft()
 	{
 		return this.tilesLeft;
+	}
+
+	protected void setTilesLeft(int tilesLeft)
+	{
+		this.tilesLeft = tilesLeft;
+	}
+
+	protected void setTile(int x, int y, Tile val)
+	{
+		this.field[x][y] = new Tile(val);
+	}
+	
+	protected void initField(int dimension)
+	{
+		this.field = new Tile[dimension][dimension];
+	}
+
+	protected boolean emptyTile(int x, int y)
+	{
+		return this.field[x][y] == null;
 	}
 }

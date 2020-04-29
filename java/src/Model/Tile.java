@@ -9,6 +9,14 @@ public class Tile
 	private boolean flag;		// Is flag placed on tile	
 	private boolean mine;		// Is this tile a mine
 
+	public Tile(Tile copy)
+	{
+		this.revealed = copy.getRevealed();
+		this.adjacentTo = copy.getAdjacent();
+		this.flag = copy.getFlag();
+		this.mine = copy.getMine();	
+	}
+
 	public Tile(int adjacentTo, boolean mine)
 	{
 		this.adjacentTo = adjacentTo;

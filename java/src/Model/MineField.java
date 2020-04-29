@@ -4,11 +4,14 @@ import java.util.*;
 
 public class MineField extends AbstractMineField
 {
-	protected final int MINE_RATIO = 5;
+	private final int MINE_RATIO = 5;
+	private int dimension;
 
 	public MineField(int x, int y, int dimension)
 	{
-		this.buildField(x, y, dimension, (int)((dimension*dimension)/this.MINE_RATIO));
+		int numMines = (int)((dimension*dimension)/this.MINE_RATIO);
+		this.dimension = dimension;
+		this.buildField(x, y, numMines);
 	}
 
 	/*
@@ -16,39 +19,39 @@ public class MineField extends AbstractMineField
 	* If there is overlap we simply skip that mine which is
 	* how we can get less than dimension mines.
 	*/
-	private void buildField(int x, int y, int dimension, int mineLimit)
+	private void buildField(int x, int y, int numMines)
 	{
-		this.field = new Tile[dimension][dimension];
-		this.tilesLeft = 0;
+		this.initField(this.dimension);
+		this.setTilesLeft(0);
 		Random rand = new Random();
 
 		// Place mines on the board
-		for(int i = 0; i < mineLimit; i++)
+		for(int i = 0; i < numMines; i++)
 		{
-			int randX = rand.nextInt(dimension);
-			int randY = rand.nextInt(dimension);
+			int randX = rand.nextInt(this.dimension);
+			int randY = rand.nextInt(this.dimension);
 
 			// Find random place that isn't where move is made and isn't already a mine
-			while ((randX == x && randY == y) || (this.field[randX][randY] != null))
+			while ((randX == x && randY == y) || !this.emptyTile(randX, randY))
 			{
-				randX = rand.nextInt(dimension);
-				randY = rand.nextInt(dimension);
+				randX = rand.nextInt(this.dimension);
+				randY = rand.nextInt(this.dimension);
 			}
-			
-			this.field[randX][randY] = new Tile(0, true);
+		
+			this.setTile(randX, randY, new Tile(0, true));	
 		}
 
 		// Determine all non-mine tiles
 		int mineCount;
-		for (int i = 0; i < dimension; i++)
+		for (int i = 0; i < this.dimension; i++)
                 {
-                        for (int j = 0; j < dimension; j++)
+                        for (int j = 0; j < this.dimension; j++)
                         {       
-				if (this.field[i][j] == null)
+				if (this.emptyTile(i, j))
 				{
 					mineCount = this.countMines(i,j);
-					this.field[i][j] = new Tile(mineCount, false);
-					this.tilesLeft++;
+					this.setTile(i, j, new Tile(mineCount, false));
+					this.incrementTilesLeft();
 				}
                         }
                 }
@@ -66,20 +69,36 @@ public class MineField extends AbstractMineField
 		int mineCount = 0;
 		for (int i = 0; i < delta.length; i = i + 2)
 		{
-			try
-			{
-				if (this.field[x + delta[i]][y + delta[i+1]].getMine())
-					mineCount+=1;
-			}
-			catch(ArrayIndexOutOfBoundsException e)
-			{
+			int new_x = x + delta[i];
+			int new_y = y + delta[i+1];
+
+			// Continue if coordinates are out of bounds
+			if (this.outOfBounds(new_x, new_y))
 				continue;
-			}
-			catch(NullPointerException e)
-			{
+		
+			// Continue if tile is null
+			if (this.emptyTile(new_x, new_y))
 				continue;
-			}
+
+			if (this.getMine(new_x, new_y))
+				mineCount+=1;
 		}
 		return mineCount;
+	}
+
+	private void incrementTilesLeft()
+	{
+		int tilesLeft = this.getTilesLeft();
+		tilesLeft++;
+		this.setTilesLeft(tilesLeft);
+	}
+
+	private boolean outOfBounds(int x, int y)
+	{
+		if (x >= this.dimension || y >= this.dimension)
+			return true;
+		if (x < 0 || y < 0)
+			return true;
+		return false;
 	}
 }

@@ -4,6 +4,8 @@ import org.junit.After;
 import static org.junit.Assert.*;
 import java.lang.*;
 
+import Model.GameTimer;
+
 public class TimerTest
 {
 	private GameTimer test;
@@ -36,7 +38,7 @@ public class TimerTest
 	@Test 
 	public void getTimeAfter2Seconds()
 	{
-		test.startTimer();
+		test.start();
 		
 		try
 		{
@@ -47,7 +49,7 @@ public class TimerTest
 			System.out.println(e);
 		}
 
-		test.stopTimer();
+		test.stop();
 		String t = test.getTime();
 		String expectedTime = "00 : 02";
 		assertEquals(expectedTime, t);

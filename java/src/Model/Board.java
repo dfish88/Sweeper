@@ -46,7 +46,13 @@ public class Board
 	public void setFlag(int x, int y)
 	{
 		this.field.setFlag(x, y);
-		this.changes.add(new TileChange(x, y, this.field.getRep(x,y)));
+
+		// Add to changes if flag was placed on covered tile
+		// If flag is placed on covered tile then there is no change
+		if (!this.field.getRevealed(x, y))
+		{
+			this.changes.add(new TileChange(x, y, this.field.getRep(x,y)));
+		}
 	}
 
 	/*

@@ -4,7 +4,7 @@ import org.junit.After;
 import static org.junit.Assert.*;
 
 import Model.Tile;
-import Model.TileRepresentation;
+import Presenter.TileRepresentation;
 
 public class TileTest
 {
@@ -23,6 +23,29 @@ public class TileTest
 	public void tearDown()
 	{
 		test = null;
+	}
+
+	@Test
+	public void testCopy()
+	{
+		Tile copy = new Tile(this.test);
+
+		assertEquals(this.test.getAdjacent(), copy.getAdjacent());
+		assertEquals(this.test.getRevealed(), copy.getRevealed());
+		assertEquals(this.test.getMine(), copy.getMine());
+		assertEquals(this.test.getFlag(), copy.getFlag());
+
+		this.test.setAdjacent(0);
+		this.test.setMine();
+		this.test.setFlag();
+
+		assertEquals(this.adjacent, copy.getAdjacent());
+		assertFalse(copy.getMine());
+		assertFalse(copy.getFlag());
+
+		this.test.setRevealed();
+
+		assertFalse(copy.getRevealed());
 	}
 
 	@Test
