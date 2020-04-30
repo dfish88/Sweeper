@@ -72,7 +72,7 @@ public class Application implements ApplicationInterface
 		this.displayResults();
 		this.displayFace(state);
 
-		if (state == State.WON || state == State.LOSS)
+		if (state == State.WON || state == State.LOST)
 		{
 			this.ui.disable();
 			this.timer.cancel();
@@ -107,7 +107,7 @@ public class Application implements ApplicationInterface
 				this.ui.displayFace(FaceRepresentation.GLASSES);
 				break;
 
-			case LOSS:
+			case LOST:
 				this.ui.displayFace(FaceRepresentation.DEAD);
 				break;
 		}

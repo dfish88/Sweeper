@@ -1,14 +1,42 @@
-package Model;
+/*
+*	Copyright (C) 2019-2020  Daniel Fisher
+*
+*	This program is free software: you can redistribute it and/or modify
+*	it under the terms of the GNU General Public License as published by
+*	the Free Software Foundation, either version 3 of the License, or
+*	(at your option) any later version.
+*
+*	This program is distributed in the hope that it will be useful,
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*	GNU General Public License for more details.
+*
+*	You should have received a copy of the GNU General Public License
+*	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
 
+package Model;
 import Presenter.TileRepresentation;
 
+/*
+* This class holds infromation about each Tile on the minesweeper board such as
+* the number of mines adjacent to this tile, if the tile is a mine, if the tile
+* has been flagged, and if the tile has been revealed.
+*
+* @author Daniel Fisher
+*/
 public class Tile
 {
 	private boolean revealed;	// Is this tile revealed or hidden
 	private int adjacentTo;		// How many mines is this tile adjacent to
-	private boolean flag;		// Is flag placed on tile	
+	private boolean flag;		// Is a flag placed on this tile
 	private boolean mine;		// Is this tile a mine
 
+	/**
+	* Copy constructor that creates a copy of the provided tile.
+	* 
+	* @param copy	the tile to be copied
+	*/
 	public Tile(Tile copy)
 	{
 		this.revealed = copy.getRevealed();
@@ -17,6 +45,15 @@ public class Tile
 		this.mine = copy.getMine();	
 	}
 
+	/**
+	* Constructor that creates a tile with the provided adjacent
+	* and mine parameters. Revealed and flag are not included
+	* because these are changed later during game play.
+	* 
+	* @param adjacentTo	the number of mines this tile is adjacent
+	*			to
+	* @param mine		true if tile is a mine, false otherwise
+	*/
 	public Tile(int adjacentTo, boolean mine)
 	{
 		this.adjacentTo = adjacentTo;
@@ -27,8 +64,12 @@ public class Tile
 
 	/* GETTERS */
 
-	/*
-	* Returns the representation of this tile.
+	/**
+	* Returns the representation of the tile which is based on
+	* all the field (revealed, adjacentTo, flag, mine).
+	*
+	* @return	the representation of this tile, see the
+	*		enum TileRepresentation for possible values.
 	*/
 	public TileRepresentation getRep()
 	{
@@ -72,21 +113,41 @@ public class Tile
 		return TileRepresentation.EMPTY;
 	}
 	
+	/**
+	* Returns the number of mines this tile is adjacent to.
+	*
+	* @return	the number of adjacent mines (0-8).
+	*/
 	public int getAdjacent()
 	{
 		return this.adjacentTo;
 	}
 
+	/**
+	* Returns true if this tile if revealed, false otherwise.
+	*
+	* @return	true if revealed, false otherwise.
+	*/
 	public boolean getRevealed()
 	{
 		return this.revealed;
 	}
 
+	/**
+	* Returns true if this tile is flagged, false otherwise.
+	*
+	* @return	true if flagged, false otherwise
+	*/
 	public boolean getFlag()
 	{
 		return this.flag;
 	}
 
+	/**
+	* Returns true if tile is a mine, false otherwise.
+	*
+	* @return	true if mine, false otherwise.
+	*/
 	public boolean getMine()
 	{
 		return this.mine;
@@ -94,9 +155,9 @@ public class Tile
 
 	/* SETTERS */
 
-	/*
-	* Only covered tiles can be flags so we
-	* set flag to false when tile is revealed
+	/**
+	* Reveals the current tile. This method also sets flag to false
+	* because revealed tiles can't be flagged.
 	*/
 	public void setRevealed()
 	{
@@ -104,19 +165,28 @@ public class Tile
 		this.flag = false;
 	}
 
+	/**
+	* Sets the number of mines this tile is adjacent to. This method
+	* assumes the input is valid (0-8).
+	*
+	* @param adjacentTo	the number of adjacent mines (0-8).
+	*/
 	public void setAdjacent(int adjacentTo)
 	{
 		this.adjacentTo = adjacentTo;
 	}
 
+	/**
+	* Sets this tile as a mine.
+	*/
 	public void setMine()
 	{
 		this.mine = true;
 	}
 
-	/*
-	* Only covered tiles can be flags so
-	* we do nothing if flags are revealed
+	/**
+	* Sets this tile as a flag or unflaggs this tile if it is already
+	* flagged. If this tile is revealed then we do not flag this tile.
 	*/
 	public void setFlag()
 	{

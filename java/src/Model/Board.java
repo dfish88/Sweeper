@@ -1,19 +1,47 @@
+/*
+*	Copyright (C) 2019-2020  Daniel Fisher
+*
+*	This program is free software: you can redistribute it and/or modify
+*	it under the terms of the GNU General Public License as published by
+*	the Free Software Foundation, either version 3 of the License, or
+*	(at your option) any later version.
+*
+*	This program is distributed in the hope that it will be useful,
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*	GNU General Public License for more details.
+*
+*	You should have received a copy of the GNU General Public License
+*	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 package Model;
 
 import Presenter.TileRepresentation;
-
 import java.util.*;
 import java.awt.*;
 import java.io.*;
 
+/**
+* This class represents the game board which contains a minefield, has a certain 
+* dimension and maintains a list of changes made to the board.
+*
+* @author Daniel Fisher
+*/
 public class Board 
 { 
 	private AbstractMineField field; 	// Stores all the tiles
 	private int dimension;		
 	private ArrayList<TileChange> changes;	// Stores all changes made
 
-	/*
-	* Creates a Board object with a MineField being injected.
+	/**
+	* Constructor that takes the dimension of the board and
+	* a mine field. Injecting the mine field allows you to build
+	* a board with a specific (non-random) mine field which is
+	* helpful for testing.
+	*
+	* @param dimension	the dimension of the board
+	* @param field		the mine field
 	*/
 	public Board(int dimension, AbstractMineField field)
 	{
@@ -22,8 +50,12 @@ public class Board
 		this.changes = new ArrayList<>();
 	}
 
-	/*
-	* Returns changes made to board.
+	/**
+	* Returns a list of changes that have been accumulated since the
+	* last call to this method. This method returns a copy of the list
+	* of changes and clears the list.
+	*
+	* @return the list of changes
 	*/
 	public ArrayList<TileChange> getChanges()
 	{
@@ -33,16 +65,36 @@ public class Board
 		return ret;
 	}
 
+	/**
+	* Returns true if a tile is revealed, false otherwise.
+	*
+	* @param x	the x coordinate of the tile to check
+	* @param y	the y coordinate of the tile to check
+	* @return	true if revealed, false otherwise
+	*/
 	public boolean getRevealed(int x, int y)
 	{
 		return this.field.getRevealed(x, y);
 	}
 
+	/**
+	* Returns true if a tile is a mines, false otherwise.
+	*
+	* @param x	the x coordinate of the tile to check
+	* @param y	the y coordinate of the tile to check
+	* @return	true if a mine, false otherwise
+	*/
 	public boolean getMine(int x, int y)
 	{
 		return this.field.getMine(x, y);
 	}
 
+	/**
+	* Flags the tile at x, y.
+	*
+	* @param x	the x coordinate of the tile to flag
+	* @param y	the y coordinate of the tile to flag
+	*/
 	public void setFlag(int x, int y)
 	{
 		this.field.setFlag(x, y);
@@ -55,9 +107,15 @@ public class Board
 		}
 	}
 
-	/*
-	* Reveals a square, used when square is clicked on.  If the tile
-	* is adjacent to 0 mines then it also reveals all adjacent 0 tiles.
+	/**
+	* Method called when a tile is clicked at the coordinates x,y. This method
+	* reveals that tile and all adjacent tiles recursively for 0 tiles. The game
+	* state is returned after the move has been made. getChanges will generally be
+	* called after this method.
+	*
+	* @param x	the x coordinate of the tile clicked on
+	* @param y	the y coordinate of the tile clicked on
+	* @return	the state of the game after the move
 	*/
 	public State makeMove(int x, int y)
 	{
@@ -73,7 +131,7 @@ public class Board
 		{
 			this.revealMines();
 			this.checkFlags();
-			ret = State.LOSS;
+			ret = State.LOST;
 		}
 
 		// Create list of all adjacent tiles if tile clicked on is 0
@@ -112,13 +170,22 @@ public class Board
 
 	/* PRIVATE HELPERS */
 
-	/*
-	* Pushes adjacent 0 tiles on to stack so we can check tiles adjacent to those tiles too.
-	* When we get to non zero, non mine, adjacent tiles we reveal them and don't push them on stack.
+	/**
+	* This method finds the adjacent 0 tiles to tile at the coordinate x,y.
+	* Adds adjacent 0 to the adjacent list if they haven't been revealed yet.
+	*
+	* @param x	the x coordinate of the tile to check around
+	* @param y	the y coordinate of the tile to check around
+	* @param adj	the list of adjacent tiles
 	*/
-	private void findAdjacentZero(int x, int y, ArrayList<Point> a)
+	private void findAdjacentZero(int x, int y, ArrayList<Point> adj)
 	{
-		// Used to calculate coordinates of all 8 adjacent tiles
+		/* Each pair of offsets represents a direction from a
+		   starting x and y. The first pair is -1,-1 which is
+		   the x and y delta respecitvely. When added to a given
+		   x and y coordinate, -1, -1 would give you the tile
+		   north west of the starting tile.
+		*/
 		int[] delta = {-1,-1,-1,0,-1,1,0,-1,0,1,1,-1,1,0,1,1};
 
 		// Check all 8 adjacent tiles 0 tiles
@@ -132,7 +199,7 @@ public class Board
 			{
 				// add 0 tiles to the list
 				if (this.field.getAdjacent(currentX, currentY) == 0 && !this.field.getRevealed(currentX, currentY))
-					a.add(new Point(currentX, currentY));
+					adj.add(new Point(currentX, currentY));
 
 				// Reveal non-zero tiles
 				else
@@ -152,10 +219,11 @@ public class Board
 	}
 
 
-	/*
-	* Returns a list of flags on the board. This will be used to reveal which
-	* flags are correct at the end of the game so we only return flags that are
-	* incorrect and leave correct ones as they are.
+	/**
+	* Checks the currently placed flags on the board to determine if they
+	* are correct (on a mine) or not. This will be used to reveal which 
+	* flags are correct at the end of the game so we only add flags that 
+	* are incorrect to changes and leave correct ones as they are.
 	*/
 	private void checkFlags()
 	{
@@ -172,10 +240,11 @@ public class Board
 		}
 	}
 
-	/*
-	* Returns a list of mines on the board. This will be used to reveal mines at
-	* end of the game so we only need to return the mines that haven't been clicked on
-	* and haven't been flagged.
+	/**
+	* Reveals the mines on the board at the end of the game when the player
+	* has lost (clicked on a mine). A mine is revealed when it wasn't clicked
+	* on and when it hasn't been flagged. Mines that meet those criteria are
+	* added to the changed.
 	*/
 	private void revealMines()
 	{
