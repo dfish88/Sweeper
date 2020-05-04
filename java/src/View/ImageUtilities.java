@@ -1,3 +1,20 @@
+/*
+*	Copyright (C) 2019-2020  Daniel Fisher
+*
+*	This program is free software: you can redistribute it and/or modify
+*	it under the terms of the GNU General Public License as published by
+*	the Free Software Foundation, either version 3 of the License, or
+*	(at your option) any later version.
+*
+*	This program is distributed in the hope that it will be useful,
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*	GNU General Public License for more details.
+*
+*	You should have received a copy of the GNU General Public License
+*	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 package View;
 
 import Presenter.TileRepresentation;
@@ -7,15 +24,33 @@ import java.util.EnumMap;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
+/**
+* Helper class that loads images from file used by the UI to display tiles and faces.
+*
+* @author Daniel Fisher
+*/
 public final class ImageUtilities
 {
+	// Hash table that maps tile reps to image icons
 	private static final EnumMap<TileRepresentation, ImageIcon> tileImgs = new EnumMap<>(TileRepresentation.class);
+
+	// Hash table that maps face reps to image icons
 	private static final EnumMap<FaceRepresentation, ImageIcon> faceImgs = new EnumMap<>(FaceRepresentation.class);
 
+	/**
+	* Private constructor beacuse this helper class only has static methods and 
+	* you shouldn't want to create an instance of this class.
+	*/
 	private ImageUtilities()
 	{ 
 	}
 
+	/**
+	* This methods returns the image icon for the corresponding tile representation.
+	* This method loads and stores the images on a by need basis.
+	*
+	* @param rep	the tile representation
+	*/
 	public static ImageIcon getTileImage(TileRepresentation rep)
 	{
 		ImageIcon ret = tileImgs.get(rep);
@@ -28,6 +63,12 @@ public final class ImageUtilities
 		return ret;
 	}
 
+	/**
+	* This methods returns the image icon for the corresponding face representation.
+	* This method loads and stores the images on a by need basis.
+	*
+	* @param rep	the face representation
+	*/
 	public static ImageIcon getFaceImage(FaceRepresentation rep)
 	{
 		ImageIcon ret = faceImgs.get(rep);
@@ -40,6 +81,13 @@ public final class ImageUtilities
 		return ret;
 	}
 
+	/**
+	* Helper method that loads and stores an image for the corresponding tile representation.
+	* This method is called when a tile representation is not currently in the hash table.
+	* This allows use to load and store images on a by need basis.
+	*
+	* @param rep	the tile representation
+	*/
 	private static void loadTileImage(TileRepresentation rep)
 	{
 
@@ -107,6 +155,13 @@ public final class ImageUtilities
 		}
 	}
 
+	/**
+	* Helper method that loads and stores an image for the corresponding face representation.
+	* This method is called when a face representation is not currently in the hash table.
+	* This allows use to load and store images on a by need basis.
+	*
+	* @param rep	the face representation
+	*/
 	private static void loadFaceImage(FaceRepresentation rep)
 	{
 		switch (rep)
