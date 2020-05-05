@@ -1,4 +1,7 @@
 # Design Overview
+
+![Design Overview](design.png)
+
 The general design used for this implementation is the Model View Presenter (MVP) design.
 The Model is responsible for the game model/logic that tracks the game board, reveals tiles,
 determines game state and so on. The View is responsible for displaying the current state of
