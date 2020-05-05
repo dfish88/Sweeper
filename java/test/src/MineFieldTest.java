@@ -1,3 +1,20 @@
+/*
+*	Copyright (C) 2019-2020  Daniel Fisher
+*
+*	This program is free software: you can redistribute it and/or modify
+*	it under the terms of the GNU General Public License as published by
+*	the Free Software Foundation, either version 3 of the License, or
+*	(at your option) any later version.
+*
+*	This program is distributed in the hope that it will be useful,
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*	GNU General Public License for more details.
+*
+*	You should have received a copy of the GNU General Public License
+*	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import org.junit.Test;
 import org.junit.Before;
 import org.junit.After;
@@ -7,17 +24,28 @@ import Model.MineField;
 import Model.AbstractMineField;
 import Presenter.TileRepresentation;
 
+/**
+* This class test the MineField class in the Model module
+*
+* @author Daniel Fisher
+*/
 public class MineFieldTest
 {
-	private AbstractMineField test;
-	private int dimension;
+	private AbstractMineField test; // The minefield to test
+	private int dimension; // The dimensions of the mine field
 
+	/**
+	* Tears down the test by setting the minefield to null
+	*/
 	@After
 	public void tearDown()
 	{
 		this.test = null;
 	}
 
+	/**
+	* Tests flagging a tile when it is covered (valid case)
+	*/
 	@Test
 	public void testValidFlag()
 	{
@@ -28,6 +56,9 @@ public class MineFieldTest
 		assertTrue(this.test.getFlag(0,0));
 	}
 
+	/**
+	* Tests flagging a tile when it is revealed (invalid case)
+	*/
 	@Test
 	public void testInvalidFlag()
 	{
@@ -39,6 +70,10 @@ public class MineFieldTest
 		assertFalse(this.test.getFlag(1,1));
 	}
 
+	/**
+	* Tests if mine field is constructed properly (all tiles covered initially)
+	* and if revealing a single tile only reveals that tile
+	*/
 	@Test
 	public void testRevealed()
 	{
@@ -69,6 +104,9 @@ public class MineFieldTest
 		assertFalse(this.test.getRevealed(2,2));
 	}
 
+	/**
+	* Tests if field is constructed properly (only one mine)
+	*/
 	@Test
 	public void testMine()
 	{
@@ -85,6 +123,9 @@ public class MineFieldTest
 		assertTrue(this.test.getMine(2,2));
 	}
 
+	/**
+	* Tests if field was created correctly (adjacent field set correctly)
+	*/
 	@Test
 	public void testAdjacent()
 	{
@@ -101,6 +142,9 @@ public class MineFieldTest
 		assertEquals(0, this.test.getAdjacent(2,2));
 	}
 
+	/**
+	* Test if the getRep method produces the correct results when tile is covered
+	*/
 	@Test
 	public void testRepCovered()
 	{
@@ -108,6 +152,10 @@ public class MineFieldTest
 		assertEquals(TileRepresentation.COVERED, this.test.getRep(1,1));
 	}
 
+	/**
+	* Test if the getRep method produces the correct results when the tile
+	* is revealed and is not a mine
+	*/
 	@Test
 	public void testRepUncovered()
 	{
@@ -116,6 +164,10 @@ public class MineFieldTest
 		assertEquals(TileRepresentation.ONE, this.test.getRep(1,1));
 	}
 
+	/**
+	* Test if the getRep method produces the correct results when the tile
+	* has been flagged
+	*/
 	@Test
 	public void testRepFlag()
 	{
@@ -124,6 +176,10 @@ public class MineFieldTest
 		assertEquals(TileRepresentation.FLAG, this.test.getRep(1,1));
 	}
 
+	/**
+	* Test if the getRep method produces the correct results when the tile
+	* is a mine that has been revealed (clicked on)
+	*/
 	@Test
 	public void testRepBoom()
 	{
@@ -132,6 +188,9 @@ public class MineFieldTest
 		assertEquals(TileRepresentation.BOOM, this.test.getRep(2,2));
 	}
 
+	/**
+	* Test if the minefield class places the correct number of random mines
+	*/
 	@Test
 	public void testNumMinesPlaced()
 	{
@@ -144,6 +203,9 @@ public class MineFieldTest
 		assertEquals(expectedNonMines, this.test.getTilesLeft());
 	}
 
+	/**
+	* Test if the tiles left field is only changed when uncovered tiles are revealed
+	*/
 	@Test
 	public void testReveal()
 	{
@@ -158,15 +220,22 @@ public class MineFieldTest
 		assertEquals(expectedTilesLeft, this.test.getTilesLeft());
 	}
 
+	/**
+	* Sets up a 5x5 minefield using the random mine placement in
+	* the minefield class
+	*/
 	public void setUpDefault()
 	{
 		this.dimension = 5;
 		this.test = new MineField(0,0, this.dimension);
 	}
 
+	/**
+	* Sets up a 3x3 minefield with one mine (see OneMineField class)
+	*/
 	public void setUpOneMine()
 	{
 		this.dimension = 3;
-		this.test = new OneMineField(this.dimension);
+		this.test = new OneMineField();
 	}
 }	

@@ -46,7 +46,7 @@ public class UIBoard extends JPanel
 	public UIBoard(int dimension, ApplicationInterface app)
 	{
 		super();
-		this.app = app
+		this.app = app;
 		this.dimension = dimension;
 		this.setLayout(new GridLayout(dimension, dimension));
 		this.buildBoard(dimension, new GameListener());

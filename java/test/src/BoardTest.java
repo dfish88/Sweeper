@@ -1,3 +1,20 @@
+/*
+*	Copyright (C) 2019-2020  Daniel Fisher
+*
+*	This program is free software: you can redistribute it and/or modify
+*	it under the terms of the GNU General Public License as published by
+*	the Free Software Foundation, either version 3 of the License, or
+*	(at your option) any later version.
+*
+*	This program is distributed in the hope that it will be useful,
+*	but WITHOUT ANY WARRANTY; without even the implied warranty of
+*	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*	GNU General Public License for more details.
+*
+*	You should have received a copy of the GNU General Public License
+*	along with this program.  If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
@@ -13,17 +30,30 @@ import Model.TileChange;
 import Model.AbstractMineField;
 import Presenter.TileRepresentation;
 
+/**
+* This class tests the methods provided by the Board class that involve
+* manipulating tiles on the board through making moves and flagging tiles
+*
+* @author Daniel Fisher
+*/
 public class BoardTest
 {
-	private Board testBoard;
-	private int dimension;
+	private Board testBoard; // The test board
+	private int dimension; // The board dimensions
 
+	/**
+	* Tears down the test by setting board to null
+	*/
 	@After
 	public void tearDown()
 	{
 		this.testBoard = null;
 	}
 
+	/**
+	* Tests flagging a non-mine tile then losing the game and checking if the
+	* board marks the flag as incorrect
+	*/
 	@Test
 	public void testBoardFlagIncorrect()
 	{
@@ -50,6 +80,10 @@ public class BoardTest
 		}
 	}
 
+	/**
+	* Tests flagging a mine tile then winning the game and checking if the
+	* board marks the flag as correct
+	*/
 	@Test
 	public void testBoardFlagCorrect()
 	{
@@ -73,6 +107,9 @@ public class BoardTest
 		
 	}
 
+	/**
+	* Tests flagging a covered tile and checks if flag field was set (valid case)
+	*/
 	@Test
 	public void testBoardValidFlag()
 	{
@@ -94,6 +131,9 @@ public class BoardTest
 
 	}
 
+	/**
+	* Tests flagging a revealed tile and checks if flag field was not set (invalid case)
+	*/
 	@Test
 	public void testBoardInvalidFlag()
 	{
@@ -109,6 +149,9 @@ public class BoardTest
 		assertTrue(changes.isEmpty());
 	}
 
+	/**
+	* Tests revealing a single tile where no adjacent tiles will be revealed
+	*/
 	@Test
 	public void testBoardRevealOneTile()
 	{
@@ -125,6 +168,10 @@ public class BoardTest
 		assertTrue(changes.isEmpty());
 	}
 
+	/**
+	* Tests if the correct state is returned after making a move when the game
+	* is still running
+	*/
 	@Test
 	public void testBoardRunning()
 	{
@@ -133,6 +180,10 @@ public class BoardTest
 		assertEquals(State.RUNNING, s);
 	}
 
+	/**
+	* Tests if the correct state is returned after making a move when the game
+	* has been won with eight mines
+	*/
 	@Test
 	public void testBoardWinEightMines()
 	{
@@ -141,6 +192,10 @@ public class BoardTest
 		assertEquals(State.WON, s);
 	}
 
+	/**
+	* Tests if the correct state is returned after making a move when the game
+	* has been won with one mine
+	*/
 	@Test
 	public void testBoardWinOneMine()
 	{
@@ -149,14 +204,22 @@ public class BoardTest
 		assertEquals(State.WON, s);
 	}
 
+	/**
+	* Tests if the correct state is returned after making a move when the game
+	* has been lost with one mine
+	*/
 	@Test
 	public void testBoardLoss()
 	{
 		this.setUpOneMine();
 		State s = this.testBoard.makeMove(2,2);
-		assertEquals(State.LOSS, s);
+		assertEquals(State.LOST, s);
 	}
 
+	/**
+	* Tests revealing a 0 tile and checking if adjacent non-mine tiles where also
+	* revealed 
+	*/
 	@Test
 	public void testRevealTwoMines()
 	{
@@ -172,25 +235,33 @@ public class BoardTest
 		assertFalse(this.testBoard.getRevealed(2,1));
 	}
 
-
+	/**
+	* Creates a one mine field and injects into the board
+	*/
 	public void setUpOneMine()
 	{
 		this.dimension = 3;
-		AbstractMineField field = new OneMineField(this.dimension);
+		AbstractMineField field = new OneMineField();
 		this.testBoard = new Board(this.dimension, field);
 	}
 
+	/**
+	* Creates a two mine field and injects into the board
+	*/
 	public void setUpTwoMines()
 	{
 		this.dimension = 3;
-		AbstractMineField field = new TwoMineField(this.dimension);
+		AbstractMineField field = new TwoMineField();
 		this.testBoard = new Board(this.dimension, field);
 	}
 
+	/**
+	* Creates an eight mine field and injects into the board
+	*/
 	public void setUpEightMines()
 	{
 		this.dimension = 3;
-		AbstractMineField field = new EightMineField(this.dimension);
+		AbstractMineField field = new EightMineField();
 		this.testBoard = new Board(this.dimension, field);
 	}
 }
