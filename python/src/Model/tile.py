@@ -4,6 +4,13 @@ class tile:
 	"""
 	A class used to represent a tile on the game board.
 
+	Parameters
+	----------
+	mine : bool
+		Used to set the tile to a mine
+	adjacent : int
+		Used to set how many mines this tile is adjacent to
+
 	Attributes
 	----------
 	mine : bool
