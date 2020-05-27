@@ -1,4 +1,5 @@
 {
   "test_logic.py": true,
-  "test_logic.py::test_all_empty": true
+  "test_logic.py::test_all_empty": true,
+  "test_tile.py::test_model::test_setter_adjacent": true
 }
