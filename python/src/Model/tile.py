@@ -56,9 +56,10 @@ class tile:
 		self._covered = True
 		self._flag = False
 		self._mine = mine
-		self.adjacent = adjacent
+		self._adjacent = adjacent
 
-	def get_rep(self):
+	@property
+	def rep(self):
 		"""Returns the tile_rep enum based on the fields of this tile
 		
 		Returns

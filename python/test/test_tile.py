@@ -2,7 +2,7 @@ import sys
 sys.path.append('../src')
 
 import unittest
-from Model.tile import tile
+from Model.tile import tile, tile_rep
 
 class test_model(unittest.TestCase):
 	"""
@@ -36,6 +36,14 @@ class test_model(unittest.TestCase):
 	test_uncover_flag()
 		Creates a tile, flags it, and uncovers it. The tile should be
 		uncoverd and the flag should be removed
+	test_rep_covered()
+		Creates a covered tile and chekcs if the tile_rep matches
+	test_rep_flag()
+		Creates a flagged tile and chekcs if the tile_rep matches
+	test_rep_adjacent()
+		Creates an uncovered tile with adjacent set and chekcs if the tile_rep matches
+	test_rep_mine()
+		Creates an uncovered tile and chekcs if the tile_rep matches
 	"""
 
 	def test_constructor_default(self):
@@ -66,11 +74,6 @@ class test_model(unittest.TestCase):
 		self.assertEqual(8, test.adjacent)
 		self.assertEqual(True, test.covered)
 
-	def test_setter_adjacent(self):
-		test = tile()
-		test.adjacent = 4
-		self.assertEquals(4, test.adjacent)
-
 	def test_flag_valid(self):
 		test = tile()
 		test.place_flag()
@@ -93,3 +96,22 @@ class test_model(unittest.TestCase):
 		test.uncover()
 		self.assertEqual(False, test.covered)
 		self.assertEqual(False, test.flag)
+
+	def test_rep_covered(self):
+		test = tile()
+		self.assertEqual(tile_rep.COVERED, test.rep)	
+
+	def test_rep_flag(self):
+		test = tile()
+		test.place_flag()
+		self.assertEqual(tile_rep.FLAG, test.rep)	
+
+	def test_rep_adjacent(self):
+		test = tile(adjacent=2)
+		test.uncover()
+		self.assertEqual(tile_rep.TWO, test.rep)	
+
+	def test_rep_mine(self):
+		test = tile(mine=True)
+		test.uncover()
+		self.assertEqual(tile_rep.BOOM, test.rep)	
