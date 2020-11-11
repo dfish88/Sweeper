@@ -2,7 +2,8 @@ import sys
 sys.path.append('../src')
 
 import unittest
-from Model.tile import tile, tile_rep
+from Model.tile import tile
+from Model.tile_rep import tile_rep
 
 class test_model(unittest.TestCase):
 	"""
